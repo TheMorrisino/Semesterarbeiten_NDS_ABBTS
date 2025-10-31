@@ -24,12 +24,12 @@ fun main() {
     //
 
     println("------- MENUE -------")
-    println("Muenze einwerfen....1")
-    println("Kaffee ($KAFFE_PREIS CHF)...$KAFFEE")
-    println("Ovo    ($OVO_PREIS CHF)...$OVO")
-    println("Tee    ($TEE_PREIS CHF)...$TEE")
-    println("Retour-Geld.........5")
-    println("Beenden.............0")
+    println("Muenze einwerfen....$MUENZEN_EINWERFEN")
+    println("Kaffee (" + KAFFE_PREIS + "0 CHF)...$KAFFEE")
+    println("Ovo    (%.2f".format(OVO_PREIS)+  " CHF)...$OVO")
+    println("Tee    (%.2f".format(TEE_PREIS) + " CHF)...$TEE")
+    println("Retour-Geld.........$RETOUR_GELD")
+    println("Beenden.............$BEENDEN")
     println("---------------------")
 
 
@@ -41,7 +41,6 @@ fun main() {
         println("------------------")
         println("Ihre_Wahl: ")
         option = readln().toInt()
-
         println("Ihre Wahl war $option")
 
 
@@ -96,22 +95,17 @@ fun main() {
                 println("BYe Bye!")
                 break
             }
-            else  -> {
-                println("UngÜltige eingabe!")
+            wassertand <= 0.0 ->{
+                wassertand = 0.0
+                println("--------------------------")
+                println("Bitte Wasserstand aufüllen!")
+                println("--------------------------")
             }
 
+            else  -> {
+                println("Ungültige Eingabe!")
+            }
 
         }
-
-
-        if (wassertand <= 0.0){
-            wassertand = 0.0
-            println("--------------------------")
-            println("Bitte Wasserstand aufüllen!")
-            println("--------------------------")
-        }
-
-
     }
-
 }
