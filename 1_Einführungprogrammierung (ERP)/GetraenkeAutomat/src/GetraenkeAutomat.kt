@@ -6,7 +6,7 @@ fun main() {
 
     // Basis Funktionen
     val BEENDEN = 0
-    val MUENZEN_EINWERFEN = 1
+    val MUENZEN_EINWERFEN = 1 // 1,2,5 CHF | 0.10, 0.20, 0.50, CHF
     val KAFFEE = 2
     val OVO = 3
     val TEE = 4
@@ -41,59 +41,67 @@ fun main() {
         println("------------------")
         println("Ihre_Wahl: ")
         option = readln().toInt()
+
         println("Ihre Wahl war $option")
 
 
+        val BECHER_VOlUMEN = 2.5
 
-                if ((option > 1) && (option < 5)) {
-            if ((option == KAFFEE) && (kredit >= KAFFE_PREIS) && (wassertand > 0.0)) {
+        when  {
+
+            ((KAFFEE == option) && (kredit >= KAFFE_PREIS) && (wassertand >= BECHER_VOlUMEN)) -> {
                 println("Vielen Dank für Ihren Einkauf!")
-                wassertand -= 2.5
+                wassertand -= BECHER_VOlUMEN
                 kredit -= KAFFE_PREIS
             }
-            else if ((option == KAFFEE) && (kredit < KAFFE_PREIS)){
+            ((option == KAFFEE) && (kredit < KAFFE_PREIS)) -> {
                 println("zu wenig Kredit!")
             }
-            else if ((option == OVO) && (kredit >= OVO_PREIS) && (wassertand > 0.0)) {
+            ((option == OVO) && (kredit >= OVO_PREIS) && (wassertand > 0.0)) -> {
                 println("Vielen Dank für Ihren Einkauf!")
-                wassertand -= 2.5
+                wassertand -= BECHER_VOlUMEN
                 kredit -= OVO_PREIS
             }
-            else if ((option == OVO) && (kredit < OVO_PREIS)) {
+            ((option == OVO) && (kredit < OVO_PREIS)) -> {
                 println("zu wenig Kredit!")
             }
-            else if ((option == TEE) && (kredit >= TEE_PREIS) && (wassertand > 0.0)) {
+            ((option == TEE) && (kredit >= TEE_PREIS) && (wassertand > 0.0)) -> {
                 println("Vielen Dank für Ihren Einkauf!")
-                wassertand -= 2.5
+                wassertand -= BECHER_VOlUMEN
                 kredit -= TEE_PREIS
             }
-            else if ((option == TEE) && (kredit < TEE_PREIS)) {
+            ((option == TEE) && (kredit < TEE_PREIS)) -> {
                 println("zu wenig Kredit!")
             }
-             else
-                 println("Ungültige Eingabe")
-        }
+            option == MUENZEN_EINWERFEN -> {
+                println("Bitte folgende Münzen einwerfen 0.1Rp, 0.2Rp, 0.5Rp, 1Fr, 2Fr, 5Fr,")
+                var einwurf_muenze: Double
+                einwurf_muenze = readln().toDouble()
+                if (Prüfung_Muenze.Muenzen_Validieren(einwurf_muenze))  {
+                    kredit += einwurf_muenze
+                }
+                else
+                    println("Bitte eingabe wiederholen, Ungültige Münze!")
 
-        when (option) {
-            MUENZEN_EINWERFEN -> {
-                println("Kredit laden:")
-                kredit = readln().toDouble()
+
             }
-
-            RETOUR_GELD -> {
+            (option == RETOUR_GELD) && ( kredit > 0.0) -> {
                 println("--------------------------")
-                println("Dein Retoure Geld: $kredit")
+                println("Dein Retoure Geld:  %.2f".format(kredit))
                 println("--------------------------")
                 kredit = 0.0
             }
-
-            BEENDEN -> {
+            option == BEENDEN -> {
                 println("Automat wird heruntergefahren")
+                println("BYe Bye!")
                 break
             }
+            else  -> {
+                println("UngÜltige eingabe!")
+            }
+
+
         }
-
-
 
 
         if (wassertand <= 0.0){
