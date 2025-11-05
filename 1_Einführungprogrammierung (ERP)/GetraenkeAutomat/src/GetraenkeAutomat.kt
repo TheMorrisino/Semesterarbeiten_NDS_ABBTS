@@ -23,25 +23,28 @@ fun main() {
     val TEE_PREIS = 0.80
     //
 
-    println("------- MENUE -------")
-    println("Muenze einwerfen....$MUENZEN_EINWERFEN")
-    println("Kaffee (" + KAFFE_PREIS + "0 CHF)...$KAFFEE")
-    println("Ovo    (%.2f".format(OVO_PREIS)+  " CHF)...$OVO")
-    println("Tee    (%.2f".format(TEE_PREIS) + " CHF)...$TEE")
-    println("Retour-Geld.........$RETOUR_GELD")
-    println("Beenden.............$BEENDEN")
-    println("---------------------")
+
 
 
 
 
     while (true) {
+        println("------- MENUE -------")
+        println("Muenze einwerfen....$MUENZEN_EINWERFEN")
+        println("Kaffee (" + KAFFE_PREIS + "0 CHF)...$KAFFEE")
+        println("Ovo    (%.2f".format(OVO_PREIS)+  " CHF)...$OVO")
+        println("Tee    (%.2f".format(TEE_PREIS) + " CHF)...$TEE")
+        println("Retour-Geld.........$RETOUR_GELD")
+        println("Beenden.............$BEENDEN")
+        println("---------------------")
         print("Wasserstand: $wassertand | ")
         println("Kredit: %.2f".format(kredit))
         println("------------------")
         println("Ihre_Wahl: ")
         option = readln().toInt()
+        println("------------------")
         println("Ihre Wahl war $option")
+        println("------------------")
 
 
         val BECHER_VOlUMEN = 2.5
@@ -85,9 +88,7 @@ fun main() {
 
             }
             (option == RETOUR_GELD) && ( kredit > 0.0) -> {
-                println("--------------------------")
                 println("Dein Retoure Geld:  %.2f".format(kredit))
-                println("--------------------------")
                 kredit = 0.0
             }
             option == BEENDEN -> {
