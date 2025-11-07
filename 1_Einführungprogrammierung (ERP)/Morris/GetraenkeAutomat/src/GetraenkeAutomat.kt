@@ -21,7 +21,16 @@ fun main() {
     val KAFFE_PREIS = 1.00
     val OVO_PREIS = 1.10
     val TEE_PREIS = 0.80
-    //
+
+    // MUENZEN-Liste
+    val MUENZEN = mutableListOf(
+        0.10,   // 10 Rappen
+        0.20,   // 20 Rappen
+        0.50,   // 50 Rappen
+        1.00,   // 1.00 Franken
+        2.00,   // 2.00 Franken
+        5.00    // 5.00 Franken
+    )
 
 
 
@@ -76,7 +85,9 @@ fun main() {
                 println("zu wenig Kredit!")
             }
             option == MUENZEN_EINWERFEN -> {
+                /*
                 println("Bitte folgende Münzen einwerfen 0.1Rp, 0.2Rp, 0.5Rp, 1Fr, 2Fr, 5Fr,")
+
                 var einwurf_muenze: Double
                 einwurf_muenze = readln().toDouble()
                 if (Prüfung_Muenze.Muenzen_Validieren(einwurf_muenze))  {
@@ -84,12 +95,48 @@ fun main() {
                 }
                 else
                     println("Bitte eingabe wiederholen, Ungültige Münze!")
+                */
+
+                println("Bitte folgende Münzen einwerfen 0.1Rp, 0.2Rp, 0.5Rp, 1Fr, 2Fr, 5Fr,")
+                var einwurf_muenze: Double
+                var weitereMuenzeEinwerfen : Int = 0
+
+                    do {
+                        println("Bitte Münzen einwerfen")
+                        einwurf_muenze = readln().toDouble()
 
 
+                        if (einwurf_muenze in MUENZEN) {
+                            kredit += einwurf_muenze
+                        }
+
+                        if (einwurf_muenze !in MUENZEN) {
+                            println("Bitte eingabe wiederholen, Ungültige Münze!")
+                        }
+
+                        println("Weiter Münzen einwerfen ? Wenn ja gebe 1 ein wenn Nein gebe 0 ")
+                        weitereMuenzeEinwerfen = readln().toInt()
+
+                    } while ((einwurf_muenze !in MUENZEN) || (weitereMuenzeEinwerfen != 0))
+
+                    println("Eingeworfene Münze: $einwurf_muenze Kredit: $kredit")
             }
+
             (option == RETOUR_GELD) && ( kredit > 0.0) -> {
                 println("Dein Retoure Geld:  %.2f".format(kredit))
-                kredit = 0.0
+
+                    var fuenfer : Double
+                    var zweier : Double
+                    var zwischenResultat: Double
+                    zwischenResultat = kredit / MUENZEN[5]
+
+
+                fuenfer = zwischenResultat
+
+                    println(zwischenResultat)
+
+
+
             }
             option == BEENDEN -> {
                 println("Automat wird heruntergefahren")
@@ -106,7 +153,6 @@ fun main() {
             else  -> {
                 println("Ungültige Eingabe!")
             }
-
         }
     }
 }
