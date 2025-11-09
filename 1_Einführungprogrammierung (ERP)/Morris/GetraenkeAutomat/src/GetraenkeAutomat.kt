@@ -129,6 +129,8 @@ fun main() {
                     var zweier : Double
                     var zwischenResultat: Double
                     zwischenResultat = kredit / MUENZEN[5]
+                    // Test Test GIT in Jetbrain
+                    var GIT : String
 
 
                 fuenfer = zwischenResultat
