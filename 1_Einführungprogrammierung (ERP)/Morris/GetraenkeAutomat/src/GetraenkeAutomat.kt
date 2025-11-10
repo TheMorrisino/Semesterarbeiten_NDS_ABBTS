@@ -15,7 +15,7 @@ fun main() {
     //Erweiterte  Funktionen
     var option: Int
     var wassertand: Double = 10.0
-    var kredit: Double = 0.0
+    var kredit: Double = 21.40
 
     // Preise der Items
     val KAFFE_PREIS = 1.00
@@ -123,23 +123,82 @@ fun main() {
             }
 
             (option == RETOUR_GELD) && ( kredit > 0.0) -> {
-                println("Dein Retoure Geld:  %.2f".format(kredit))
+                //println("Dein Retoure Geld:  %.2f".format(kredit))
+                // Aufgabe a
+//                var anzahl10rappen : Int = 0
+//                while (kredit > MUENZEN[0]) {
+//                    if (kredit >= MUENZEN[0]) {
+//                        kredit -= MUENZEN[0]
+//
+//                        anzahl10rappen++
+//                    }
+//                }
+//                println("Dein Retoure Geld:  %.2f".format(kredit ))
+//                println("Anzahl 10 Räppler: $anzahl10rappen")
 
-                    var fuenfer : Double
-                    var zweier : Double
-                    var zwischenResultat: Double
-                    zwischenResultat = kredit / MUENZEN[5]
-                    // Test Test GIT in Jetbrain
-                    var GIT : String
-
-
-                fuenfer = zwischenResultat
-
-                    println(zwischenResultat)
+                // Aufgabe b = 0
+               var rueckbetrag : Double = (kredit * 100 ).roundToInt() / 100.0
+               var anzahl10Rp : Int = 0
+               var anzahl20Rp : Int = 0
+               var anzahl50Rp : Int = 0
+               var anzahl1CHF : Int = 0
+               var anzahl2CHF : Int = 0
+               var anzahl5CHF : Int = 0
 
 
 
+                while (kredit > MUENZEN[0]) {
+                    if (kredit >= MUENZEN[5]) {
+                        kredit -= MUENZEN[5]
+                        anzahl5CHF++
+                    }
+                    else if (kredit >= MUENZEN[4]) {
+                        kredit -= MUENZEN[4]
+                        anzahl2CHF++
+                    }
+                    else if (kredit >= MUENZEN[3]) {
+                        kredit -= MUENZEN[3]
+                        anzahl1CHF++
+                    }
+                    else if (kredit >= MUENZEN[2]) {
+                        kredit -= MUENZEN[2]
+                        anzahl50Rp++
+                    }
+                    else if (kredit >= MUENZEN[1]) {
+                        kredit -= MUENZEN[1]
+                        anzahl20Rp++
+                    }
+                    else if (kredit >= MUENZEN[0]) {
+                        kredit -= MUENZEN[0]
+                        anzahl10Rp++
+                    }
+
+                    else {
+                        println("Fehler")
+                        break
+
+                    }
+
+                    kredit = (kredit * 100).roundToInt() / 100.0
+
+                }
+
+                println("Rückgeld von " + rueckbetrag + "0  vollständig ausgezahlt.")
+                println("Verwendete Münzen:")
+                if (anzahl5CHF > 0)   println("5.00CHF  × $anzahl5CHF")
+                if (anzahl2CHF > 0)   println("2.00CHF  × $anzahl2CHF")
+                if (anzahl1CHF > 0)   println("1.00CHF  × $anzahl1CHF")
+                if (anzahl50Rp > 0)   println("0.50CHF  × $anzahl50Rp")
+                if (anzahl20Rp > 0)   println("0.20CHF  × $anzahl20Rp")
+                if (anzahl10Rp > 0)   println("0.10CHF  × $anzahl10Rp")
+
+                // Falls ein Restbetrag übrig bleibt
+                if (kredit > 0.0) {
+                    println("Restbetrag, der nicht ausbezahlt werden konnte: %.2f CHF".format(kredit))
+                }
             }
+
+
             option == BEENDEN -> {
                 println("Automat wird heruntergefahren")
                 println("BYe Bye!")
