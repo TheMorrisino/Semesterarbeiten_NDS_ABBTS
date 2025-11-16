@@ -1,5 +1,7 @@
 import kotlin.math.*
 
+// Globale Variablen //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Menü Funktionen (option)
 val BEENDEN = 0
 val MUENZEN_EINWERFEN = 1
@@ -20,7 +22,7 @@ val RETOUR_GELD = 5
 
 //Kredit und Wasserstand
 var wassertand: Double = 20.0
-var kredit: Double = 5.00
+var kredit: Double = 5.0
 
 // Preise der Items
 val KAFFE_PREIS = 1.00
@@ -28,6 +30,8 @@ val OVO_PREIS = 1.10
 val TEE_PREIS = 0.80
 
 val BECHER_VOlUMEN = 2.5
+
+// Main Programm //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 fun main() {
 
@@ -38,8 +42,6 @@ fun main() {
         println("Bitte geben sie Ihre Wahl an.")
         var option: Int = readln().toInt()
         benutzereingabe(option)
-
-
 
         when  {
 
@@ -64,33 +66,157 @@ fun main() {
 
             option == MUENZEN_EINWERFEN -> {
 //                Validierung der Münzen Option 1
-
-//                var einwurfmuenze: Double
-//                einwurfmuenze = readln().toDouble()
-//                validierungMuenzeOP1(einwurfmuenze)
-//
-//                }
-//                Validierung der Münzen Option 2
+//                validierungMuenzeOP1()}
 
 
+//              Validierung der Münzen Option 2
                 validierungMuenzeOP2()
             }
 
             (option == RETOUR_GELD) && ( kredit > 0.0) -> {
-                //println("Dein Retoure Geld:  %.2f".format(kredit))
-                // Aufgabe a
-//                var anzahl10rappen : Int = 0
-//                while (kredit > MUENZEN[0]) {
-//                    if (kredit >= MUENZEN[0]) {
-//                        kredit -= MUENZEN[0]
-//
-//                        anzahl10rappen++
-//                    }
-//                }
-//                println("Dein Retoure Geld:  %.2f".format(kredit ))
-//                println("Anzahl 10 Räppler: $anzahl10rappen")
 
-                // Aufgabe b = 0
+//                rueckgeldIn10Rp()
+//                rueckgabe1()
+                rueckgeld()
+            }
+
+            option == BEENDEN -> {
+                println("Automat wird heruntergefahren")
+                println("BYe Bye!")
+                break
+            }
+            wassertand <= 0.0 ->{
+                wassertand = 0.0
+                println("--------------------------")
+                println("Bitte Wasserstand aufüllen!")
+                println("--------------------------")
+                println("Produkt konnte nicht zubereiten werden")
+            }
+
+            else  -> {
+                println("Ungültige Eingabe!")
+            }
+        }
+    }
+}
+
+
+
+// Funktionen //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+fun ausgabeMenue (){
+    println("------- MENUE -------")
+    println("Muenze einwerfen....$MUENZEN_EINWERFEN")
+    println("Kaffee (" + KAFFE_PREIS + "0 CHF)...$KAFFEE")
+    println("Ovo    (%.2f".format(OVO_PREIS)+  " CHF)...$OVO")
+    println("Tee    (%.2f".format(TEE_PREIS) + " CHF)...$TEE")
+    println("Retour-Geld.........$RETOUR_GELD")
+    println("Beenden.............$BEENDEN")
+    println("---------------------")
+    print("Wasserstand: $wassertand | ")
+    println("Kredit: %.2f".format(kredit))
+    println("------------------")
+}
+
+fun benutzereingabe (option : Int) {
+    println("------------------")
+    println("Ihre Wahl war $option")
+    println("------------------")
+}
+
+fun  macheKAffe() {
+        println("Ihr Kaffee wird zubereiten")
+        println("Vielen Dank für Ihren Einkauf!")
+        wassertand -= BECHER_VOlUMEN
+        kredit -= KAFFE_PREIS
+}
+
+fun machOVO() {
+    println("Ihr Ovo wird zubereiten")
+    println("Vielen Dank für Ihren Einkauf!")
+    wassertand -= BECHER_VOlUMEN
+    kredit -= OVO_PREIS
+}
+
+fun macheTee() {
+    println("Ihr Tee wird zubereiten")
+    println("Vielen Dank für Ihren Einkauf!")
+    wassertand -= BECHER_VOlUMEN
+    kredit -= TEE_PREIS
+}
+
+fun validierungMuenzeOP1 () {
+    var einwurfmuenze: Double
+    println("Bitte folgende Münzen einwerfen 0.1Rp, 0.2Rp, 0.5Rp, 1Fr, 2Fr, 5Fr,")
+    einwurfmuenze = readln().toDouble()
+    if (Prüfung_Muenze.Muenzen_Validieren(einwurfmuenze))  {
+        kredit += einwurfmuenze
+        println("Münze Validiert und dem Kredit hinzugefügt!")
+
+    }
+    else
+        println("Bitte eingabe wiederholen, Ungültige Münze!")
+}
+
+var breakwhile : Boolean = true
+fun validierungMuenzeOP2 () {
+    var weitereMuenzeEinwerfen: String
+    var einwurf_muenze: Double
+
+
+    do {
+        println("Bitte folgende Münzen einwerfen 0.1Rp, 0.2Rp, 0.5Rp, 1Fr, 2Fr, 5Fr,")
+        einwurf_muenze = readln().toDouble()
+        println("Eingeworfen: $einwurf_muenze")
+        if (einwurf_muenze in MUENZEN ) {
+            kredit += einwurf_muenze
+            println("Aktueller Kredit: $kredit")
+            println("Weiter Münzen einwerfen ? (Ja/Nein) ")
+            weitereMuenzeEinwerfen = readln()
+
+            do {
+                if (weitereMuenzeEinwerfen.equals("ja", ignoreCase = true)) {
+                    breakwhile = true
+                    break
+                }
+                if (weitereMuenzeEinwerfen.equals("nein", ignoreCase = true)) {
+                    breakwhile = false
+                    break
+
+                } else
+                    println("Falscher Input")
+                    println("Bitte ja oder nein eingeben")
+                    weitereMuenzeEinwerfen = readln()
+            } while (breakwhile)
+
+        }
+        if (einwurf_muenze !in MUENZEN) {
+            println("Bitte eingabe wiederholen, Ungültige Münze!")
+        }
+
+    } while (breakwhile)
+
+    println("Eingeworfener Kredit: $kredit")
+}
+
+
+fun rueckgeldIn10Rp (){
+    println("Dein Retoure Geld:  %.2f".format(kredit))
+//  Aufgabe a
+                var anzahl10rappen : Int = 0
+                while (kredit > MUENZEN[0]) {
+                    if (kredit >= MUENZEN[0]) {
+                        kredit -= MUENZEN[0]
+
+                        anzahl10rappen++
+                    }
+                }
+                println("Dein Retoure Geld:  %.2f".format(kredit ))
+                println("Anzahl 10 Räppler: $anzahl10rappen")
+}
+
+fun rueckgabe1() {
+// Aufgabe b
                var rueckbetrag : Double = (kredit * 100 ).roundToInt() / 100.0
                var anzahl10Rp : Int = 0
                var anzahl20Rp : Int = 0
@@ -146,118 +272,21 @@ fun main() {
                 if (anzahl20Rp > 0)   println("0.20CHF  × $anzahl20Rp")
                 if (anzahl10Rp > 0)   println("0.10CHF  × $anzahl10Rp")
 
-                // Falls ein Restbetrag übrig bleibt
+                // Debug
                 if (kredit > 0.0) {
-                    println("Restbetrag, der nicht ausbezahlt werden konnte: %.2f CHF".format(kredit))
+                    println("Restbetrag: %.2f CHF".format(kredit))
                 }
-            }
+}
 
-
-            option == BEENDEN -> {
-                println("Automat wird heruntergefahren")
-                println("BYe Bye!")
-                break
-            }
-            wassertand <= 0.0 ->{
-                wassertand = 0.0
-                println("--------------------------")
-                println("Bitte Wasserstand aufüllen!")
-                println("--------------------------")
-                println("Produkt konnte nicht zubereiten werden")
-            }
-
-            else  -> {
-                println("Ungültige Eingabe!")
-            }
-        }
+fun rueckgeld () {
+    println("Retourgeld")
+    for (muenze in MUENZEN.asReversed()) {            // Alle Muenzen testen (grösste zuerst)
+        while (kredit - muenze >= 0) {                // mehrfach abbuchen
+            kredit = kredit - muenze
+            kredit = "%.2f".format(kredit).toDouble() // Korrektur
+            println("Muenze: " + muenze + "0 CHF") }
     }
 }
 
-fun ausgabeMenue (){
-    println("------- MENUE -------")
-    println("Muenze einwerfen....$MUENZEN_EINWERFEN")
-    println("Kaffee (" + KAFFE_PREIS + "0 CHF)...$KAFFEE")
-    println("Ovo    (%.2f".format(OVO_PREIS)+  " CHF)...$OVO")
-    println("Tee    (%.2f".format(TEE_PREIS) + " CHF)...$TEE")
-    println("Retour-Geld.........$RETOUR_GELD")
-    println("Beenden.............$BEENDEN")
-    println("---------------------")
-    print("Wasserstand: $wassertand | ")
-    println("Kredit: %.2f".format(kredit))
-    println("------------------")
-}
-
-fun benutzereingabe (option : Int) {
-    println("------------------")
-    println("Ihre Wahl war $option")
-    println("------------------")
-}
-
-fun  macheKAffe() {
-        println("Ihr Kaffee wird zubereiten")
-        println("Vielen Dank für Ihren Einkauf!")
-        wassertand -= BECHER_VOlUMEN
-        kredit -= KAFFE_PREIS
-}
-
-fun machOVO() {
-    println("Ihr Ovo wird zubereiten")
-    println("Vielen Dank für Ihren Einkauf!")
-    wassertand -= BECHER_VOlUMEN
-    kredit -= OVO_PREIS
-}
-
-fun macheTee() {
-    println("Ihr Tee wird zubereiten")
-    println("Vielen Dank für Ihren Einkauf!")
-    wassertand -= BECHER_VOlUMEN
-    kredit -= TEE_PREIS
-}
-
-fun validierungMuenzeOP1 (einwurfmuenze : Double) {
-    if (Prüfung_Muenze.Muenzen_Validieren(einwurfmuenze))  {
-        kredit += einwurfmuenze
-        println("Münze Validiert und dem Kredit hinzugefügt!")
-
-    }
-    else
-        println("Bitte eingabe wiederholen, Ungültige Münze!")
-
-}
-
-fun validierungMuenzeOP2 () {
-    var weitereMuenzeEinwerfen: String
-    var einwurf_muenze: Double
-
-    do {
-        println("Bitte folgende Münzen einwerfen 0.1Rp, 0.2Rp, 0.5Rp, 1Fr, 2Fr, 5Fr,")
-        einwurf_muenze = readln().toDouble()
-        println("Eingeworfen: $einwurf_muenze")
-        if (einwurf_muenze in MUENZEN ) {
-            kredit += einwurf_muenze
-            println("Aktueller Kredit: $kredit")
-            println("Weiter Münzen einwerfen ? (Ja/Nein) ")
-            weitereMuenzeEinwerfen = readln()
-            if (weitereMuenzeEinwerfen.equals("ja", ignoreCase = true)) {
-                continue
-            }
-            if (weitereMuenzeEinwerfen.equals("nein", ignoreCase = true)) {
-                break
-            }else
-                println("Falscher Input")
-                println("Bitte ja oder nein eingeben")
-                continue
-        }
-        if (einwurf_muenze !in MUENZEN) {
-            println("Bitte eingabe wiederholen, Ungültige Münze!")
-        }
-
-    } while (true)
-
-    println("Eingeworfener Kredit: $kredit")
-}
 
 
-fun rueckgeldIn10Rp (){
-
-}
