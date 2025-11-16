@@ -1,26 +1,24 @@
 import kotlin.math.*
 
+// Basis Funktionen
+val BEENDEN = 0
+val MUENZEN_EINWERFEN = 1 // 1,2,5 CHF | 0.10, 0.20, 0.50, CHF
+val KAFFEE = 2
+val OVO = 3
+val TEE = 4
+val RETOUR_GELD = 5
+
+//Erweiterte Funktionen
+var wassertand: Double = 20.0
+var kredit: Double = 10.00
+
+// Preise der Items
+val KAFFE_PREIS = 1.00
+val OVO_PREIS = 1.10
+val TEE_PREIS = 0.80
+
 fun main() {
 
-
-
-    // Basis Funktionen
-    val BEENDEN = 0
-    val MUENZEN_EINWERFEN = 1 // 1,2,5 CHF | 0.10, 0.20, 0.50, CHF
-    val KAFFEE = 2
-    val OVO = 3
-    val TEE = 4
-    val RETOUR_GELD = 5
-
-    //Erweiterte  Funktionen
-    var option: Int
-    var wassertand: Double = 10.0
-    var kredit: Double = 21.40
-
-    // Preise der Items
-    val KAFFE_PREIS = 1.00
-    val OVO_PREIS = 1.10
-    val TEE_PREIS = 0.80
 
     // MUENZEN-Liste
     val MUENZEN = mutableListOf(
@@ -38,23 +36,27 @@ fun main() {
 
 
     while (true) {
-        println("------- MENUE -------")
-        println("Muenze einwerfen....$MUENZEN_EINWERFEN")
-        println("Kaffee (" + KAFFE_PREIS + "0 CHF)...$KAFFEE")
-        println("Ovo    (%.2f".format(OVO_PREIS)+  " CHF)...$OVO")
-        println("Tee    (%.2f".format(TEE_PREIS) + " CHF)...$TEE")
-        println("Retour-Geld.........$RETOUR_GELD")
-        println("Beenden.............$BEENDEN")
-        println("---------------------")
-        print("Wasserstand: $wassertand | ")
-        println("Kredit: %.2f".format(kredit))
-        println("------------------")
-        println("Ihre_Wahl: ")
-        option = readln().toInt()
-        println("------------------")
-        println("Ihre Wahl war $option")
-        println("------------------")
+//        println("------- MENUE -------")
+//        println("Muenze einwerfen....$MUENZEN_EINWERFEN")
+//        println("Kaffee (" + KAFFE_PREIS + "0 CHF)...$KAFFEE")
+//        println("Ovo    (%.2f".format(OVO_PREIS)+  " CHF)...$OVO")
+//        println("Tee    (%.2f".format(TEE_PREIS) + " CHF)...$TEE")
+//        println("Retour-Geld.........$RETOUR_GELD")
+//        println("Beenden.............$BEENDEN")
+//        println("---------------------")
+//        print("Wasserstand: $wassertand | ")
+//        println("Kredit: %.2f".format(kredit))
+//        println("------------------")
+//        println("Ihre_Wahl: ")
+//        option = readln().toInt()
+//        println("------------------")
+//        println("Ihre Wahl war $option")
+//        println("------------------")
 
+        ausgabeMenue()
+
+        var option = readln().toInt()
+        benutzereingabe(option)
 
         val BECHER_VOlUMEN = 2.5
 
@@ -216,4 +218,24 @@ fun main() {
             }
         }
     }
+}
+
+fun ausgabeMenue (){
+    println("------- MENUE -------")
+    println("Muenze einwerfen....$MUENZEN_EINWERFEN")
+    println("Kaffee (" + KAFFE_PREIS + "0 CHF)...$KAFFEE")
+    println("Ovo    (%.2f".format(OVO_PREIS)+  " CHF)...$OVO")
+    println("Tee    (%.2f".format(TEE_PREIS) + " CHF)...$TEE")
+    println("Retour-Geld.........$RETOUR_GELD")
+    println("Beenden.............$BEENDEN")
+    println("---------------------")
+    print("Wasserstand: $wassertand | ")
+    println("Kredit: %.2f".format(kredit))
+    println("------------------")
+}
+
+fun benutzereingabe (option : Int) {
+    println("------------------")
+    println("Ihre Wahl war $option")
+    println("------------------")
 }
