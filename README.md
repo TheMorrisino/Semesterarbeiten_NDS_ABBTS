@@ -1,13 +1,12 @@
-Hallo Zusammen
+**Hallo Zusammen**
 
-Erstes Semster
 
-**1_Semesterarbeit/Ressourcix/** – Hier arbeiten wir alle gemeinsam am eigentlichen Projekt.
+**Erstes Semster**  
+1_Semesterarbeit/Ressourcix/ – Hier arbeiten wir alle gemeinsam am eigentlichen Projekt.
 Alle Änderungen sollten über Pull‑Requests bzw. Merge‑Requests in diesen Ordner erfolgen, damit wir den Überblick behalten.
 
-Zweites Semster
-
-**2_Semesterarbeit/Ressourcix/** – Hier arbeiten wir alle gemeinsam am eigentlichen Projekt.
+**Zweites Semster**    
+2_Semesterarbeit/Ressourcix/ – Hier arbeiten wir alle gemeinsam am eigentlichen Projekt.
 Alle Änderungen sollten über Pull‑Requests bzw. Merge‑Requests in diesen Ordner erfolgen, damit wir den Überblick behalten.
 
 **fachX/** – Für jedes Fach gibt es einen eigenen Ordner.
