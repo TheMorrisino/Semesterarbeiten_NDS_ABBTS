@@ -6,6 +6,7 @@ import kotlin.math.*
 val BEENDEN = 0
 val MUENZEN_EINWERFEN = 1
 
+
 // MUENZEN-Liste
 val MUENZEN = mutableListOf(
     0.10,   // 10 Rappen
@@ -35,33 +36,29 @@ val BECHER_VOlUMEN = 2.5
 
 fun main() {
 
+    var erfolg: Boolean
     while (true) {
 
         ausgabeMenue()
 
         println("Bitte geben sie Ihre Wahl an.")
-        var option: Int = readln().toInt()
-        benutzereingabe(option)
+        var option: Int = benutzereingabe()
 
         when  {
 
-            ((KAFFEE == option) && (kredit >= KAFFE_PREIS) && (wassertand >= BECHER_VOlUMEN)) -> {
-                macheKAffe()
+            ((KAFFEE == option) && (wassertand >= BECHER_VOlUMEN)) -> {
+                erfolg = belasten(KAFFE_PREIS)
+                if (erfolg) { macheKAffe() }
+
             }
-            ((KAFFEE == option) && (kredit < KAFFE_PREIS)) -> {
-                println("zu wenig Kredit!")
+            ((option == OVO) && (wassertand > 0.0)) -> {
+                erfolg = belasten(OVO_PREIS)
+                if (erfolg == true) { machOVO() }
             }
-            ((option == OVO) && (kredit >= OVO_PREIS) && (wassertand > 0.0)) -> {
-                machOVO()
-            }
-            ((option == OVO) && (kredit < OVO_PREIS)) -> {
-                println("zu wenig Kredit!")
-            }
-            ((option == TEE) && (kredit >= TEE_PREIS) && (wassertand > 0.0)) -> {
-                macheTee()
-            }
-            ((option == TEE) && (kredit < TEE_PREIS)) -> {
-                println("zu wenig Kredit!")
+
+            ((option == TEE) && (wassertand > 0.0)) -> {
+                erfolg = belasten(TEE_PREIS)
+                if (erfolg) { macheTee() }
             }
 
             option == MUENZEN_EINWERFEN -> {
@@ -118,10 +115,12 @@ fun ausgabeMenue (){
     println("------------------")
 }
 
-fun benutzereingabe (option : Int) {
+fun benutzereingabe () : Int {
+    var option2: Int = readln().toInt()
     println("------------------")
-    println("Ihre Wahl war $option")
+    println("Ihre Wahl war $option2")
     println("------------------")
+    return option2
 }
 
 fun  macheKAffe() {
@@ -149,6 +148,7 @@ fun validierungMuenzeOP1 () {
     var einwurfmuenze: Double
     println("Bitte folgende Münzen einwerfen 0.1Rp, 0.2Rp, 0.5Rp, 1Fr, 2Fr, 5Fr,")
     einwurfmuenze = readln().toDouble()
+    einwurfmuenze = korrektur(einwurfmuenze)
     if (Prüfung_Muenze.Muenzen_Validieren(einwurfmuenze))  {
         kredit += einwurfmuenze
         println("Münze Validiert und dem Kredit hinzugefügt!")
@@ -283,9 +283,27 @@ fun rueckgeld () {
     for (muenze in MUENZEN.asReversed()) {            // Alle Muenzen testen (grösste zuerst)
         while (kredit - muenze >= 0) {                // mehrfach abbuchen
             kredit = kredit - muenze
-            kredit = "%.2f".format(kredit).toDouble() // Korrektur
+            kredit= korrektur(kredit)
             println("Muenze: " + muenze + "0 CHF") }
     }
+}
+
+fun belasten(betrag: Double) : Boolean {
+    var erfolg : Boolean = true
+     if (kredit >= betrag) {
+         erfolg = true
+         println("Kredit wurde belastet")
+
+    }   else  {
+         erfolg=false
+            println("Kredit konnte nicht belastet werden") }
+
+    return erfolg
+}
+
+fun korrektur(kredit: Double) : Double {
+    var kredit = "%.2f".format(kredit).toDouble()
+    return kredit
 }
 
 
