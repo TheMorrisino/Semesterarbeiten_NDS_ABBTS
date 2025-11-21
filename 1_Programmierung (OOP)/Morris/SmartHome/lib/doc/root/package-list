@@ -1,0 +1,28 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:ch.abbts.buildingclient////PointingToDeclaration/root/ch.abbts.buildingclient/index.html
+$dokka.location:ch.abbts.buildingclient/building///PointingToDeclaration/root/ch.abbts.buildingclient/building/index.html
+$dokka.location:ch.abbts.buildingclient/building/clearDisplay/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/clear-display.html
+$dokka.location:ch.abbts.buildingclient/building/close/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/close.html
+$dokka.location:ch.abbts.buildingclient/building/debugOn/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/debug-on.html
+$dokka.location:ch.abbts.buildingclient/building/getBrightness/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/get-brightness.html
+$dokka.location:ch.abbts.buildingclient/building/getDistance/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/get-distance.html
+$dokka.location:ch.abbts.buildingclient/building/getFire/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/get-fire.html
+$dokka.location:ch.abbts.buildingclient/building/getGas/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/get-gas.html
+$dokka.location:ch.abbts.buildingclient/building/getHumidity/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/get-humidity.html
+$dokka.location:ch.abbts.buildingclient/building/getKey/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/get-key.html
+$dokka.location:ch.abbts.buildingclient/building/getRfid/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/get-rfid.html
+$dokka.location:ch.abbts.buildingclient/building/getSound/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/get-sound.html
+$dokka.location:ch.abbts.buildingclient/building/getTemperature/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/get-temperature.html
+$dokka.location:ch.abbts.buildingclient/building/hardwareOn/#kotlin.String#kotlin.Int/PointingToDeclaration/root/ch.abbts.buildingclient/building/hardware-on.html
+$dokka.location:ch.abbts.buildingclient/building/isButtonPressed/#kotlin.Int/PointingToDeclaration/root/ch.abbts.buildingclient/building/is-button-pressed.html
+$dokka.location:ch.abbts.buildingclient/building/isMotion/#/PointingToDeclaration/root/ch.abbts.buildingclient/building/is-motion.html
+$dokka.location:ch.abbts.buildingclient/building/setBuzzer/#kotlin.Boolean/PointingToDeclaration/root/ch.abbts.buildingclient/building/set-buzzer.html
+$dokka.location:ch.abbts.buildingclient/building/setDisplay/#kotlin.String/PointingToDeclaration/root/ch.abbts.buildingclient/building/set-display.html
+$dokka.location:ch.abbts.buildingclient/building/setDisplayCursor/#kotlin.Int#kotlin.Int/PointingToDeclaration/root/ch.abbts.buildingclient/building/set-display-cursor.html
+$dokka.location:ch.abbts.buildingclient/building/setDoor/#kotlin.Int/PointingToDeclaration/root/ch.abbts.buildingclient/building/set-door.html
+$dokka.location:ch.abbts.buildingclient/building/setLed/#kotlin.Boolean#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/root/ch.abbts.buildingclient/building/set-led.html
+$dokka.location:ch.abbts.buildingclient/building/setLed/#kotlin.Int#kotlin.Boolean/PointingToDeclaration/root/ch.abbts.buildingclient/building/set-led.html
+$dokka.location:ch.abbts.buildingclient/building/setRelay/#kotlin.Boolean/PointingToDeclaration/root/ch.abbts.buildingclient/building/set-relay.html
+ch.abbts.buildingclient
+
