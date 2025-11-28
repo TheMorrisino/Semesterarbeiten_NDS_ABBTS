@@ -13,8 +13,9 @@ class Employee(
 
 
     companion object {
+        // To DO Liste in einer CSV Datei abspeichern und diese Liste jeweils in saveIdInList importieren und Vergleichen lassen
         private var IDcount : UInt = 0u
-        private var idliste = mutableListOf<UInt>()
+        private var idliste = mutableListOf<UInt>(0u,)
 
 
         private fun generateId() : UInt{
@@ -23,16 +24,23 @@ class Employee(
 
 
             }
-            IDcount += 1u
-            val saveidinlist = (IDcount -1u)
-            idliste.add(saveidinlist)
+            val saveIdInList = (IDcount)
+            idliste.add(saveIdInList)
 
-            println(idliste) //DEBUG
+            //DEBUG
+            println()
+            println("Debug")
+            println("IDLISTE: $idliste")
+            println("IDCOUNT: $IDcount")
+            println("saveIdInList: $saveIdInList")
 
-            return saveidinlist
+            return saveIdInList
 
 
         }
+
+
     }
+
 }
 
