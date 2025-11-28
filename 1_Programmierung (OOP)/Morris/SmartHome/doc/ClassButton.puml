@@ -1,0 +1,26 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+
+'--- Imports ----------------------------------------------------
+package "ch.abbts.buildingclient" {
+    class building {
+        + isButtonPressed(nr: Int): Boolean
+    }
+}
+'--- Klasse Button ---------------------------------------------
+class Button {
+    - name : String = ""
+    - nr   : Int = 0
+    + getName()    : String
+    + getNr()      : Int
+    + setName()    : String
+    + setNr()      : Int
+    - isPressed()  : Boolean
+    + waitForPressed()
+}
+'--- Beziehungen ------------------------------------------------
+Button <-- building : uses
+@enduml
+
+

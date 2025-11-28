@@ -1,0 +1,17 @@
+@startuml
+'--- Imports ----------------------------------------------------
+package "ch.abbts.buildingclient" {
+    class building {
+        + isButtonPressed(nr: Int): Boolean
+    }
+}
+'--- Objekt buttonBlue -----------------------------------------
+class buttonBlue {
+    - name : String = "Taster Blau"
+    - nr   : Int = 0
+    + isPressed() : Boolean
+    + waitForPressed() : void
+}
+'--- Beziehungen ------------------------------------------------
+buttonBlue --> building : uses
+@enduml
