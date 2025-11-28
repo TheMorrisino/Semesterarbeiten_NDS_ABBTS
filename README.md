@@ -9,8 +9,6 @@ Alle Änderungen sollten über Pull‑Requests bzw. Merge‑Requests in diesen O
 2_Semesterarbeit/Ressourcix/ – Hier arbeiten wir alle gemeinsam am eigentlichen Projekt.
 Alle Änderungen sollten über Pull‑Requests bzw. Merge‑Requests in diesen Ordner erfolgen, damit wir den Überblick behalten.
 
-**fachX/** – Für jedes Fach gibt es einen eigenen Ordner.
-In jedem Fach‑Ordner legt jede Person einen Unterordner mit ihrem Namen an und speichert dort ihre jeweiligen Dateien (Code, Skripte, Notizen …). So bleibt alles klar getrennt und lässt sich leicht finden.
 
 **🛠️ Arbeitsablauf mit Git**
 

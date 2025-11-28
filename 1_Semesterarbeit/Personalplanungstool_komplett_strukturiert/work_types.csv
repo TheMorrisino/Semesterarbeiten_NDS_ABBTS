@@ -1,0 +1,3 @@
+id,label_de,label_en,required_skills,default_code
+WT-001,Grundpflege,,SRK,GP
+WT-002,Wundpflege,Wound Care,SRK;WUND,WP
