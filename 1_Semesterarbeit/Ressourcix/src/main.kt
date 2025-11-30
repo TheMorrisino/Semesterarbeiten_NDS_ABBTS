@@ -10,7 +10,7 @@ fun main (){
     var SantosPedro = Employee(Role = 30u, workloadPercentage = 9000.toUByte(),
         Holidays = 8.toUByte(), AbsentOnBusiness = false)
 
-    println()
+    println(TiagoTest)
     println("MAIN Programm")
     println(MeierMorris.Id)
     println(DeSousaSaTiago.Id)
