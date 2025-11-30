@@ -1,0 +1,31 @@
+@startuml
+'--- Definition der Employee class ------------------------------------
+
+class Employee {
+    +Id : UInt {readOnly}
+    +Role : UInt
+    +workloadPercentage : UByte
+    +Tags : List<UByte> = List(30) { 0u }
+    +Holidays : UByte
+    +AbsentOnBusiness : Boolean
+}
+
+'--- Companion object  ----------------------------------
+class EmployeeCompanion {
+    -IDcount : UInt = 0u
+    -idliste : List<UInt> = {0u}
+    -generateId() : UInt
+}
+
+'--- Beziehung zum Objet Employee -----------------
+Employee ..> EmployeeCompanion : «companion»
+
+'--- Notes ------------------------------------------------------------
+note right of EmployeeCompanion
+  • generateId() erzeugt eine eindeutige ID
+  • Solange IDcount bereits in idliste vorkommt, wird er inkrementiert
+  • Die neue ID wird zu idliste hinzugefügt
+  • Es werden Debug‑Informationen ausgegeben
+end note
+
+@enduml
