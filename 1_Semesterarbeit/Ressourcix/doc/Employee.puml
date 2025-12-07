@@ -2,12 +2,14 @@
 '--- Definition der Employee class ------------------------------------
 
 class Employee {
-    +Id : UInt {readOnly}
-    +Role : UInt
-    +workloadPercentage : UByte
-    +Tags : List<UByte> = List(30) { 0u }
-    +Holidays : UByte
-    +AbsentOnBusiness : Boolean
+    -Id : UInt {readOnly}
+    -Role : UInt
+    -workloadPercentage : UByte
+    -Tags : List<UByte> = List(30) { 0u }
+    -Holidays : UByte
+    -AbsentOnBusiness : Boolean
+    --
+    +EmployeeCounter()
 }
 
 '--- Companion object  ----------------------------------
