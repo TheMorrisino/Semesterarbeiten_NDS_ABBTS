@@ -1,0 +1,42 @@
+class IDManager(
+    private var csvList: UInt = 0u   //ToDo eine CSV Liste zu importierten
+
+
+) {
+    private var nextId: UInt = 0u
+    private var id : UInt = 0u
+    private val issuedIds = mutableSetOf<UInt>(0u)
+
+    @Synchronized
+    fun generateId(): UInt {
+        if (nextId == UInt.MAX_VALUE) {
+            println("Maximum number ${UInt.MAX_VALUE}")
+            throw IllegalStateException("No more IDs available")
+
+        } else {
+
+            while (nextId in issuedIds) {
+                 id = nextId++ }
+
+            //Weil der letzte durchgang nicht zählt
+            id = nextId++
+            issuedIds.add(id)
+            nextId -= 1u
+        }
+
+
+
+
+
+
+        println("\nDebug")
+        println("Issued IDs: $issuedIds")
+        println("Next ID to issue: $nextId")
+        println("Returned ID: $id")
+
+        return id
+    }
+
+
+    fun isIssued(id: UInt): Boolean = id in issuedIds
+}

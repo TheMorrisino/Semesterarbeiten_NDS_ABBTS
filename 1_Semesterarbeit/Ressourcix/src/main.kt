@@ -1,20 +1,49 @@
 fun main (){
+    var employeeID = IDManager()
+    var FerienID = IDManager()
 
 
-    var MeierMorris = Employee(Role = 10u, workloadPercentage = 80.toUByte(),
+    var MeierMorris = Employee(employeeID.generateId(),Role = 10u, workloadPercentage = 80.toUByte(),
         Holidays = 20.toUByte(), AbsentOnBusiness = false)
 
-    var DeSousaSaTiago = Employee(Role = 30u, workloadPercentage = 9000.toUByte(),
+    var DeSousaSaTiago = Employee(employeeID.generateId(),Role = 30u, workloadPercentage = 9000.toUByte(),
         Holidays = 2.toUByte(), AbsentOnBusiness = false)
 
-    var SantosPedro = Employee(Role = 30u, workloadPercentage = 9000.toUByte(),
+    var SantosPedro = Employee(employeeID.generateId(),Role = 30u, workloadPercentage = 9000.toUByte(),
         Holidays = 8.toUByte(), AbsentOnBusiness = false)
 
-    println(TiagoTest)
+
+    MeierMorris
+    var employeeMorris = FerienEintrag(MeierMorris.Id)
+        employeeMorris.add(HolidayWeek(5u, 8u))
+
+    employeeMorris.add(HolidayWeek(3u, 2u))
+    employeeMorris.add(HolidayWeek(1u, 2u))
+    employeeMorris.add(HolidayWeek(9u, 48u))
+    employeeMorris.add(HolidayWeek(10u, 55u))
+
+    employeeMorris.remove(HolidayWeek(10u,55u))
+
+
+
+
+    println()
     println("MAIN Programm")
-    println(MeierMorris.Id)
-    println(DeSousaSaTiago.Id)
-    println(SantosPedro.Id)
+
+    println(employeeMorris)
+    println(employeeMorris.holidayWeeks)
+
+
+
+        println(MeierMorris.Id)
+        println(DeSousaSaTiago.Id)
+        println(SantosPedro.Id)
+
+    println(employeeID.isIssued(2u))
+
+
+
+
 
 
 
