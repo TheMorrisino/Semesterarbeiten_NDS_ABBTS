@@ -1,20 +1,24 @@
 class MitarbeiterVerwaltung (
-    private val Mitarbeiters: MutableList <Mitarbeiter>){
+    private val mitarbeiters: MutableList <Mitarbeiter>){
 
-    fun einfuegen(){
+    fun einfuegen(mitarbeiters: Mitarbeiter): Boolean {
+        mitarbeiters.add(Mitarbeiter)
+    }
+
+    fun loeschen(): Boolean {
 
     }
 
-    fun loeschen(){
+    fun suchenNachId(Id: Int): Boolean {
 
+        return true
     }
 
-    fun suchenNachId(){
+    fun suchenNachKuerzel(kuerzel: String): Boolean {
 
-    }
-
-    fun suchenNachKuerzel(){
-
+        return true
     }
 
 }
+
+

@@ -9,14 +9,25 @@ class Jahresplan (
     }
 
     fun loeschen(){
+        //plan.clear()
+        val Spalte = KW
+        val Zeile = AnzMitarbeiter
+
+        for (Spalte in 1 .. KW){
+            for (Spalte in 1 .. AnzMitarbeiter ){
+
+            }
+        }
+    }
+
+    fun importierenCSV(
+        pfad: String){
 
     }
 
-    fun importieren(){
-
-    }
-
-    fun exportieren(){
+    fun exportierenCSV(
+        pfad: String,
+        dateiname: String){
 
     }
 
