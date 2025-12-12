@@ -4,7 +4,6 @@ class Jahresplan (
     private var AnzMitarbeiter: Int) {
 
 
-
     fun erstellen(){
 
     }
