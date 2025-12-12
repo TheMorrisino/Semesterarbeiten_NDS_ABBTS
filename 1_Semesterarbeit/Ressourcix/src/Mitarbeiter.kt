@@ -1,6 +1,6 @@
 import kotlin.UInt
 
-class Employee(
+class Mitarbeiter(
     val Id: UInt = generateId(),
     var Role : UInt,
     var workloadPercentage : UByte,
