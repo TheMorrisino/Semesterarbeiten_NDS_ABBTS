@@ -1,4 +1,103 @@
 fun main (){
+    // Pedro Test Bereich
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Tiago Test Bereich
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Morris Test Bereich
+
     var employeeID = IDManager()
     var FerienID = IDManager()
 
@@ -19,21 +118,23 @@ fun main (){
 
     employeeMorris.add(HolidayWeek(3u, 2u))
     employeeMorris.add(HolidayWeek(1u, 2u))
-    employeeMorris.add(HolidayWeek(9u, 48u))
-    employeeMorris.holidayWeeks.get(2)
+    employeeMorris.add(HolidayWeek(9u, 52u))
+//    employeeMorris.holidayWeeks.get(2)
 
 
 
     employeeMorris.remove(HolidayWeek(9u,48u))
+    employeeMorris.add(HolidayWeek(45u, 50u))
 
 
 
 
     println()
     println("MAIN Programm")
-
     println(employeeMorris)
-    println(employeeMorris.holidayWeeks)
+    employeeMorris.change(HolidayWeek(45u,51u),HolidayWeek(46u,48u))
+    println(employeeMorris)
+//    println(employeeMorris.holidayWeeks)
 
 
 

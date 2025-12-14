@@ -79,7 +79,10 @@ class FerienEintrag {
   - prioritaet: Int
   - mitarbeiterId: UUID
   - kommentar: String
-  + addWochenBereich()
+  + add()
+  + remove()
+  + change()
+  + toString()
 }
 
 class WochenBereich {

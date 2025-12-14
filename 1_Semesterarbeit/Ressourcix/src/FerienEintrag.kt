@@ -20,7 +20,12 @@ class FerienEintrag (
 
     fun add(holidayWeek : HolidayWeek) {
         val holiday = HolidayWeek(holidayWeek.startWeek, holidayWeek.endWeek)
-        holidayWeeks.add(holiday)
+        if (holiday.startWeek in 1u..52u && holiday.endWeek in 1u..52u) {
+            holidayWeeks.add(holiday)
+        } else {
+            println("Ungültige KW Woche: ${holiday.startWeek}–${holiday.endWeek}. " +
+                    "Erlaubt ist nur KW 1 bis KW 52.")
+        }
 
     }
     fun remove (week: HolidayWeek) {
@@ -32,8 +37,34 @@ class FerienEintrag (
         }
     }
 
-    fun change (){
-        // ToDO "Ändern der Ferien Einträge"
+    fun change (oldHolidayWeek: HolidayWeek, newHolidayWeek: HolidayWeek)   {
+
+       if (oldHolidayWeek in holidayWeeks) {
+            // Suche im Index
+           val index = holidayWeeks.indexOfFirst {
+           ((it.startWeek == oldHolidayWeek.startWeek) and (it.endWeek == oldHolidayWeek.endWeek)) }
+           // Wenn gefunden ersetzte diesen Index mit neuen Werten
+           holidayWeeks[index] = newHolidayWeek
+           println("Alter Eintrag $oldHolidayWeek hat Index: $index")
+           // Überprüfung, ob neuer Index der gleiche ist wie der alte
+           val indexNew = holidayWeeks.indexOfFirst {
+               ((it.startWeek == newHolidayWeek.startWeek) and (it.endWeek == newHolidayWeek.endWeek)) }
+           println("Alter Eintrag wird mit neuem ersetzt $newHolidayWeek hat Index: $indexNew")
+
+
+        } else {
+           println("Eintrag nicht gefunden")
+           println("Debugging")
+           for ((index, oldHolidayWeek) in holidayWeeks.withIndex()) {
+               println("Index $index, Wert $oldHolidayWeek")
+        }
+
+
+
+
+
+        }
+
     }
 
 
