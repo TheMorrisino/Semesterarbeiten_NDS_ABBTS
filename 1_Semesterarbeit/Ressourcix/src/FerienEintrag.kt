@@ -32,6 +32,10 @@ class FerienEintrag (
         }
     }
 
+    fun change (){
+        // ToDO "Ändern der Ferien Einträge"
+    }
+
 
     override fun toString(): String {
 

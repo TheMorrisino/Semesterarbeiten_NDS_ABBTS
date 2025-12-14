@@ -1,0 +1,130 @@
+@startuml
+
+' =========================
+' Basis-Werteobjekte & Enums
+' =========================
+enum Rolle {
+  LEHRLING
+  ANGESTELLTER
+  TEAMLEITER
+  MANAGER
+}
+
+enum FerienArt {
+  OFFEN
+  WUNSCH
+  SYSTEM_VORSCHLAG
+  BESTAETIGT
+}
+
+enum FerienStatus {
+  OFFEN,
+  ANGEFRAGT
+  GENEHMIGT
+  GENERIERT
+  ABGELEHNT
+  STORNIERT
+}
+
+enum Schweregrad {
+  KRITISCH
+  HOCH
+  MITTEL
+  NIEDRIG
+}
+
+class Qualifikation {
+  - name: String
+}
+
+' =========================
+' Kern-Domäne
+' =========================
+
+
+class JahresPlan {
+    - jahr: Int
+    - generiertJahresplan(MitarbeiterVerwaltung.Miterarbeiters)
+}
+
+object mitarbeiterVerwaltung{
+     - Miterarbeiters: Mutiblelist <Mitarbeiter>
+     + einfuege()
+     + lösche()
+     + sucheNachId()
+     + sucheNachKuerzel()
+}
+
+class Mitarbeiter {
+  - id: Uint
+  - kürzel : String
+  - vorname: String
+  - nachname: String
+  - pensumProzent: Int
+  - rolle: Rolle = ANGESTELLTER
+  - qualifikationen: List<Qualifikation>
+  - ferienEintraege: Mutiblelist<FerienEintrag>
+  Mitarbeiter(id, vorname, nachname, pensumProzent)
+  + change()
+  + generiereFerienantrag()
+  + generiereKürzel()
+}
+
+class FerienEintrag {
+  - id: Uint
+  - jahr: Int
+  - wochenBereich: WochenBereich
+  - art: FerienArt
+  - status: FerienStatus
+  - prioritaet: Int
+  - mitarbeiterId: UUID
+  - kommentar: String
+  + addWochenBereich()
+}
+
+class WochenBereich {
+  - startWoche: Uint
+  - endWoche: Uint
+}
+
+object idManager {
+    var Ids : List <Int>
+    CheckId() : Int
+    GeneriereID() : Int
+}
+
+' =========================
+' Beziehungen
+' =========================
+
+JahresPlan "1..n  " -->  mitarbeiterVerwaltung
+mitarbeiterVerwaltung --> "1..n  " Mitarbeiter
+Mitarbeiter --> "1..n  "  FerienEintrag
+Mitarbeiter  -->   Qualifikation
+FerienEintrag  --> "1..n "  WochenBereich
+
+idManager  <--   mitarbeiterVerwaltung
+idManager  <--   FerienEintrag
+idManager  <--   Mitarbeiter
+
+Rolle <-- Mitarbeiter
+Schweregrad <-- Mitarbeiter
+
+FerienEintrag <-- FerienArt
+FerienEintrag <-- FerienStatus
+
+
+note left of JahresPlan
+  Jahresplan für eine Organisation.
+  Mitarbeiterzentriert: Alle Ferien werden pro Mitarbeiter gespeichert.
+end note
+
+note left of FerienEintrag
+  Ferienblock für einen Mitarbeiter.
+  Basierend auf Wochenbereichen.
+  Erweiterbar auf Tagesbereiche.
+end note
+
+
+
+@enduml

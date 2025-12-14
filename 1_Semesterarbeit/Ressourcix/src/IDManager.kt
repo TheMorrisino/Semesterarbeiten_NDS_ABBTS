@@ -26,9 +26,6 @@ class IDManager(
 
 
 
-
-
-
         println("\nDebug")
         println("Issued IDs: $issuedIds")
         println("Next ID to issue: $nextId")

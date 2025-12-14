@@ -20,9 +20,11 @@ fun main (){
     employeeMorris.add(HolidayWeek(3u, 2u))
     employeeMorris.add(HolidayWeek(1u, 2u))
     employeeMorris.add(HolidayWeek(9u, 48u))
-    employeeMorris.add(HolidayWeek(10u, 55u))
+    employeeMorris.holidayWeeks.get(2)
 
-    employeeMorris.remove(HolidayWeek(10u,55u))
+
+
+    employeeMorris.remove(HolidayWeek(9u,48u))
 
 
 
