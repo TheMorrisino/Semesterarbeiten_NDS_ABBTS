@@ -142,7 +142,7 @@ fun main (){
         println(DeSousaSaTiago.Id)
         println(SantosPedro.Id)
 
-    println(employeeID.isIssued(2u))
+    println(employeeID.Issued(2u))
 
 
 

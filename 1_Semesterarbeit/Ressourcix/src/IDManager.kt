@@ -14,7 +14,8 @@ class IDManager(
             throw IllegalStateException("No more IDs available")
 
         } else {
-
+            // ToDO Wenn eine ID gelöscht wird zBsp. von einer Liste von 1 bis 10 wird die ID 5 gelöscht darf die Nie mehr gebraucht werden.
+            // TOdO Liste beim löschen muss sich zusammenrücken
             while (nextId in issuedIds) {
                  id = nextId++ }
 
@@ -35,5 +36,5 @@ class IDManager(
     }
 
 
-    fun isIssued(id: UInt): Boolean = id in issuedIds
+    fun Issued(id: UInt): Boolean = id in issuedIds
 }

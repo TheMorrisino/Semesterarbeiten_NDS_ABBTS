@@ -24,6 +24,16 @@ package "Ressourcix" {
 
     }
 
+    package "Datenverwaltung" {
+
+    }
+
+note top of Datenverwaltung
+  - Verwaltung von Algorithmen, Filter, Parametrierung etc.
+  - Datenspeicherung (CSV Converter)
+end note
 }
+
+
 
 @enduml
