@@ -18,7 +18,7 @@ class FerienEintrag (
     var holidayWeek = HolidayWeek()
 
 
-    fun add(holidayWeek : HolidayWeek) {
+    fun addHolidayWeek(holidayWeek : HolidayWeek) {
         val holiday = HolidayWeek(holidayWeek.startWeek, holidayWeek.endWeek)
         if (holiday.startWeek in 1u..52u && holiday.endWeek in 1u..52u) {
             holidayWeeks.add(holiday)
@@ -28,7 +28,7 @@ class FerienEintrag (
         }
 
     }
-    fun remove (week: HolidayWeek) {
+    fun removeHolidayWeek (week: HolidayWeek) {
         val removed = holidayWeeks.remove(week)   // true, wenn etwas entfernt wurde
         if (removed) {
             println("Entfernt: $week")
@@ -37,7 +37,7 @@ class FerienEintrag (
         }
     }
 
-    fun change (oldHolidayWeek: HolidayWeek, newHolidayWeek: HolidayWeek)   {
+    fun changeHolidayWeek (oldHolidayWeek: HolidayWeek, newHolidayWeek: HolidayWeek)   {
 
        if (oldHolidayWeek in holidayWeeks) {
             // Suche im Index

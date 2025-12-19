@@ -114,17 +114,17 @@ fun main (){
 
     MeierMorris
     var employeeMorris = FerienEintrag(MeierMorris.Id)
-        employeeMorris.add(HolidayWeek(5u, 8u))
+        employeeMorris.addHolidayWeek(HolidayWeek(5u, 8u))
 
-    employeeMorris.add(HolidayWeek(3u, 2u))
-    employeeMorris.add(HolidayWeek(1u, 2u))
-    employeeMorris.add(HolidayWeek(9u, 52u))
+    employeeMorris.addHolidayWeek(HolidayWeek(3u, 2u))
+    employeeMorris.addHolidayWeek(HolidayWeek(1u, 2u))
+    employeeMorris.addHolidayWeek(HolidayWeek(9u, 52u))
 //    employeeMorris.holidayWeeks.get(2)
 
 
 
-    employeeMorris.remove(HolidayWeek(9u,48u))
-    employeeMorris.add(HolidayWeek(45u, 50u))
+    employeeMorris.removeHolidayWeek(HolidayWeek(9u,48u))
+    employeeMorris.addHolidayWeek(HolidayWeek(45u, 50u))
 
 
 
@@ -132,7 +132,7 @@ fun main (){
     println()
     println("MAIN Programm")
     println(employeeMorris)
-    employeeMorris.change(HolidayWeek(45u,51u),HolidayWeek(46u,48u))
+    employeeMorris.changeHolidayWeek(HolidayWeek(45u,51u),HolidayWeek(46u,48u))
     println(employeeMorris)
 //    println(employeeMorris.holidayWeeks)
 
