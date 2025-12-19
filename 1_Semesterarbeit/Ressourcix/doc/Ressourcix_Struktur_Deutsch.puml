@@ -168,10 +168,9 @@ PlanBewertung "1" o-- "1" BewertungsZusammenfassung
 
 FerienPlaner "1" o-- "1" PlanBewertung
 
-note right of JahresPlan
+note top of JahresPlan
   Jahresplan für eine Organisation.
-  Mitarbeiterzentriert: Alle Ferien
-   werden pro Mitarbeiter gespeichert.
+  Mitarbeiterzentriert: Alle Ferien werden pro Mitarbeiter gespeichert.
 end note
 
 note right of FerienEintrag
