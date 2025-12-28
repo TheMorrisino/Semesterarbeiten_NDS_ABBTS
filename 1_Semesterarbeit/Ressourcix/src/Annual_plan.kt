@@ -1,4 +1,4 @@
-class Jahresplan (
+class Annual_plan (
     private val Jahr: Int,
     private val KW: Int = 52,
     private var AnzMitarbeiter: Int) {
