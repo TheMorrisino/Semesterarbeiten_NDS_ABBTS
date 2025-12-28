@@ -102,7 +102,7 @@ fun main (){
     var FerienID = IDManager()
 
 
-    var MeierMorris = Employee(employeeID.generateId(),Role = 10u, workloadPercentage = 80.toUByte(),
+    var MeierMorris = Employee(employeeID.generateId(), Role = 10u, workloadPercentage = 80.toUByte(),
         Holidays = 20.toUByte(), AbsentOnBusiness = false)
 
     var DeSousaSaTiago = Employee(employeeID.generateId(),Role = 30u, workloadPercentage = 9000.toUByte(),
@@ -112,7 +112,6 @@ fun main (){
         Holidays = 8.toUByte(), AbsentOnBusiness = false)
 
 
-    MeierMorris
     var employeeMorris = FerienEintrag(MeierMorris.Id)
         employeeMorris.addHolidayWeek(HolidayWeek(5u, 8u))
 
@@ -147,17 +146,17 @@ fun main (){
 
 
 
-
-    morris.setFirstName("Morris")
-    morris.setLastName("Meier")
-    println(morris.getAbbreviation())
-    println(morris.getRole())
-
-    qualification.add("Meister")
-    qualification.add("Kaki")
-
-
-    println(morris.getQualifications().forEach {})
+//
+//    morris.setFirstName("Morris")
+//    morris.setLastName("Meier")
+//    println(morris.getAbbreviation())
+//    println(morris.getRole())
+//
+//    qualification.add("Meister")
+//    qualification.add("Kaki")
+//
+//
+//    println(morris.getQualifications().forEach {})
 }
 
 
