@@ -134,7 +134,7 @@ private fun rateSingleWeek(year: Int, management: EmployeeManagement) {
         return
     }
 
-    println("Neuer Status: 1=OK (APPROVED), 2=NO (REJECTED)")
+    println("Neuer Status: 1=OK (APPROVED), 2=NOK (REJECTED)")
     print("Auswahl: ")
     when (ui.readChoice()) {
         1 -> {
@@ -143,7 +143,7 @@ private fun rateSingleWeek(year: Int, management: EmployeeManagement) {
         }
         2 -> {
             entry.setStatus(week, VacationStatus.REJECTED)
-            println("KW $week -> NO")
+            println("KW $week -> NOK")
         }
         else -> println("Abgebrochen.")
     }

@@ -26,7 +26,7 @@ class UI () : UserInterface {
         println("3) Mitarbeiter löschen")
         println("4) Ferien automatisch generieren")
         println("5) Kalender anzeigen")
-        println("6) Woche bewerten (OK/NO)")
+        println("6) Woche bewerten (OK/NOK)")
         println("0) Beenden")
         print("Auswahl: ")
     }

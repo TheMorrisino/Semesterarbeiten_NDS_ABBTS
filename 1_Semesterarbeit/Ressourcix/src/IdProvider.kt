@@ -34,10 +34,10 @@ class IdProvider(
 
 
 
-        println("\nDebug")
-        println("Issued IDs: $issuedIds")
-        println("Next ID to issue: $nextId")
-        println("Returned ID: $id")
+//        println("\nDebug")
+//        println("Issued IDs: $issuedIds")
+//        println("Next ID to issue: $nextId")
+//        println("Returned ID: $id")
 
         return id
     }
