@@ -8,7 +8,7 @@
 //}
 class IdProvider(
     var start: UInt,
-    private var csvList: UInt = 0u  //ToDo eine CSV Liste zu importierten
+//    private var csvList: UInt = 0u  //ToDo eine CSV Liste zu importierten
 
 ) {
 
@@ -23,8 +23,6 @@ class IdProvider(
             throw IllegalStateException("No more IDs available")
 
         } else {
-            // ToDO Wenn eine ID gelöscht wird zBsp. von einer Liste von 1 bis 10 wird die ID 5 gelöscht darf die Nie mehr gebraucht werden.
-            // TOdO Liste beim löschen muss sich zusammenrücken
             while (nextId in issuedIds) {
                 id = nextId++ }
 
@@ -36,10 +34,10 @@ class IdProvider(
 
 
 
-        println("\nDebug")
-        println("Issued IDs: $issuedIds")
-        println("Next ID to issue: $nextId")
-        println("Returned ID: $id")
+//        println("\nDebug")
+//        println("Issued IDs: $issuedIds")
+//        println("Next ID to issue: $nextId")
+//        println("Returned ID: $id")
 
         return id
     }
