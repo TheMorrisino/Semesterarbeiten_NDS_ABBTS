@@ -1,4 +1,4 @@
-class GUI () : UserInterface {
+class UI () : UserInterface {
     override fun showMessage(msg: String, type: MessageType) {
         val prefix = when (type) {
             MessageType.INFO -> "[INFO] "
@@ -30,6 +30,8 @@ class GUI () : UserInterface {
         println("0) Beenden")
         print("Auswahl: ")
     }
+
+
 
     override fun printCalendar(year: Int, employees: List<Employee>) {
         // Wir delegieren an die bestehende CalendarOutput‑Klasse,

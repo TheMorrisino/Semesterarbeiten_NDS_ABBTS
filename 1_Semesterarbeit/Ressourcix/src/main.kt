@@ -9,7 +9,7 @@
  * - Einzelne Woche bewerten (APPROVED/REJECTED)
  */
 
-var ui : UserInterface = GUI()
+var ui : UserInterface = UI()
 
 fun main() {
     val year = 2026
