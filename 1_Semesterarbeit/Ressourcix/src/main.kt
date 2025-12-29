@@ -8,6 +8,9 @@
  * - Kalender in der Konsole anzeigen
  * - Einzelne Woche bewerten (APPROVED/REJECTED)
  */
+
+var ui : UserInterface = GUI()
+
 fun main() {
     val year = 2026
 
@@ -17,9 +20,11 @@ fun main() {
 
     val calendarOutput: CalendarOutput = ConsoleCalendarOutput()
 
+
+
     while (true) {
-        printMainMenu(year)
-        when (readChoice()) {
+        ui.printMainMenu(year)
+        when (ui.readChoice()) {
             1 -> listEmployees(management)
             2 -> addEmployee(management, employeeIds)
             3 -> deleteEmployee(management)
@@ -27,25 +32,25 @@ fun main() {
             5 -> calendarOutput.printYearPlan(year, management.listAll())
             6 -> rateSingleWeek(year, management)
             0 -> return
-            else -> println("Unbekannte Auswahl.")
+            else -> ui.showMessage("Unbekannte Auswahl.", MessageType.WARNING)
         }
     }
 }
 
-private fun printMainMenu(year: Int) {
-    println()
-    println("=== Ressourcix (Jahresplan $year) ===")
-    println("1) Mitarbeiter anzeigen")
-    println("2) Mitarbeiter hinzufügen")
-    println("3) Mitarbeiter löschen")
-    println("4) Ferien automatisch generieren")
-    println("5) Kalender anzeigen")
-    println("6) Woche bewerten (OK/NO)")
-    println("0) Beenden")
-    print("Auswahl: ")
-}
+//private fun printMainMenu(year: Int) {
+//    println()
+//    println("=== Ressourcix (Jahresplan $year) ===")
+//    println("1) Mitarbeiter anzeigen")
+//    println("2) Mitarbeiter hinzufügen")
+//    println("3) Mitarbeiter löschen")
+//    println("4) Ferien automatisch generieren")
+//    println("5) Kalender anzeigen")
+//    println("6) Woche bewerten (OK/NO)")
+//    println("0) Beenden")
+//    print("Auswahl: ")
+//}
 
-private fun readChoice(): Int = readLine()?.trim()?.toIntOrNull() ?: -1
+//private fun readChoice(): Int = readLine()?.trim()?.toIntOrNull() ?: -1
 
 private fun listEmployees(management: EmployeeManagement) {
     println()
@@ -131,7 +136,7 @@ private fun rateSingleWeek(year: Int, management: EmployeeManagement) {
 
     println("Neuer Status: 1=OK (APPROVED), 2=NO (REJECTED)")
     print("Auswahl: ")
-    when (readChoice()) {
+    when (ui.readChoice()) {
         1 -> {
             entry.setStatus(week, VacationStatus.APPROVED)
             println("KW $week -> OK")
