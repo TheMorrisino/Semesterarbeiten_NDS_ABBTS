@@ -1,3 +1,7 @@
+package ressourcix.ui
+
+import ressourcix.domain.Employee
+
 // in Progress
 interface UserInterface {
     /** Zeigt eine Nachricht an (Info, Warnung, Fehler). */

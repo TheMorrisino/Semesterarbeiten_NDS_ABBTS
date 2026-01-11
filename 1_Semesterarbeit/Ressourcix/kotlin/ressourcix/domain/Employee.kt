@@ -1,8 +1,6 @@
 package ressourcix.domain
 
-/**
- * Employee in deinem Stil: private Felder + Getter/Setter.
- */
+
 class Employee(private val id: UInt) {
     private var firstName: String = ""
     private var lastName: String = ""
