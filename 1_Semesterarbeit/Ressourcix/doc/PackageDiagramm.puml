@@ -1,0 +1,39 @@
+@startuml
+package "Ressourcix" {
+    object main
+    object idManager
+    class Jahresplan
+
+
+    package "Personalverwaltung"{
+        object mitarbeiterverwaltung
+        enum Schweregrad
+        enum Rolle
+        class Mitarbeiter
+        class Qualifikation
+
+
+
+    }
+
+    package "PersonalFerien"{
+        enum FerienStatus
+        enum FerienArt
+        class FerienEintrag
+        class WochenBereich
+
+    }
+
+    package "Datenverwaltung" {
+
+    }
+
+note top of Datenverwaltung
+  - Verwaltung von Algorithmen, Filter, Parametrierung etc.
+  - Datenspeicherung (CSV Converter)
+end note
+}
+
+
+
+@enduml
