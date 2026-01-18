@@ -55,7 +55,7 @@ class MainMenu(
         io.println("3) Mitarbeiter löschen")
         io.println("4) Ferien automatisch generieren")
         io.println("5) Kalender anzeigen")
-        io.println("6) Woche bewerten (OK/NO)")
+        io.println("6) Woche bewerten (OK/NOK)")
         io.println("7) Ferien manuell hinzufügen")
         io.println("0) Beenden")
         io.print("Auswahl: ")
@@ -133,7 +133,7 @@ class MainMenu(
                 return
             }
 
-        io.println("Neuer Status: 1=OK (APPROVED), 2=NO (REJECTED)")
+        io.println("Neuer Status: 1=OK (APPROVED), 2=NOK (REJECTED)")
         when (io.readChoice("Auswahl: ")) {
             1 -> {
                 entry.setStatus(week, VacationStatus.APPROVED)
@@ -141,7 +141,7 @@ class MainMenu(
             }
             2 -> {
                 entry.setStatus(week, VacationStatus.REJECTED)
-                io.println("KW $week -> NO")
+                io.println("KW $week -> NOK")
             }
             else -> io.println("Abgebrochen.")
         }
