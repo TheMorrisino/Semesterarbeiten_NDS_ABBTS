@@ -31,7 +31,9 @@ class Employee(private val id: UInt) {
         workloadPercent = value
     }
 
-    fun setRole(value: Role) { role = value }
+    fun setRole(value: Role) {
+        role = value
+    }
 
     fun getFullName(): String =
         listOf(firstName, lastName).filter { it.isNotBlank() }.joinToString(" ")
@@ -44,6 +46,7 @@ class Employee(private val id: UInt) {
     fun addVacationEntry(entry: VacationEntry) {
         vacationEntries.add(entry)
     }
+
 }
 
 fun Employee.label(): String =

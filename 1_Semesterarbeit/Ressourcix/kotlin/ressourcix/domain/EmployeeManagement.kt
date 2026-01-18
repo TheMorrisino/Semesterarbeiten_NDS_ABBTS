@@ -73,4 +73,14 @@ class EmployeeManagement {
             employees.add(e)
         }
     }
+
+    fun readAllEmVacation () {
+        var allVacation = employees
+
+    }
+
+    fun showAllEmVacation () {
+
+    }
+
 }
