@@ -11,7 +11,11 @@ import ressourcix.util.IdProvider
  */
 class EmployeeManagement () {
     private val employees: MutableList<Employee> = mutableListOf()
-     fun mitarbeiterVerwaltung(io: ConsoleIO , management: EmployeeManagement , employeeIds: IdProvider) {
+
+
+
+
+    fun mitarbeiterVerwaltung(io: ConsoleIO , management: EmployeeManagement , employeeIds: IdProvider) {
         io.println()
         io.println("=== Ressourcix Mitarbeiter Verwaltung ===")
         io.println("1) Mitarbeiter anzeigen")
@@ -132,12 +136,52 @@ class EmployeeManagement () {
         }
     }
 
-    fun readAllEmVacation () {
-        var allVacation = employees
 
+    fun VacationEntry.overlapsWith(other: VacationEntry): Boolean {
+        // Nur überlappen wenn gleiches Jahr
+        if (this.year != other.year) return false
+
+        // Wochen-Überschneidung prüfen
+        return this.range.overlaps(other.range)
     }
 
-    fun showAllEmVacation () {
+    fun checkVacationOverlaps(maxAllowed: Int = 1) {
+        val allVacation = employees.flatMap { it.getVacationEntries() }
+        val overlaps = mutableListOf<Pair<VacationEntry, VacationEntry>>()
+
+        for (i in allVacation.indices) {
+            for (j in i + 1 until allVacation.size) {
+                val vacation1 = allVacation[i]
+                val vacation2 = allVacation[j]
+
+                if (vacation1.overlapsWith(vacation2)) {
+                    overlaps.add(Pair(vacation1, vacation2))
+                }
+            }
+        }
+
+
+        println("=== Überschneidungs-Check ===")
+        println("Gefundene Überschneidungen: ${overlaps.size}")
+        println("Maximal erlaubt: $maxAllowed")
+
+        if (overlaps.size > maxAllowed) {
+            println("WARNUNG: ${overlaps.size - maxAllowed} zu viele Überschneidung(en)!")
+            println()
+            println("Überschneidungen:")
+            overlaps.forEach { (v1, v2) ->
+                val emp1 = findById(v1.employeeId)
+                val emp2 = findById(v2.employeeId)
+                println("${emp1?.getFullName()} (Wochen ${v1.range.startWeek}-${v1.range.endWeek}) <-> ${emp2?.getFullName()} (Wochen ${v2.range.startWeek}-${v2.range.endWeek})")
+            }
+        } else {
+            println("OK: Anzahl Überschneidungen im erlaubten Bereich.")
+            overlaps.forEach { (v1, v2) ->
+                val emp1 = findById(v1.employeeId)
+                val emp2 = findById(v2.employeeId)
+                println("${emp1?.getFullName()} (Wochen ${v1.range.startWeek}-${v1.range.endWeek}) <-> ${emp2?.getFullName()} (Wochen ${v2.range.startWeek}-${v2.range.endWeek})")
+            }
+        }
 
     }
 

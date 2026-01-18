@@ -33,4 +33,8 @@ class VacationEntry(
         require(hasWeek(week)) { "week $week is not part of this VacationEntry (range ${range.startWeek}-${range.endWeek})." }
         statusByWeek[week] = status
     }
+
+    override fun toString(): String {
+        return "Urlaub #$id (MA-ID: $employeeId) - Jahr $year, Wochen ${range.startWeek}-${range.endWeek}"
+    }
 }
