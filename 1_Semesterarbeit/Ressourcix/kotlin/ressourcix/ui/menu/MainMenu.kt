@@ -28,9 +28,7 @@ class MainMenu(
             printMainMenu()
             try {
                 when (io.readChoice()) {
-                    1 -> {
-                        management.mitarbeiterVerwaltung(io,management,employeeIds)
-                    }
+                    1 -> { management.mitarbeiterVerwaltung(io,management,employeeIds)}
                     2 -> calendarOutput.printYearPlan(year, management.listAll())
                     3 -> rateSingleWeek()
                     4 -> addVacationManual()
