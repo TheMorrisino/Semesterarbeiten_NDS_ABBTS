@@ -15,8 +15,8 @@ interface UserInterface {
 
     /** Gibt das Hauptmenü aus. */
     fun printMainMenu(year: Int)
-
-    /** Gibt die aktuelle Jahresplanung aus (Kalender). */
-    fun printCalendar(year: Int, employees: List<Employee>)
+//
+//    /** Gibt die aktuelle Jahresplanung aus (Kalender). */
+//    fun printCalendar(year: Int, employees: List<Employee>)
 
 }
