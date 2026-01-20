@@ -1,6 +1,7 @@
 package ressourcix.app
 
 import ressourcix.domain.EmployeeManagement
+import ressourcix.domain.VacationEntry
 import ressourcix.ui.ConsoleIO
 import ressourcix.ui.menu.MainMenu
 import ressourcix.util.IdProvider
@@ -14,16 +15,25 @@ class App(
     private val management: EmployeeManagement = EmployeeManagement(),
     private val employeeIds: IdProvider = IdProvider(start = 11u), // Seeds nutzen 1..10
     private val vacationIds: IdProvider = IdProvider(start = 1u),
+
+
 ) {
     fun run() {
         // Seed: 10 Mitarbeiter, damit du sofort testen kannst
         management.seed10Employees()
+
+
 
         MainMenu(
             io = io,
             management = management,
             employeeIds = employeeIds,
             vacationIds = vacationIds
+
+
         ).loop()
+
+        management.checkVacationOverlaps()
+
     }
 }
