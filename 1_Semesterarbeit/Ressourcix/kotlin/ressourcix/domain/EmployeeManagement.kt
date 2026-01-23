@@ -10,7 +10,7 @@ import ressourcix.util.IdProvider
  * - überprüft Überschneidungen bei Ferien
  */
 class EmployeeManagement () {
-    private val employees: MutableList<Employee> = mutableListOf()
+     val employees: MutableList<Employee> = mutableListOf()
 
 
 
@@ -39,7 +39,7 @@ class EmployeeManagement () {
         println()
         println("--- Mitarbeiter ---")
         management.listAll().forEach {
-            io.println("ID=${it.getId()} | ${it.getAbbreviation().ifBlank { "??" }} | ${it.getFullName()}")
+            io.println("ID=${it.getId()} | ${it.abbreviationSting().ifBlank { "??" }} | ${it.getFullName()}")
         }
     }
     private fun addEmployee(io: ConsoleIO , management: EmployeeManagement , employeeIds: IdProvider) {
@@ -59,7 +59,7 @@ class EmployeeManagement () {
         }
 
         management.add(employee)
-        io.println("Mitarbeiter hinzugefügt: ID=${employee.getId()} (${employee.getAbbreviation()})")
+        io.println("Mitarbeiter hinzugefügt: ID=${employee.getId()} (${employee.abbreviationSting()})")
     }
 
     private fun deleteEmployee(io: ConsoleIO, management: EmployeeManagement) {

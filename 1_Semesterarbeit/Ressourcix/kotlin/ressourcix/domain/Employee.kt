@@ -6,7 +6,7 @@ class Employee(private val id: UInt) {
     private var lastName: String = ""
     private var workloadPercent: UByte = 100u
     private var role: Role = Role.STAFF
-
+    var Abbreviation : String = ""
     private val vacationEntries: MutableList<VacationEntry> = mutableListOf()
 
     fun getId(): UInt = id
@@ -38,9 +38,10 @@ class Employee(private val id: UInt) {
     fun getFullName(): String =
         listOf(firstName, lastName).filter { it.isNotBlank() }.joinToString(" ")
 
-    fun getAbbreviation(): String {
+    fun abbreviationSting(): String {
         if (firstName.isBlank() || lastName.isBlank()) return ""
-        return (firstName.take(2) + lastName.take(2)).uppercase()
+        Abbreviation = (firstName.take(2) + lastName.take(2)).uppercase()
+        return Abbreviation
     }
 
     fun addVacationEntry(entry: VacationEntry) {
@@ -50,4 +51,4 @@ class Employee(private val id: UInt) {
 }
 
 fun Employee.label(): String =
-    getAbbreviation().ifBlank { getFullName().ifBlank { getId().toString() } }
+    abbreviationSting().ifBlank { getFullName().ifBlank { getId().toString() } }
