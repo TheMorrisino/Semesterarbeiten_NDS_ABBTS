@@ -16,7 +16,7 @@ import ressourcix.util.IdProvider
  */
 class MainMenu(
     private val io: ConsoleIO,
-    private val management: EmployeeManagement,
+    val management: EmployeeManagement,
     private val employeeIds: IdProvider,
     private val vacationIds: IdProvider,
     private val calendarOutput: CalendarOutput = ConsoleCalendarOutput(),
@@ -28,9 +28,7 @@ class MainMenu(
             printMainMenu()
             try {
                 when (io.readChoice()) {
-                    1 -> {
-                        management.mitarbeiterVerwaltung(io,management,employeeIds)
-                    }
+                    1 -> { management.mitarbeiterVerwaltung(io,management,employeeIds)}
                     2 -> calendarOutput.printYearPlan(year, management.listAll())
                     3 -> rateSingleWeek()
                     4 -> addVacationManual()
@@ -53,7 +51,6 @@ class MainMenu(
         io.println("0) Beenden")
         io.print("Auswahl: ")
     }
-
 
     private fun rateSingleWeek() {
         io.println()
