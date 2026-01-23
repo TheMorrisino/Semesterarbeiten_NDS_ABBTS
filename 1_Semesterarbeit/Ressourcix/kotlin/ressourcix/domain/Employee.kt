@@ -1,14 +1,12 @@
 package ressourcix.domain
 
-/**
- * Employee in deinem Stil: private Felder + Getter/Setter.
- */
+
 class Employee(private val id: UInt) {
     private var firstName: String = ""
     private var lastName: String = ""
     private var workloadPercent: UByte = 100u
     private var role: Role = Role.STAFF
-
+    var Abbreviation : String = ""
     private val vacationEntries: MutableList<VacationEntry> = mutableListOf()
 
     fun getId(): UInt = id
@@ -33,20 +31,24 @@ class Employee(private val id: UInt) {
         workloadPercent = value
     }
 
-    fun setRole(value: Role) { role = value }
+    fun setRole(value: Role) {
+        role = value
+    }
 
     fun getFullName(): String =
         listOf(firstName, lastName).filter { it.isNotBlank() }.joinToString(" ")
 
-    fun getAbbreviation(): String {
+    fun abbreviationSting(): String {
         if (firstName.isBlank() || lastName.isBlank()) return ""
-        return (firstName.take(2) + lastName.take(2)).uppercase()
+        Abbreviation = (firstName.take(2) + lastName.take(2)).uppercase()
+        return Abbreviation
     }
 
     fun addVacationEntry(entry: VacationEntry) {
         vacationEntries.add(entry)
     }
+
 }
 
 fun Employee.label(): String =
-    getAbbreviation().ifBlank { getFullName().ifBlank { getId().toString() } }
+    abbreviationSting().ifBlank { getFullName().ifBlank { getId().toString() } }
