@@ -18,4 +18,5 @@ fun main() {
     }.apply { isDaemon = true }.start()
 
     Application.launch(GuiBorderPane::class.java)
+
 }
