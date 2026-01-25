@@ -2,12 +2,13 @@ package ressourcix.gui
 
 import Graphical
 import javafx.application.Application
-import javafx.collections.FXCollections
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.layout.BorderPane
-import javafx.scene.layout.VBox
 import javafx.stage.Stage
+import ressourcix.gui.navigation.*
+import java.util.Optional
+import kotlin.system.exitProcess
 
 class GuiBorderPane : Application() {
 
@@ -16,79 +17,38 @@ class GuiBorderPane : Application() {
         lateinit var graphical: Graphical
     }
 
-    private lateinit var root: BorderPane
-    private lateinit var leftArea: VBox
-
     override fun start(stage: Stage) {
-        root = BorderPane()
-        leftArea = VBox(10.0).apply { prefWidth = 300.0 }
+        val root = BorderPane().apply {
+            top = TopNavigationBar.getView()
+            bottom = bottomBar.getView()
+        }
 
-        // Links: Abkürzungen als ListView
-        val abbreviations = FXCollections.observableArrayList(
-            graphical.employees.map { it.abbreviationSting() } // <- ggf. anpassen!
-        )
-        val listView = ListView(abbreviations)
-        leftArea.children.addAll(Label("Mitarbeitende"), listView)
+        val router = NavigationsController(root)
+        TopNavigationBar.bind(router)
+        router.navigate(Route.DASHBOARD)
 
-        // Menü
-        val menuBar = bar(
-            menu("Datei",
-                item("Neu") { neueDatei() },
-                item("Öffnen") { oeffneDatei() },
-                separator(),
-                item("Beenden") { beenden() }
-            ),
-            menu("Ansicht",
-                item("Left-Bereich ein/aus") { toggleLeftBereich() },
-                separator(),
-                item("Vollbild") { vollbild(stage) }
-            ),
-            menu("Hilfe",
-                item("Über") { zeigUeber() }
-            )
-        )
-
-        root.top = menuBar
-        root.left = leftArea
-        root.center = TextArea("Center-Bereich")
-
-        stage.scene = Scene(root, 900.0, 600.0)
-        stage.title = "BorderPane"
-        stage.show()
+        stage.apply {
+            scene = Scene(root, 1300.0, 900.0)
+            title = "Ressourcix"
+            setResizable(false)
+            setOnCloseRequest { exit() }
+            show()
+        }
     }
 
-    // --- Menü-Helfer ---
-    private fun bar(vararg elements: Menu) = MenuBar().apply { menus.addAll(elements) }
-    private fun menu(text: String, vararg elements: MenuItem) = Menu(text).apply { items.addAll(elements) }
-    private fun item(text: String, method: () -> Unit) = MenuItem(text).apply { setOnAction { method() } }
-    private fun separator() = SeparatorMenuItem()
 
-    // --- Aktionen ---
-    private fun neueDatei() {
-        println("Neue Datei erstellt")
-    }
+    fun exit() {
+        val alert = Alert(Alert.AlertType.CONFIRMATION).apply {
+            title = "Ressourcix beenden"
+            headerText = "Möchten Sie Ressourcix wirklich beenden?"
+            contentText = "Nicht gespeicherte Daten gehen verloren."
+        }
 
-    private fun oeffneDatei() {
-        println("Datei öffnen Dialog")
-    }
+        val result: Optional<ButtonType> = alert.showAndWait()
 
-    private fun beenden() {
-        javafx.application.Platform.exit()
-    }
+        if (result.isPresent && result.get() == ButtonType.OK) {
 
-    private fun toggleLeftBereich() {
-        root.left = if (root.left == null) leftArea else null
-    }
-
-    private fun vollbild(stage: Stage) {
-        stage.isFullScreen = !stage.isFullScreen
-    }
-
-    private fun zeigUeber() {
-        Alert(Alert.AlertType.INFORMATION).apply {
-            title = "Über"
-            headerText = "BorderPane Demo"
-            contentText = "GUI mit Interface (Graphical) als Datenquelle"
-        }.showAndWait()
+            exitProcess(0)
+        }
     }
 }

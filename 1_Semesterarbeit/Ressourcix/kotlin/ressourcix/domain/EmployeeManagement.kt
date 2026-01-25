@@ -95,15 +95,13 @@ class EmployeeManagement () {
      * - String = Fehlertext
      */
     fun addVacationSafe(employee: Employee, entry: VacationEntry): String? {
-        val overlaps = employee.getVacationEntries()
-            .filter { it.year == entry.year }
-            .any { it.range.overlaps(entry.range) }
 
-        if (overlaps) {
+        if (checkVacationOverlaps()) {
             return "Überschneidung: ${employee.label()} hat bereits Ferien im überlappenden Bereich."
         }
 
         employee.addVacationEntry(entry)
+
         return null
     }
 
@@ -145,7 +143,10 @@ class EmployeeManagement () {
         return this.range.overlaps(other.range)
     }
 
-    fun checkVacationOverlaps(maxAllowed: Int = 1) {
+
+
+    fun checkVacationOverlaps(maxAllowed: Int = 1) : Boolean {
+        var vacationError : Boolean = false
         val allVacation = employees.flatMap { it.getVacationEntries() }
         val overlaps = mutableListOf<Pair<VacationEntry, VacationEntry>>()
 
@@ -169,6 +170,7 @@ class EmployeeManagement () {
             println("WARNUNG: ${overlaps.size - maxAllowed} zu viele Überschneidung(en)!")
             println()
             println("Überschneidungen:")
+            vacationError = true
             overlaps.forEach { (v1, v2) ->
                 val emp1 = findById(v1.employeeId)
                 val emp2 = findById(v2.employeeId)
@@ -176,12 +178,15 @@ class EmployeeManagement () {
             }
         } else {
             println("OK: Anzahl Überschneidungen im erlaubten Bereich.")
+            vacationError = false
             overlaps.forEach { (v1, v2) ->
                 val emp1 = findById(v1.employeeId)
                 val emp2 = findById(v2.employeeId)
                 println("${emp1?.getFullName()} (Wochen ${v1.range.startWeek}-${v1.range.endWeek}) <-> ${emp2?.getFullName()} (Wochen ${v2.range.startWeek}-${v2.range.endWeek})")
             }
         }
+
+        return vacationError
 
     }
 

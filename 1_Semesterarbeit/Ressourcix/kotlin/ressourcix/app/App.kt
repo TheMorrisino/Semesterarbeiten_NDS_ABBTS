@@ -27,6 +27,6 @@ class App(
             vacationIds = vacationIds
         ).loop()
 
-        management.checkVacationOverlaps()
+
     }
 }

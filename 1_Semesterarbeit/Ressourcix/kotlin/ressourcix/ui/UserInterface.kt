@@ -5,12 +5,13 @@ import ressourcix.calendar.ConsoleCalendarOutput
 import ressourcix.domain.Employee
 import ressourcix.domain.EmployeeManagement
 import ressourcix.util.IdProvider
+import java.awt.TrayIcon
 
 // in Progress
 interface UserInterface {
 
     /** Zeigt eine Nachricht an (Info, Warnung, Fehler). */
-    fun showMessage(msg: String, type: MessageType = MessageType.INFO)
+    fun showMessage(msg: String, type: TrayIcon.MessageType = TrayIcon.MessageType.INFO) //type: Message = MessageType.INFO)
 
     /** Liest eine ganze Zeile vom Nutzer ein. */
     fun readLine(prompt: String = ""): String?
