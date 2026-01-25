@@ -7,7 +7,7 @@ import ressourcix.gui.GuiBorderPane
 
 
 fun main() {
-    val app: Graphical = App()   // 👈 Interface-Typ!
+    val app: Graphical = App()
 
     // GUI bekommt Interface, nicht konkrete Klasse
     GuiBorderPane.graphical = app
