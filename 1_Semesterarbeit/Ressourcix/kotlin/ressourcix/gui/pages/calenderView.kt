@@ -1,20 +1,44 @@
 package ressourcix.gui.pages
 
-import javafx.collections.FXCollections
+import javafx.beans.property.ReadOnlyObjectWrapper
+import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.Label
-import javafx.scene.control.ListView
+import javafx.scene.control.TableColumn
+import javafx.scene.control.TableView
 import javafx.scene.layout.StackPane
-import javafx.scene.layout.VBox
+import ressourcix.domain.Employee
+import ressourcix.gui.GuiBorderPane
 
-object calenderView: StackPane(Label("Kalender")) {
+object calenderView : StackPane() {
 
+    private val employees = GuiBorderPane.graphical.employees
 
-//    // Links: Abkürzungen als ListView
-//    val abbreviations = FXCollections.observableArrayList(
-//        graphical.employees.map { it.abbreviationSting() } // <- ggf. anpassen!
-//    )
-//    val listView = ListView(abbreviations)
-//    leftArea.children.addAll(Label("Mitarbeitende"), listView)
-//
-//    var leftArea: VBox = VBox(10.0).apply { prefWidth = 300.0 }
+    private val tableView = TableView<Employee>()
+
+    private val idColumn = TableColumn<Employee, UInt>("ID")
+    private val abbrevColumn = TableColumn<Employee, String>("Abkürzung")
+
+    init {
+        // ID-Spalte (UInt!)
+        idColumn.setCellValueFactory {
+            ReadOnlyObjectWrapper(it.value.getId())
+        }
+
+        // Abkürzungs-Spalte
+        abbrevColumn.setCellValueFactory {
+            SimpleStringProperty(it.value.abbreviationSting())
+        }
+
+        // Reihenfolge der Spalten ist hier festgelegt
+        tableView.columns.setAll(idColumn, abbrevColumn)
+
+        // Daten in die Tabelle
+        tableView.items.addAll(employees)
+
+        // Tabelle anzeigen
+        children.add(tableView)
+    }
+    fun update() {
+        tableView.items.setAll(GuiBorderPane.graphical.employees)
+    }
 }
