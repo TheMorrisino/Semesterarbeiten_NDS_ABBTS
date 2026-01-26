@@ -16,6 +16,16 @@ import javafx.util.Duration
 
 object dashboardView : StackPane() {
 
+    private lateinit var barChart: BarChart<String, Number>
+    private val xAxis = CategoryAxis().apply {
+        label = "Kalenderwochen"
+        side = javafx.geometry.Side.BOTTOM
+    }
+    private val yAxis = NumberAxis().apply {
+        label = "Anzahl MA"
+        side = javafx.geometry.Side.LEFT
+    }
+
     init {
         // Hauptcontainer mit Grid-Layout (1x1)
         val gridPane = GridPane().apply {
@@ -24,7 +34,6 @@ object dashboardView : StackPane() {
             vgap = 1.0
 
             // Spalten und Zeilen gleichmässig verteilen
-
             columnConstraints.add(
                 ColumnConstraints().apply {
                     percentWidth = 100.0
@@ -42,113 +51,72 @@ object dashboardView : StackPane() {
                 }
             )
         }
+
         // ====================================================================================================
+        // Top Area mit BarChart
         // ====================================================================================================
-        // ===== OBEN : Linechart-Diagramm =====
         val topArea = VBox().apply {
             spacing = 0.0
             padding = Insets(5.0)
             style = "-fx-border-color: #cccccc; -fx-border-width: 1; -fx-background-color: #f9f9f9;"
 
-            // Titel
-            val titleLabel = Label("Abwesenheiten").apply {
-                font = Font.font("System", FontWeight.BOLD, 20.0)
-            }
-//            children.add(titleLabel)
-
-            // Linechart erstellen
-            val xAxis = CategoryAxis().apply {
-                label = "Kalenderwochen"
-                side = Side.BOTTOM
-            }
-            val yAxis = NumberAxis().apply {
-                label = "Anzahl MA"
-                side = Side.LEFT
-
-            }
-            val linechart = LineChart<String, Number>(xAxis, yAxis).apply {
-                // Chart soll den verfügbaren Platz nutzen
+            // BarChart erstellen und als Klassenvariable speichern
+            barChart = BarChart<String, Number>(xAxis, yAxis).apply {
+//              title = "Übersicht"
                 animated = true
-                createSymbols = true
                 isLegendVisible = false
 
-
-//                title = "Übersicht"
-                // Beispieldaten - hier kannst du deine eigenen Daten eintragen
-                val series = XYChart.Series<String, Number>().apply {
-                    val overlapCounts = computeWeeklyOverlap(graphical.employees)
-                    overlapCounts.forEachIndexed { idx, cnt ->
-                        val weekLabel = "${idx + 1}"
-                        data.add(XYChart.Data(weekLabel, cnt))
-
-                    }
-
-                }
-
-
-                data.add(series)
-                series.data.forEach { point ->
-                    val tip = Tooltip("KW ${point.xValue}\nAnzahl: ${point.yValue}")
-                    // Tooltip sofort anzeigen, wenn die Maus darüber fährt
-                    tip.showDelay = Duration.millis(100.0)
-                    point.node?.let { Tooltip.install(it, tip) }
-                }
-
-
-
             }
-            children.add(linechart)
+
+            children.add(barChart)
             prefWidth = Double.MAX_VALUE
             prefHeight = Double.MAX_VALUE
-            VBox.setVgrow(linechart, Priority.ALWAYS)
+            VBox.setVgrow(barChart, Priority.ALWAYS)
         }
 
-        // ====================================================================================================
-        // ====================================================================================================
-        // ===== UNTEN LINKS: Warnungen und Hinweise =====
-        val bottomArea = VBox().apply {
-            spacing = 0.0
-            padding = Insets(0.0)
-            style = "-fx-border-color: #cccccc; -fx-border-width: 1; -fx-background-color: #fff8dc;"
-
-            // Titel
-            val titleLabel = Label("Warnungen & Hinweise").apply {
-                font = Font.font("System", FontWeight.BOLD, 14.0)
-            }
-            children.add(titleLabel)
-
-            // ListView für Warnungen
-            val warningsList = FXCollections.observableArrayList<String>(
-                // TODO: Hier deine Warnungen eintragen
-                "Beispiel:",
-                 "⚠ Mitarbeiter X hat noch offene Urlaubsanträge",
-                 "⚠ Personalmangel in Abteilung Y",
-                 "ℹ Erinnerung: Teammeeting morgen um 10:00",
-                "Lost"
-            )
-
-            val warningsListView = ListView(warningsList).apply {
-                prefHeight = Double.MAX_VALUE
-                fixedCellSize = 28.0
-            }
-
-            children.add(warningsListView)
-            VBox.setVgrow(warningsListView, Priority.ALWAYS)
-        }
-
-        val  empty = VBox()
-
-
+        val empty = VBox()
 
         // Alle Bereiche zum Grid hinzufügen
         gridPane.add(topArea, 0, 0)      // Oben Links
-        gridPane.add(empty, 0, 1)   // Unten Links
-
-
+        gridPane.add(empty, 0, 1)        // Unten Links
 
         // Grid zum StackPane hinzufügen
         children.add(gridPane)
+
+        // Initial Chart befüllen
+        updateBarChart()
     }
+
+    /**
+     * Aktualisiert das BarChart mit aktuellen Daten
+     */
+    fun updateBarChart() {
+        // Alte Daten entfernen
+        barChart.data.clear()
+
+        // Neue Daten berechnen
+        val overlapCounts = computeWeeklyOverlap(graphical.employees)
+
+        // Neue Series erstellen
+        val series = XYChart.Series<String, Number>().apply {
+            overlapCounts.forEachIndexed { idx, cnt ->
+                val weekLabel = "${idx + 1}"
+                data.add(XYChart.Data(weekLabel, cnt))
+            }
+        }
+
+        // Series zum Chart hinzufügen
+        barChart.data.add(series)
+
+        // Tooltips für jeden Datenpunkt hinzufügen
+        series.data.forEach { point ->
+            val tip = Tooltip("KW ${point.xValue}\nAnzahl: ${point.yValue}").apply {
+                showDelay = Duration.millis(100.0)
+            }
+            point.node?.let { Tooltip.install(it, tip) }
+        }
+    }
+
     private fun computeWeeklyOverlap(employees: List<Employee>): List<Int> {
         // 52 Plätze, initial 0
         val counts = MutableList(52) { 0 }
