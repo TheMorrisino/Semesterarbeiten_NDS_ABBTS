@@ -1,5 +1,6 @@
 package ressourcix.gui.pages
 
+import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.geometry.Insets
 import javafx.geometry.Side
@@ -24,7 +25,13 @@ object dashboardView : StackPane() {
     private val yAxis = NumberAxis().apply {
         label = "Anzahl MA"
         side = javafx.geometry.Side.LEFT
+        minorTickCount = 0
+        isAutoRanging = true
+
     }
+
+    // Cache für die letzten Daten, um unnötige Updates zu vermeiden
+    private var lastData: List<Int> = emptyList()
 
     init {
         // Hauptcontainer mit Grid-Layout (1x1)
@@ -62,8 +69,7 @@ object dashboardView : StackPane() {
 
             // BarChart erstellen und als Klassenvariable speichern
             barChart = BarChart<String, Number>(xAxis, yAxis).apply {
-//              title = "Übersicht"
-                animated = true
+                animated = false  // Animation ausschalten für flüssigere Updates
                 isLegendVisible = false
 
             }
@@ -83,37 +89,63 @@ object dashboardView : StackPane() {
         // Grid zum StackPane hinzufügen
         children.add(gridPane)
 
-        // Initial Chart befüllen
-        updateBarChart()
+        // Initial Chart befüllen wird später gemacht, wenn graphical initialisiert ist
+        // updateBarChart() wird vom Update-Thread aufgerufen
     }
 
     /**
      * Aktualisiert das BarChart mit aktuellen Daten
+     * Kann sicher von jedem Thread aus aufgerufen werden
+     * Updated nur, wenn sich die Daten tatsächlich geändert haben
      */
     fun updateBarChart() {
-        // Alte Daten entfernen
-        barChart.data.clear()
-
-        // Neue Daten berechnen
-        val overlapCounts = computeWeeklyOverlap(graphical.employees)
-
-        // Neue Series erstellen
-        val series = XYChart.Series<String, Number>().apply {
-            overlapCounts.forEachIndexed { idx, cnt ->
-                val weekLabel = "${idx + 1}"
-                data.add(XYChart.Data(weekLabel, cnt))
-            }
+        // Neue Daten berechnen - mit try-catch für den Fall dass graphical noch nicht initialisiert ist
+        val overlapCounts = try {
+            computeWeeklyOverlap(graphical.employees)
+        } catch (e: UninitializedPropertyAccessException) {
+            return  // graphical noch nicht bereit, beim nächsten Mal versuchen
         }
 
-        // Series zum Chart hinzufügen
-        barChart.data.add(series)
+        // Nur updaten, wenn sich die Daten geändert haben
+        if (overlapCounts == lastData) {
+            return
+        }
 
-        // Tooltips für jeden Datenpunkt hinzufügen
-        series.data.forEach { point ->
-            val tip = Tooltip("KW ${point.xValue}\nAnzahl: ${point.yValue}").apply {
-                showDelay = Duration.millis(100.0)
+        lastData = overlapCounts
+
+        Platform.runLater {
+            // Alte Daten entfernen
+            barChart.data.clear()
+
+            // Neue Series erstellen
+            val series = XYChart.Series<String, Number>().apply {
+                overlapCounts.forEachIndexed { idx, cnt ->
+                    val weekLabel = "${idx + 1}"
+                    data.add(XYChart.Data(weekLabel, cnt))
+                }
             }
-            point.node?.let { Tooltip.install(it, tip) }
+
+            // Series zum Chart hinzufügen
+            barChart.data.add(series)
+
+            // Y-Achse mit 0.5er-Schritten konfigurieren, nachdem Daten geladen sind
+            Platform.runLater {
+                val maxValue = if (overlapCounts.isNotEmpty()) overlapCounts.max() else 1
+                yAxis.apply {
+                    isAutoRanging = false
+                    lowerBound = 0.0
+                    upperBound = Math.ceil((maxValue + 1).toDouble())
+                    tickUnit = 0.5
+                }
+            }
+
+            // Tooltips für jeden Datenpunkt hinzufügen
+            series.data.forEach { point ->
+                val tip = Tooltip("KW ${point.xValue}\nAnzahl: ${point.yValue}").apply {
+                    showDelay = Duration.millis(100.0)
+                }
+                point.node?.let { Tooltip.install(it, tip) }
+            }
         }
     }
 
