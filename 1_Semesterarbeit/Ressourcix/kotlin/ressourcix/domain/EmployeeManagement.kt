@@ -189,5 +189,5 @@ class EmployeeManagement () {
         return vacationError
 
     }
-
+    fun getEmployeeByIndex(index: Int): Employee = employees[index]
 }

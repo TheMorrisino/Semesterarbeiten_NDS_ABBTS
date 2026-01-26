@@ -16,6 +16,7 @@ class Employee(private val id: UInt) {
     fun getRole(): Role = role
     fun getVacationEntries(): List<VacationEntry> = vacationEntries.toList()
 
+
     fun setFirstName(value: String) {
         require(value.isNotBlank()) { "firstName must not be blank" }
         firstName = value.trim()
