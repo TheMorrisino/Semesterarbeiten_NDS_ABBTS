@@ -1,5 +1,5 @@
 import ressourcix.domain.Employee
 
 interface Graphical {
-    val employees: MutableList<Employee>
+    var employees: MutableList<Employee>
 }

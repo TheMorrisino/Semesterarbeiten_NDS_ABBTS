@@ -38,4 +38,7 @@ object calenderView : StackPane() {
         // Tabelle anzeigen
         children.add(tableView)
     }
+    fun update() {
+        tableView.items.setAll(GuiBorderPane.graphical.employees)
+    }
 }
