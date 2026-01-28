@@ -35,7 +35,7 @@ class GuiBorderPane : Application() {
         router.navigate(Route.DASHBOARD)
 
         stage.apply {
-            scene = Scene(root,500.0,500.0)
+            scene = Scene(root,1000.0,700.0)
             title = "Ressourcix"
 
             if (stream == null) {
