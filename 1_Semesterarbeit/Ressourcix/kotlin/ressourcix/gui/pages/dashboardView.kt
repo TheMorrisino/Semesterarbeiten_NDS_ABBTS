@@ -90,7 +90,7 @@ object dashboardView : StackPane() {
         empty.apply {
             thankYouButton.setText("Thank You")
             children.add(thankYouButton)
-            alignment = Pos.CENTER
+            alignment = Pos.BOTTOM_CENTER
 
 
             thankYouButton.setOnAction{
@@ -103,7 +103,7 @@ object dashboardView : StackPane() {
 
 
 
-        // Alle Bereiche zum Grid hinzufügen
+
         gridPane.add(topArea, 0, 0)      // Oben
         gridPane.add(empty, 0, 1)        // Unten
 
