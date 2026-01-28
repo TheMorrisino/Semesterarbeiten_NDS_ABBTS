@@ -28,9 +28,9 @@ class GuiBorderPane : Application() {
         router.navigate(Route.DASHBOARD)
 
         stage.apply {
-            scene = Scene(root, 1300.0, 900.0)
+            scene = Scene(root,500.0,500.0)
             title = "Ressourcix"
-            setResizable(false)
+            setResizable(true)
             setOnCloseRequest { exit() }
             show()
         }

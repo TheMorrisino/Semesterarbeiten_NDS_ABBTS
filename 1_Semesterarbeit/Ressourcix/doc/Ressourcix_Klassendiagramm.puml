@@ -1,0 +1,227 @@
+@startuml Ressourcix_Class_Diagram
+
+' ===== INTERFACES =====
+interface Graphical {
+    +employees: MutableList<Employee>
+}
+
+interface CalendarOutput {
+    +printYearPlan(year: UInt, employees: List<Employee>)
+}
+
+interface UserInterface {
+    +showMessage(msg: String, type: MessageType)
+    +readLine(prompt: String): String?
+    +readChoice(prompt: String): Int
+    +printMainMenu(year: Int)
+}
+
+' ===== MAIN & APP =====
+class Main <<main>> {
+    +{static} main()
+}
+
+class App {
+    -io: ConsoleIO
+    -management: EmployeeManagement
+    -employeeIds: IdProvider
+    -vacationIds: IdProvider
+    +employees: MutableList<Employee>
+    +run()
+}
+
+' ===== GUI =====
+class GuiBorderPane <<JavaFX Application>> {
+    -{static} graphical: Graphical
+    -root: BorderPane
+    -leftArea: VBox
+    +start(stage: Stage)
+    -bar(elements: Menu...): MenuBar
+    -menu(text: String, elements: MenuItem...): Menu
+    -item(text: String, method: Function): MenuItem
+    -separator(): SeparatorMenuItem
+    -neueDatei()
+    -oeffneDatei()
+    -beenden()
+    -toggleLeftBereich()
+    -vollbild(stage: Stage)
+    -zeigUeber()
+}
+
+' ===== DOMAIN LAYER =====
+class Employee {
+    -id: UInt
+    -firstName: String
+    -lastName: String
+    -workloadPercent: UByte
+    -role: Role
+    -Abbreviation: String
+    -vacationEntries: MutableList<VacationEntry>
+    +getId(): UInt
+    +getFirstName(): String
+    +getLastName(): String
+    +getWorkloadPercent(): UByte
+    +getRole(): Role
+    +getVacationEntries(): List<VacationEntry>
+    +setFirstName(value: String)
+    +setLastName(value: String)
+    +setWorkloadPercent(value: UByte)
+    +setRole(value: Role)
+    +getFullName(): String
+    +abbreviationSting(): String
+    +addVacationEntry(entry: VacationEntry)
+    +label(): String
+}
+
+class EmployeeManagement {
+    +employees: MutableList<Employee>
+    +mitarbeiterVerwaltung(io: ConsoleIO, management: EmployeeManagement, employeeIds: IdProvider)
+    +listAll(): List<Employee>
+    +add(employee: Employee)
+    +removeById(id: UInt): Boolean
+    +findById(id: UInt): Employee?
+    +addVacationSafe(employee: Employee, entry: VacationEntry): String?
+    +seed10Employees()
+    +checkVacationOverlaps(maxAllowed: Int): Boolean
+    -listEmployees(io: ConsoleIO, management: EmployeeManagement)
+    -addEmployee(io: ConsoleIO, management: EmployeeManagement, employeeIds: IdProvider)
+    -deleteEmployee(io: ConsoleIO, management: EmployeeManagement)
+}
+
+class VacationEntry {
+    +id: UInt
+    +employeeId: UInt
+    +year: UInt
+    +range: WeekRange
+    -statusByWeek: MutableMap<UInt, VacationStatus>
+    +hasWeek(week: UInt): Boolean
+    +getStatus(week: UInt): VacationStatus?
+    +setStatus(week: UInt, status: VacationStatus)
+    +toString(): String
+}
+
+class WeekRange <<data class>> {
+    +startWeek: UInt
+    +endWeek: UInt
+    +contains(week: UInt): Boolean
+    +overlaps(other: WeekRange): Boolean
+}
+
+class VacationPlanner <<object>> {
+    +{static} generateForAll(year: UInt, employees: List<Employee>, nextVacationId: Function, addVacationSafe: Function, blocks: List<WeekRange>): List<String>
+}
+
+' ===== ENUMS =====
+enum Role {
+    APPRENTICE
+    STAFF
+    TEAM_LEAD
+    MANAGER
+}
+
+enum VacationStatus {
+    REQUESTED
+    APPROVED
+    GENERATED
+    REJECTED
+    CANCELLED
+    --
+    +code: String
+}
+
+enum MessageType {
+    INFO
+    WARNING
+    ERROR
+}
+
+' ===== UI LAYER =====
+class MainMenu {
+    -io: ConsoleIO
+    -management: EmployeeManagement
+    -employeeIds: IdProvider
+    -vacationIds: IdProvider
+    -calendarOutput: CalendarOutput
+    -year: UInt
+    +loop()
+    -printMainMenu()
+    -rateSingleWeek()
+    -addVacationManual()
+    -readStatus(): VacationStatus?
+}
+
+class ConsoleIO {
+    +println(msg: String = "")
+    +print(msg: String)
+    +readTrimmed(): String
+    +readUInt(prompt: String, min: UInt?, max: UInt?): UInt?
+    +readNonBlank(prompt: String): String?
+    +readChoice(prompt: String): Int
+}
+
+' ===== CALENDAR =====
+class ConsoleCalendarOutput {
+    +printYearPlan(year: UInt, employees: List<Employee>)
+    -statusForWeek(year: UInt, employee: Employee, week: UInt): VacationStatus?
+}
+
+' ===== UTILITY =====
+class IdProvider {
+    -start: UInt
+    -nextId: UInt
+    -id: UInt
+    -issuedIds: MutableSet<UInt>
+    +generateId(): UInt
+    +Issued(id: UInt): Boolean
+}
+
+
+' ===== RELATIONSHIPS =====
+
+' Main relationships
+Main ..> App : creates
+Main ..> GuiBorderPane : launches
+Main --> Graphical : uses
+
+' App relationships
+App ..|> Graphical : implements
+App *-- EmployeeManagement : contains
+App *-- ConsoleIO : uses
+App *-- IdProvider : uses (2x)
+App --> MainMenu : creates
+
+' Domain relationships
+EmployeeManagement o-- Employee : manages *
+Employee *-- VacationEntry : contains *
+Employee --> Role : has
+VacationEntry --> VacationStatus : has
+VacationEntry *-- WeekRange : contains
+VacationPlanner ..> Employee : generates for
+VacationPlanner ..> VacationEntry : creates
+VacationPlanner ..> WeekRange : uses
+
+' UI relationships
+MainMenu --> EmployeeManagement : uses
+MainMenu --> ConsoleIO : uses
+MainMenu --> CalendarOutput : uses
+MainMenu --> IdProvider : uses (2x)
+MainMenu ..> VacationEntry : creates
+MainMenu ..> VacationStatus : uses
+MainMenu ..> WeekRange : uses
+
+EmployeeManagement --> ConsoleIO : uses
+EmployeeManagement --> IdProvider : uses
+
+' Calendar relationships
+ConsoleCalendarOutput ..|> CalendarOutput : implements
+ConsoleCalendarOutput --> Employee : reads
+ConsoleCalendarOutput --> VacationStatus : uses
+
+' GUI relationships
+GuiBorderPane ..> Graphical : uses static
+GuiBorderPane --> Employee : displays
+
+' UserInterface
+UserInterface ..> MessageType : uses
+
+@enduml

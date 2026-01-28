@@ -88,22 +88,7 @@ class EmployeeManagement () {
 
     fun findById(id: UInt): Employee? = employees.firstOrNull { it.getId() == id }
 
-    /**
-     * Fügt Ferien nur hinzu, wenn es keine Überschneidung im gleichen Jahr gibt.
-     * Rückgabe:
-     * - null = OK
-     * - String = Fehlertext
-     */
-    fun addVacationSafe(employee: Employee, entry: VacationEntry): String? {
 
-        if (checkVacationOverlaps()) {
-            return "Überschneidung: ${employee.label()} hat bereits Ferien im überlappenden Bereich."
-        }
-
-        employee.addVacationEntry(entry)
-
-        return null
-    }
 
     /**
      * Demo-Seed: 10 Mitarbeiter IDs 1..10.
@@ -135,6 +120,62 @@ class EmployeeManagement () {
     }
 
 
+
+    fun addVacationSafe(employee: Employee, entry: VacationEntry, maxAllowed: Int = 1): String? {
+        // Aktuelle Anzahl Überschneidungen zählen (OHNE den neuen Eintrag)
+        val currentOverlaps = countAllOverlaps()
+
+        // Prüfen mit wem der neue Eintrag Überschneidungen hätte
+        val conflictingEmployees = mutableSetOf<String>()
+
+        employees.forEach { otherEmp ->
+            if (otherEmp.getId() != employee.getId()) {
+                otherEmp.getVacationEntries().forEach { otherEntry ->
+                    if (entry.overlapsWith(otherEntry)) {
+                        conflictingEmployees.add(otherEmp.getFullName())
+                    }
+                }
+            }
+        }
+
+        // Anzahl neuer Überschneidungen
+        val newOverlapCount = conflictingEmployees.size
+
+        // Prüfen ob das Limit überschritten würde
+        val totalOverlapsAfter = currentOverlaps + newOverlapCount
+
+        // Bei maxAllowed = 0: keine Überschneidung erlaubt (>=)
+        // Bei maxAllowed > 0: maxAllowed Überschneidungen erlaubt (>)
+        val limitExceeded = if (maxAllowed == 0) {
+            totalOverlapsAfter >= 1
+        } else {
+            totalOverlapsAfter > maxAllowed
+        }
+
+        if (limitExceeded) {
+            // Schöne Fehlermeldung erstellen
+            val names = conflictingEmployees.toList()
+            val namesList = when {
+                names.isEmpty() -> ""
+                names.size == 1 -> names[0]
+                names.size <= 3 -> names.joinToString(" und ")
+                else -> "${names.take(3).joinToString(", ")} und ${names.size - 3} weitere(r)"
+            }
+
+            val message = if (names.isEmpty()) {
+                "Überschneidung: Kein Ferieneintrag für ${employee.label()} (${employee.getFullName()}) möglich, da das Überschneidungslimit erreicht ist."
+            } else {
+                "Überschneidung: Kein Ferieneintrag für ${employee.label()} (${employee.getFullName()}) möglich, da die Ferien mit $namesList überlappen " //(Max. $maxAllowed erlaubt, danach wären es $totalOverlapsAfter).
+            }
+
+            return message
+        }
+
+        // Alles OK, jetzt erst hinzufügen
+        employee.addVacationEntry(entry)
+        return null
+    }
+
     fun VacationEntry.overlapsWith(other: VacationEntry): Boolean {
         // Nur überlappen wenn gleiches Jahr
         if (this.year != other.year) return false
@@ -143,7 +184,20 @@ class EmployeeManagement () {
         return this.range.overlaps(other.range)
     }
 
+    private fun countAllOverlaps(): Int {
+        val allVacation = employees.flatMap { it.getVacationEntries() }
+        var count = 0
 
+        for (i in allVacation.indices) {
+            for (j in i + 1 until allVacation.size) {
+                if (allVacation[i].overlapsWith(allVacation[j])) {
+                    count++
+                }
+            }
+        }
+
+        return count
+    }
 
     fun checkVacationOverlaps(maxAllowed: Int = 1) : Boolean {
         var vacationError : Boolean = false
@@ -161,13 +215,22 @@ class EmployeeManagement () {
             }
         }
 
-
         println("=== Überschneidungs-Check ===")
         println("Gefundene Überschneidungen: ${overlaps.size}")
         println("Maximal erlaubt: $maxAllowed")
+        println()
 
-        if (overlaps.size > maxAllowed) {
-            println("WARNUNG: ${overlaps.size - maxAllowed} zu viele Überschneidung(en)!")
+        // Bei maxAllowed = 0: keine Überschneidung erlaubt (>=)
+        // Bei maxAllowed > 0: maxAllowed Überschneidungen erlaubt (>)
+        val limitExceeded = if (maxAllowed == 0) {
+            overlaps.size >= 1
+        } else {
+            overlaps.size > maxAllowed
+        }
+
+        if (limitExceeded) {
+            val excess = if (maxAllowed == 0) overlaps.size else overlaps.size - maxAllowed
+            println("WARNUNG: $excess zu viele Überschneidung(en)!")
             println()
             println("Überschneidungen:")
             vacationError = true
@@ -187,7 +250,6 @@ class EmployeeManagement () {
         }
 
         return vacationError
-
     }
-
+    fun getEmployeeByIndex(index: Int): Employee = employees[index]
 }

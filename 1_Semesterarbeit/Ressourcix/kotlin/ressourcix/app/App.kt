@@ -14,8 +14,7 @@ class App(
     private val vacationIds: IdProvider = IdProvider(start = 1u),
 ) : Graphical {
 
-    override val employees: MutableList<Employee>
-        get() = management.employees
+    override var employees = management.employees
 
     fun run() {
         management.seed10Employees()
