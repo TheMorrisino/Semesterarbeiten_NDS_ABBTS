@@ -61,7 +61,7 @@ fun main() {
             try {
                 GuiBorderPane.graphical = app
                 Thread.sleep(1000)
-                calenderView.update()
+                calenderView.refreshVacations()
                 dashboardView.updateBarChart()
             } catch (e: InterruptedException) {
                 // Thread wurde unterbrochen, beenden
