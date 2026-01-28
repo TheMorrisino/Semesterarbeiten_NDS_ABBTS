@@ -41,7 +41,9 @@ class ConsoleCalendarOutput : CalendarOutput {
     private fun statusForWeek(year: UInt, employee: Employee, week: UInt): VacationStatus? {
         val entries = employee.getVacationEntries().filter { it.year == year && it.hasWeek(week) }
         if (entries.isEmpty()) return null
-        if (entries.size > 1) throw IllegalStateException("Overlap detected for ${employee.label()} year=$year week=$week")
-        return entries.single().getStatus(week)
+
+        // Nimm einfach den ersten Eintrag (oder letzten mit .last())
+        return entries.first().getStatus(week)
+
     }
 }
