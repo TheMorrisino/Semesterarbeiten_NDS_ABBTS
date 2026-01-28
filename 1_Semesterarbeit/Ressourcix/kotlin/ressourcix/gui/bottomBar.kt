@@ -4,17 +4,21 @@ import javafx.animation.KeyFrame
 import javafx.animation.Timeline
 import javafx.event.EventHandler
 import javafx.geometry.Insets
+import javafx.geometry.Pos
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
+import javafx.scene.layout.Region
+import javafx.scene.text.Text
 import javafx.util.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 object bottomBar {
-    private val status = TextField("Meldungen werden hier angezeigt").apply {
-        setDisable(true)
+    private val status = Text("Release Version 1.0").apply {   //Meldungen werden hier angezeigt
+        setDisable(false)
+//        isEditable = false
     }
 
     private val clockLabel = Label().apply {
@@ -24,8 +28,15 @@ object bottomBar {
 
     private val bar = HBox(10.0).apply {
         padding = Insets(5.0)
-        children.addAll(status,clockLabel)
+        alignment = Pos.CENTER_LEFT
+
+        val spacer = Region().apply {
+            HBox.setHgrow(this, Priority.ALWAYS)
+        }
+        children.addAll(status, spacer,clockLabel )
+
         HBox.setHgrow(status, Priority.ALWAYS)
+        style = "-fx-border-color: #cccccc; -fx-border-width: 1 0 0 0;"
     }
 
     private val clockTimeline = Timeline().apply {
@@ -37,6 +48,7 @@ object bottomBar {
 
     private fun updateClock() {
         clockLabel.text = LocalDateTime.now().format(timeFmt)
+
     }
 
     fun getView(): HBox = bar

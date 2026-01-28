@@ -122,10 +122,10 @@ class EmployeeManagement () {
 
 
     fun addVacationSafe(employee: Employee, entry: VacationEntry, maxAllowed: Int = 1): String? {
-        // Aktuelle Anzahl Überschneidungen zählen (OHNE den neuen Eintrag)
+
         val currentOverlaps = countAllOverlaps()
 
-        // Prüfen mit wem der neue Eintrag Überschneidungen hätte
+
         val conflictingEmployees = mutableSetOf<String>()
 
         employees.forEach { otherEmp ->
@@ -153,7 +153,6 @@ class EmployeeManagement () {
         }
 
         if (limitExceeded) {
-            // Schöne Fehlermeldung erstellen
             val names = conflictingEmployees.toList()
             val namesList = when {
                 names.isEmpty() -> ""
@@ -171,7 +170,7 @@ class EmployeeManagement () {
             return message
         }
 
-        // Alles OK, jetzt erst hinzufügen
+
         employee.addVacationEntry(entry)
         return null
     }

@@ -3,6 +3,7 @@ package ressourcix.gui.pages
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.geometry.Insets
+import javafx.geometry.Pos
 import javafx.geometry.Side
 import javafx.scene.chart.*
 import javafx.scene.control.*
@@ -30,6 +31,9 @@ object dashboardView : StackPane() {
 
     }
 
+    val thankYouButton = Button()
+
+
     // Cache für die letzten Daten, um unnötige Updates zu vermeiden
     private var lastData: List<Int> = emptyList()
 
@@ -49,11 +53,11 @@ object dashboardView : StackPane() {
             )
             rowConstraints.addAll(
                 RowConstraints().apply {
-                    percentHeight = 100.0
+                    percentHeight = 95.0
                     vgrow = Priority.ALWAYS
                 },
                 RowConstraints().apply {
-                    percentHeight = 0.0
+                    percentHeight = 5.0
                     vgrow = Priority.ALWAYS
                 }
             )
@@ -69,7 +73,7 @@ object dashboardView : StackPane() {
 
             // BarChart erstellen und als Klassenvariable speichern
             barChart = BarChart<String, Number>(xAxis, yAxis).apply {
-                animated = false  // Animation ausschalten für flüssigere Updates
+                animated = false
                 isLegendVisible = false
 
             }
@@ -80,33 +84,59 @@ object dashboardView : StackPane() {
             VBox.setVgrow(barChart, Priority.ALWAYS)
         }
 
-        val empty = VBox()
 
-        // Alle Bereiche zum Grid hinzufügen
-        gridPane.add(topArea, 0, 0)      // Oben Links
-        gridPane.add(empty, 0, 1)        // Unten Links
+
+        val empty = VBox()
+        empty.apply {
+            thankYouButton.setText("Thank You")
+            children.add(thankYouButton)
+            alignment = Pos.BOTTOM_CENTER
+
+
+            thankYouButton.setOnAction{
+                alert()
+            }
+
+
+
+        }
+
+
+
+
+        gridPane.add(topArea, 0, 0)      // Oben
+        gridPane.add(empty, 0, 1)        // Unten
 
         // Grid zum StackPane hinzufügen
         children.add(gridPane)
+
 
         // Initial Chart befüllen wird später gemacht, wenn graphical initialisiert ist
         // updateBarChart() wird vom Update-Thread aufgerufen
     }
 
-    /**
-     * Aktualisiert das BarChart mit aktuellen Daten
-     * Kann sicher von jedem Thread aus aufgerufen werden
-     * Updated nur, wenn sich die Daten tatsächlich geändert haben
-     */
+
+
+
+
+    fun alert()  {
+        Alert(Alert.AlertType.INFORMATION).apply {
+            title = "Information"
+            headerText = "Dankeschön"
+            contentText = "Vielen Dank, dass Sie unsere Software nutzen!\nIhr Ressourcix‑Team \uD83D\uDE80"
+        }.showAndWait()
+    }
+
+
     fun updateBarChart() {
-        // Neue Daten berechnen - mit try-catch für den Fall dass graphical noch nicht initialisiert ist
+
         val overlapCounts = try {
             computeWeeklyOverlap(graphical.employees)
         } catch (e: UninitializedPropertyAccessException) {
-            return  // graphical noch nicht bereit, beim nächsten Mal versuchen
+            return
         }
 
-        // Nur updaten, wenn sich die Daten geändert haben
+
         if (overlapCounts == lastData) {
             return
         }
@@ -114,7 +144,7 @@ object dashboardView : StackPane() {
         lastData = overlapCounts
 
         Platform.runLater {
-            // Alte Daten entfernen
+
             barChart.data.clear()
 
             // Neue Series erstellen
@@ -135,7 +165,7 @@ object dashboardView : StackPane() {
                     isAutoRanging = false
                     lowerBound = 0.0
                     upperBound = Math.ceil((maxValue + 1).toDouble())
-                    tickUnit = 0.5
+                    tickUnit = 1.0
                 }
             }
 
