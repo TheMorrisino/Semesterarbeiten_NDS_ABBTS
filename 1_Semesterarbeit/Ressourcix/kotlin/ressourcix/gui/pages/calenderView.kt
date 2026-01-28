@@ -2,6 +2,7 @@ package ressourcix.gui.pages
 
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.beans.property.SimpleStringProperty
+import javafx.scene.control.Alert
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableRow
@@ -136,7 +137,20 @@ object calenderView : StackPane() {
 
     private fun onEmployeeDoubleClick(employee: Employee) {
         println("Doppelklick auf: ${employee.getId()} ${employee.abbreviationSting()}")
-
+        showSimplePopup("Information", "Doppelklick auf: ${employee.getId()} ${employee.abbreviationSting()}", "Doppelklick auf: ${employee.getId()} ${employee.abbreviationSting()}")
 
     }
+    fun showSimplePopup(
+        title: String = "Information",
+        header: String? = null,
+        message: String,
+        type: Alert.AlertType = Alert.AlertType.INFORMATION
+    ) {
+        Alert(type).apply {
+            this.title = title
+            this.headerText = header
+            this.contentText = message
+        }.showAndWait()
+    }
+
 }
