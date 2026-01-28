@@ -12,9 +12,6 @@ import ressourcix.util.IdProvider
 class EmployeeManagement () {
      val employees: MutableList<Employee> = mutableListOf()
 
-
-
-
     fun mitarbeiterVerwaltung(io: ConsoleIO , management: EmployeeManagement , employeeIds: IdProvider) {
         io.println()
         io.println("=== Ressourcix Mitarbeiter Verwaltung ===")
