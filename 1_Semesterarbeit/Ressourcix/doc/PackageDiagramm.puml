@@ -1,39 +1,45 @@
-@startuml
-package "Ressourcix" {
-    object main
-    object idManager
-    class Jahresplan
-
-
-    package "Personalverwaltung"{
-        object mitarbeiterverwaltung
-        enum Schweregrad
-        enum Rolle
-        class Mitarbeiter
-        class Qualifikation
-
-
-
-    }
-
-    package "PersonalFerien"{
-        enum FerienStatus
-        enum FerienArt
-        class FerienEintrag
-        class WochenBereich
-
-    }
-
-    package "Datenverwaltung" {
-
-    }
-
-note top of Datenverwaltung
-  - Verwaltung von Algorithmen, Filter, Parametrierung etc.
-  - Datenspeicherung (CSV Converter)
-end note
+@startuml Ressourcix_Package_Diagram
+' ===== PACKAGE GROUPING =====
+package "ressourcix.app" {
+    class App
 }
 
+package "ressourcix.domain" {
+    class Employee
+    class EmployeeManagement
+    class VacationEntry
+    class WeekRange
+    class VacationPlanner
+    enum Role
+    enum VacationStatus
+}
 
+package "ressourcix.calendar" {
+    interface CalendarOutput
+    class ConsoleCalendarOutput
+}
+
+package "ressourcix.gui" {
+    class GuiBorderPane
+}
+
+package "ressourcix.ui" {
+    class ConsoleIO
+    enum MessageType
+    interface UserInterface
+}
+
+package "ressourcix.ui.menu" {
+    class MainMenu
+}
+
+package "ressourcix.util" {
+    class IdProvider
+}
+
+package "root" {
+    interface Graphical
+    class Main
+}
 
 @enduml
