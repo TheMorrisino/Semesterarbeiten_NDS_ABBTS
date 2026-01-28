@@ -42,7 +42,6 @@ class ConsoleCalendarOutput : CalendarOutput {
         val entries = employee.getVacationEntries().filter { it.year == year && it.hasWeek(week) }
         if (entries.isEmpty()) return null
 
-        // Nimm einfach den ersten Eintrag (oder letzten mit .last())
         return entries.first().getStatus(week)
 
     }
