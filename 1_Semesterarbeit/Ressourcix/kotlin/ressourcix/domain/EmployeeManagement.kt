@@ -122,7 +122,6 @@ class EmployeeManagement () {
 
         val currentOverlaps = countAllOverlaps()
 
-
         val conflictingEmployees = mutableSetOf<String>()
 
         employees.forEach { otherEmp ->

@@ -38,9 +38,7 @@ import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.dashboardView
 
 fun main() {
-    val app: Graphical = App()
-
-
+    val app: Graphical = App
 
     // App-Logik parallel starten
     Thread {

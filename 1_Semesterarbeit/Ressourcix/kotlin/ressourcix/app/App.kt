@@ -7,12 +7,11 @@ import ressourcix.ui.ConsoleIO
 import ressourcix.ui.menu.MainMenu
 import ressourcix.util.IdProvider
 
-class App(
-    private val io: ConsoleIO = ConsoleIO(),
-    val management: EmployeeManagement = EmployeeManagement(),
-    private val employeeIds: IdProvider = IdProvider(start = 11u),
-    private val vacationIds: IdProvider = IdProvider(start = 1u),
-) : Graphical {
+object App : Graphical {
+    val io: ConsoleIO = ConsoleIO()
+    val management: EmployeeManagement = EmployeeManagement()
+    private val employeeIds: IdProvider = IdProvider(start = 11u)
+    val vacationIds: IdProvider = IdProvider(start = 1u)
 
     override var employees = management.employees
 
