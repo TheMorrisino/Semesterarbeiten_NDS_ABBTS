@@ -1,6 +1,6 @@
 package ressourcix.calendar
 
-import ressourcix.app.App
+import ressourcix.app.app
 import ressourcix.domain.Employee
 import ressourcix.domain.VacationEntry
 import ressourcix.domain.VacationStatus
@@ -55,13 +55,13 @@ object consoleCalendarOutput : CalendarOutput {
 
     fun addVacation(empId: UInt, startWeek: UInt, endWeek: UInt) {
         val entry = VacationEntry(
-            id = App.vacationIds.generateId(),
+            id = app.vacationIds.generateId(),
             employeeId = empId,
             year = year,
             range = WeekRange(startWeek, endWeek),
             initialStatus = VacationStatus.REQUESTED
         )
-        println(App.management.addVacationSafe(App.management.employees[empId.toInt()-1],entry))
+        println(app.management.addVacationSafe(app.management.employees[empId.toInt()-1],entry))
     }
     fun getYear(): UInt {
         return year

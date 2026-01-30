@@ -14,11 +14,14 @@ import ressourcix.domain.code
 import ressourcix.gui.GuiBorderPane
 import ressourcix.gui.popUp.FerienantragKwPopup
 import ressourcix.calendar.consoleCalendarOutput
+import ressourcix.app.app
+
+
 
 
 object calenderView : StackPane() {
 
-    private val employees = GuiBorderPane.graphical.employees
+    private val employeecalenderView = app.employees
     private val tableView = TableView<Employee>()
 
     private val idColumn = TableColumn<Employee, UInt>("ID").apply {
@@ -37,7 +40,7 @@ object calenderView : StackPane() {
 
     init {
         tableView.columns.setAll(idColumn, abbrevColumn)
-        tableView.items.addAll(employees)
+        tableView.items.addAll(employeecalenderView)
 
 
         val scroll = ScrollPane(tableView).apply {
@@ -68,7 +71,7 @@ object calenderView : StackPane() {
     private fun rebuildCache(year: UInt, weeks: UInt = 52u) {
         weekCodeCache.clear()
 
-        for (employee in GuiBorderPane.graphical.employees) {
+        for (employee in employeecalenderView) {
             val codes = Array(weeks.toInt() + 1) { "." } // index 0 unbenutzt, Wochen starten bei 1
 
             val entries = employee.getVacationEntries().filter { it.year == year }
@@ -99,7 +102,7 @@ object calenderView : StackPane() {
     fun showYear(year: UInt, weeks: UInt = 52u) {
         currentYear = year
 
-        tableView.items.setAll(GuiBorderPane.graphical.employees)
+        tableView.items.setAll(employeecalenderView)
 
         rebuildCache(year, weeks)
 
@@ -133,7 +136,7 @@ object calenderView : StackPane() {
 
     /** Falls Mitarbeiterliste geändert wurde */
     fun updateEmployees() {
-        tableView.items.setAll(GuiBorderPane.graphical.employees)
+        tableView.items.setAll(employeecalenderView)
         showYear(currentYear) // baut Spalten + Cache neu
     }
 
