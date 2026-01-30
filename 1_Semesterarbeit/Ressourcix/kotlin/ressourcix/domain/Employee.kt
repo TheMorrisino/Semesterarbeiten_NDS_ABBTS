@@ -56,15 +56,11 @@ class Employee(private val id: UInt) {
 
         var startweek = entry.range.startWeek
         var endweek = entry.range.endWeek
-        println(startweek)
-        println(endweek)
-
-        println(vacationList)
-        println("leer")
+        //println(vacationList)
         for (e in 1..52) {
             if (e >= startweek.toInt() && (e <= endweek.toInt())) {
                 vacationList[e-1] = 1
-                println(vacationList)
+                //println(vacationList)
 
             }
 

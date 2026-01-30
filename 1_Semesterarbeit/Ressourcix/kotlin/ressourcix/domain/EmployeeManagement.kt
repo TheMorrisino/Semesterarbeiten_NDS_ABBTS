@@ -191,21 +191,24 @@ class EmployeeManagement () {
             println(message)
         }
         employee.addVacationEntry(entry)
-
+        Thread.sleep(1000)
+        updateOverlapList()
     }
 
-    // ====================================================================================================
-    // TO DO FÜR TIAGO
-    // ====================================================================================================
 
-//    // TO DO
-//    val popo : MutableList<Int> = mutableListOf()
-//    fun groupbyKW (){
-//        for (i in employees){
-//            employees[i].vacationList
-//            println(employees[i].vacationList)
-//        }
-//    }
+
+    //Die FerienListe mit 52 Einträgen aus Employee wird bei jedem Employee durchgegangen
+    val overlapList : MutableList<Int> = MutableList(52) { 0 }
+    fun updateOverlapList (){
+        overlapList.replaceAll { 0 }
+        for (i in 0 .. 51)
+            for (e in 0 .. employees.size - 1){
+                //overlapList[i] = 0
+                overlapList[i] += employees[e].vacationList[i]
+                //println(overlapList)
+        }
+        println(overlapList)
+    }
 
 
     fun VacationEntry.overlapsWith(other: VacationEntry): Boolean {
