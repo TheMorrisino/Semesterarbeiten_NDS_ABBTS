@@ -1,0 +1,208 @@
+@startuml
+' ==========================================================
+' Packages & Klassendiagramm
+' ==========================================================
+package "ressourcix.domain" {
+    class Employee {
+        - id: UInt
+        - firstName: String
+        - lastName: String
+        - workloadPercent: UByte
+        - role: Role
+        - Abbreviation: String
+        - vacationEntries: MutableList<VacationEntry>
+        - vacationList: MutableList<Int>
+        + getId(): UInt
+        + getFirstName(): String
+        + getLastName(): String
+        + getWorkloadPercent(): UByte
+        + getRole(): Role
+        + getVacationEntries(): List<VacationEntry>
+        + getFullName(): String
+        + abbreviationSting(): String
+        + setFirstName(value: String)
+        + setLastName(value: String)
+        + setWorkloadPercent(value: UByte)
+        + setRole(value: Role)
+        + addVacationEntry(entry: VacationEntry)
+        + createVacationList(entry: VacationEntry)
+    }
+    class EmployeeManagement {
+        - employees: MutableList<Employee>
+        + mitarbeiterVerwaltung(io: ConsoleIO, management: EmployeeManagement, employeeIds: IdProvider)
+        + listAll(): List<Employee>
+        + add(employee: Employee)
+        + removeById(id: UInt): Boolean
+        + findById(id: UInt): Employee?
+        + seed10Employees()
+        + allVacationInKwFiltern()
+        + addVacationSafe(employee: Employee, entry: VacationEntry, maxAllowed: Int = 1)
+        + VacationEntry.overlapsWith(other: VacationEntry): Boolean
+        + countAllOverlaps(): Int
+        + getEmployeeByIndex(index: Int): Employee
+    }
+    class VacationEntry {
+        - id: UInt
+        - employeeId: UInt
+        - year: UInt
+        - range: WeekRange
+        - statusByWeek: Map<UInt, VacationStatus>
+        + hasWeek(week: UInt): Boolean
+        + getStatus(week: UInt): VacationStatus?
+        + setStatus(week: UInt, status: VacationStatus)
+        + toString(): String
+    }
+    class WeekRange {
+        - startWeek: UInt
+        - endWeek: UInt
+        + contains(week: UInt): Boolean
+        + overlaps(other: WeekRange): Boolean
+    }
+    enum Role {
+        APPRENTICE
+        STAFF
+        TEAM_LEAD
+        MANAGER
+    }
+    enum VacationStatus {
+        REQUESTED
+        APPROVED
+        GENERATED
+        REJECTED
+        CANCELLED
+    }
+    enum OverlapStatus {
+        OK
+        WARNING
+        CRITICAL
+    }
+    class vacationPlanner {
+        + generateForAll(year: UInt,
+                         employees: List<Employee>,
+                         nextVacationId: () -> UInt,
+                         addVacationSafe: (Employee, VacationEntry) -> String?,
+                         blocks: List<WeekRange> = …): List<String>
+    }
+
+    ' Extension function
+    Employee ..> "label()" : extension
+    VacationStatus ..> "code" : extension
+}
+
+package "ressourcix.app" {
+    class app {
+        + io: ConsoleIO
+        + management: EmployeeManagement
+        + employees: List<Employee>
+        - employeeIds: IdProvider
+        + vacationIds: IdProvider
+        + run()
+    }
+}
+
+package "ressourcix.util" {
+    class IdProvider {
+        - start: UInt
+        - nextId: UInt
+        - id: UInt
+        - issuedIds: Set<UInt>
+        + generateId(): UInt
+        + Issued(id: UInt): Boolean
+    }
+}
+
+package "ressourcix.ui" {
+    class ConsoleIO {
+        + println(msg: String = "")
+        + print(msg: String)
+        + readTrimmed(): String
+        + readUInt(prompt: String, min: UInt?, max: UInt?): UInt?
+        + readNonBlank(prompt: String): String?
+        + readChoice(prompt: String = "Auswahl: "): Int
+    enum MessageType { INFO, WARNING, ERROR }
+    interface UserInterface {
+        + showMessage(msg: String, type: TrayIcon.MessageType = TrayIcon.MessageType.INFO)
+        + readLine(prompt: String = ""): String?
+        + readChoice(prompt: String = ""): Int
+        + printMainMenu(year: Int)
+    }
+}
+
+package "ressourcix.calendar" {
+    interface CalendarOutput {
+        + printYearPlan(year: UInt, employees: List<Employee>)
+    }
+    class consoleCalendarOutput {
+        - year: UInt = 2026u
+        + printYearPlan(year: UInt, employees: List<Employee>)
+        + addVacation(empId: UInt, startWeek: UInt, endWeek: UInt)
+        + getYear(): UInt
+        - statusForWeek(year: UInt, employee: Employee, week: UInt): VacationStatus?
+    }
+    consoleCalendarOutput ..|> CalendarOutput
+}
+
+package "ressourcix.gui" {
+    class GuiBorderPane <<Application>>
+    object bottomBar
+    object topNavigationBar
+    class NavigationsController
+    enum Route {
+    DASHBOARD, CALENDER, EMPLOYEEMANAGEMENT, PARAMETER }
+    object dashboardView
+    object calenderView
+    class EmployeeManagementView
+    object parameterview
+    object calendarPopUp
+    object filterPopUp
+    object vacationPopUp
+
+    GuiBorderPane --> TopNavigationBar
+    GuiBorderPane --> BottomBar
+    GuiBorderPane --> NavigationsController
+    NavigationsController --> Route
+    CalenderView --> consoleCalendarOutput
+    CalenderView --> app.employees
+    DashboardView --> app.employees
+    DashboardView --> consoleCalendarOutput
+    EmployeeManagementView --> app.management
+    TopNavigationBar --> Route
+}
+
+package "ressourcix.ui.menu" {
+    class MainMenu {
+        + init(io: ConsoleIO, management: EmployeeManagement,
+               employeeIds: IdProvider, vacationIds: IdProvider)
+        + loop()
+        - printMainMenu()
+        - rateSingleWeek()
+    }
+    MainMenu --> ConsoleIO
+    MainMenu --> EmployeeManagement
+    MainMenu --> IdProvider
+}
+
+' ==========================================================
+' Relationships
+' ==========================================================
+Employee "1" *-- "*" VacationEntry : has >
+EmployeeManagement "1" *-- "*" Employee : verwaltet >
+app "1" --> "1" EmployeeManagement
+app "1" --> "*" Employee : uses >
+app "1" --> IdProvider : uses >\n(employeeIds)
+app "1" --> IdProvider : uses >\n(vacationIds)
+ConsoleIO <-- MainMenu
+ConsoleIO <-- EmployeeManagement
+ConsoleIO <-- app
+WeekRange --> VacationEntry
+consoleCalendarOutput --> calenderView
+
+' ==========================================================
+' Notes / Styling
+' ==========================================================
+hide circle
+skinparam backgroundColor #F9F9F9
+skinparam classBackgroundColor #FFFFFF
+skinparam arrowColor #555555
+skinparam classBorderColor #CCCCCC
+@enduml

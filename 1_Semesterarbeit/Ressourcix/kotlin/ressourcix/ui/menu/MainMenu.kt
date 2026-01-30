@@ -43,6 +43,7 @@ object mainMenu {
                     1 -> { management.mitarbeiterVerwaltung(io,management,employeeIds)}
                     2 -> consoleCalendarOutput.printYearPlan(year, management.listAll())
                     3 -> rateSingleWeek()
+//                    4 -> management.addVacationSafe()
                     0 -> return
                     else -> io.println("Unbekannte Auswahl.")
                 }
