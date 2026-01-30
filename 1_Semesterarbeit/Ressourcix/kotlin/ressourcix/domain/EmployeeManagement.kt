@@ -116,9 +116,17 @@ class EmployeeManagement () {
         }
     }
 
+    fun allVacationInKwFiltern() {
+        val allVacation = employees.flatMap { it.getVacationEntries() }
 
+
+
+    }
 
     fun addVacationSafe(employee: Employee, entry: VacationEntry, maxAllowed: Int = 1) {
+        // To Do Ferienliste erstelle aller Mitableitern mit Index 1 = KW1 = alle Mitarbeiterferien aufrufen in KW 1 etc.
+        //
+
 
         val currentOverlaps = countAllOverlaps()
 
@@ -183,7 +191,22 @@ class EmployeeManagement () {
             println(message)
         }
         employee.addVacationEntry(entry)
+
     }
+
+    // ====================================================================================================
+    // TO DO FÜR TIAGO
+    // ====================================================================================================
+
+//    // TO DO
+//    val popo : MutableList<Int> = mutableListOf()
+//    fun groupbyKW (){
+//        for (i in employees){
+//            employees[i].vacationList
+//            println(employees[i].vacationList)
+//        }
+//    }
+
 
     fun VacationEntry.overlapsWith(other: VacationEntry): Boolean {
         // Nur überlappen wenn gleiches Jahr

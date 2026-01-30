@@ -154,11 +154,14 @@ object dashboardView : StackPane() {
 
             // Neue Series erstellen
             val series = XYChart.Series<String, Number>().apply {
+
                 overlapCounts.forEachIndexed { idx, cnt ->
                     val weekLabel = "${idx + 1}"
                     data.add(XYChart.Data(weekLabel, cnt))
                 }
+
             }
+            series.name = "2026"
 
             // Series zum Chart hinzufügen
             barChart.data.add(series)
