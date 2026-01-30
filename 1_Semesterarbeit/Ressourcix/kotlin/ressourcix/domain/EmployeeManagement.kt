@@ -137,7 +137,7 @@ class EmployeeManagement () {
         // Anzahl neuer Überschneidungen
         val newOverlapCount = conflictingEmployees.size
 
-        // Prüfen ob das Limit überschritten würde
+        // Prüfen, ob das Limit überschritten würde
         val totalOverlapsAfter = currentOverlaps + newOverlapCount
 
         // Bei maxAllowed = 0: keine Überschneidung erlaubt (>=)

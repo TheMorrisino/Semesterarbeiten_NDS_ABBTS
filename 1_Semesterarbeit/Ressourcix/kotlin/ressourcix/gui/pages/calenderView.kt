@@ -13,7 +13,8 @@ import ressourcix.domain.VacationStatus
 import ressourcix.domain.code
 import ressourcix.gui.GuiBorderPane
 import ressourcix.gui.popUp.FerienantragKwPopup
-import ressourcix.calendar.ConsoleCalendarOutput
+import ressourcix.calendar.consoleCalendarOutput
+
 
 object calenderView : StackPane() {
 
@@ -138,12 +139,15 @@ object calenderView : StackPane() {
 
 
     private fun onEmployeeDoubleClick(employee: Employee) {
-        println("Doppelklick auf: ${employee.getId()} ${employee.abbreviationSting()}")
+        val empId = employee.getId()
+        println("empId: $empId")
+        FerienantragKwPopup.empId = empId
+        println("Doppelklick auf: ${empId} ${employee.abbreviationSting()}")
         FerienantragKwPopup.show()?.let {
-            ConsoleCalendarOutput().addVacationManual(employee.getId(), it.startKW, it.endKW)
+            consoleCalendarOutput.addVacation(empId, it.startKW, it.endKW)
             println("Ferien: ${it.startKW} - ${it.endKW}")
-        }
 
+        }
     }
     fun showSimplePopup(
         title: String = "Ferieneintrag hinzufügen",

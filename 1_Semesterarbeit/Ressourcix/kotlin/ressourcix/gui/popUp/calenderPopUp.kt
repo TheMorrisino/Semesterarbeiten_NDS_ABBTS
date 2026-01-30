@@ -4,20 +4,22 @@ import javafx.beans.binding.Bindings
 import javafx.geometry.Insets
 import javafx.scene.control.*
 import javafx.scene.layout.GridPane
+import ressourcix.calendar.consoleCalendarOutput
 
 data class FerienantragKW(val startKW: UInt, val endKW: UInt)
 object FerienantragKwPopup {
-
+    var empId: UInt = 0u
     fun show(): FerienantragKW? {
         val dialog = Dialog<FerienantragKW>()
-        dialog.title = "Ferienantrag (KW)"
-        dialog.headerText = "Start- und Endwoche eingeben"
+
+        dialog.title = "Ferienantrag (KW) ${consoleCalendarOutput.getYear()}"
+        dialog.headerText = "Start- und Endwoche eingeben von Mitarbeiter ${empId}"
 
         val okType = ButtonType("OK", ButtonBar.ButtonData.OK_DONE)
         dialog.dialogPane.buttonTypes.addAll(okType, ButtonType.CANCEL)
 
-        val startField = TextField().apply { promptText = "1 - 53" }
-        val endField = TextField().apply { promptText = "1 - 53" }
+        val startField = TextField().apply { promptText = "1 - 52" }
+        val endField = TextField().apply { promptText = "1 - 52" }
 
         // nur Zahlen erlauben
         fun numbersOnly(tf: TextField) {
@@ -53,8 +55,8 @@ object FerienantragKwPopup {
             val end = endField.text.toIntOrNull()
 
             if (start == null || end == null) return "Beide Felder ausfüllen"
-            if (start !in 1..53) return "Start-KW muss 1–53 sein"
-            if (end !in 1..53) return "End-KW muss 1–53 sein"
+            if (start !in 1..52) return "Start-KW muss 1–52 sein"
+            if (end !in 1..52) return "End-KW muss 1–52 sein"
             if (end < start) return "End-KW darf nicht kleiner sein als Start-KW"
             return null
         }

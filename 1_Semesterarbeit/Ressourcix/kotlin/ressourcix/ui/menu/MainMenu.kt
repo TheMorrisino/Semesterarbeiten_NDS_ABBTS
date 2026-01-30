@@ -1,7 +1,7 @@
 package ressourcix.ui.menu
 
 import ressourcix.calendar.CalendarOutput
-import ressourcix.calendar.ConsoleCalendarOutput
+import ressourcix.calendar.consoleCalendarOutput
 import ressourcix.domain.EmployeeManagement
 import ressourcix.domain.VacationStatus
 import ressourcix.domain.WeekRange
@@ -15,22 +15,33 @@ import ressourcix.util.IdProvider
  * Hauptmenü der Konsolen-App.
  * Enthält Fehlerbehandlung (try/catch), damit die App nicht abstürzt.
  */
-class MainMenu(
-    private val io: ConsoleIO,
-    val management: EmployeeManagement,
-    private val employeeIds: IdProvider,
-    private val vacationIds: IdProvider,
-    val calendarOutput: CalendarOutput = ConsoleCalendarOutput(),
-    private val year: UInt = 2026u
-) {
+object mainMenu {
 
+    lateinit var io: ConsoleIO
+    lateinit var management: EmployeeManagement
+    lateinit var employeeIds: IdProvider
+    lateinit var vacationIds: IdProvider
+
+    fun init(
+        io: ConsoleIO,
+        management: EmployeeManagement,
+        employeeIds: IdProvider,
+        vacationIds: IdProvider
+    ) {
+        this.io = io
+        this.management = management
+        this.employeeIds = employeeIds
+        this.vacationIds = vacationIds
+    }
+
+    val year: UInt = 2026u
     fun loop() {
         while (true) {
             printMainMenu()
             try {
                 when (io.readChoice()) {
                     1 -> { management.mitarbeiterVerwaltung(io,management,employeeIds)}
-                    2 -> calendarOutput.printYearPlan(year, management.listAll())
+                    2 -> consoleCalendarOutput.printYearPlan(year, management.listAll())
                     3 -> rateSingleWeek()
                     0 -> return
                     else -> io.println("Unbekannte Auswahl.")
