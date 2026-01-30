@@ -12,12 +12,15 @@ import ressourcix.domain.EmployeeManagement
 import ressourcix.gui.navigation.*
 import java.util.*
 import kotlin.system.exitProcess
+import ressourcix.gui.pages.calenderView
+import ressourcix.gui.pages.dashboardView
 
 class GuiBorderPane : Application() {
 
 
 
-       var  guiEmployeeUpdatet = app.employees
+
+
 
 
 

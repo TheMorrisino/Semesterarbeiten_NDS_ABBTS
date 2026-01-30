@@ -6,8 +6,9 @@ class Employee(private val id: UInt) {
     private var lastName: String = ""
     private var workloadPercent: UByte = 100u
     private var role: Role = Role.STAFF
-    var Abbreviation : String = ""
+    var Abbreviation: String = ""
     private val vacationEntries: MutableList<VacationEntry> = mutableListOf()
+    var vacationList: MutableList<Int> = MutableList(52) { 0 }
 
     fun getId(): UInt = id
     fun getFirstName(): String = firstName
@@ -46,9 +47,31 @@ class Employee(private val id: UInt) {
     }
 
     fun addVacationEntry(entry: VacationEntry) {
+        createVacationList(entry)
         vacationEntries.add(entry)
     }
 
+
+    fun createVacationList(entry: VacationEntry) {
+
+        var startweek = entry.range.startWeek
+        var endweek = entry.range.endWeek
+        println(startweek)
+        println(endweek)
+
+        println(vacationList)
+        println("leer")
+        for (e in 1..52) {
+            if (e >= startweek.toInt() && (e <= endweek.toInt())) {
+                vacationList[e-1] = 1
+                println(vacationList)
+
+            }
+
+        }
+
+
+    }
 }
 
 fun Employee.label(): String =
