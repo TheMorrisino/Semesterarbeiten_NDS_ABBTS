@@ -12,11 +12,16 @@ import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import ressourcix.domain.Employee
 import ressourcix.domain.VacationEntry
-import ressourcix.gui.GuiBorderPane.Companion.graphical
+//import ressourcix.gui.GuiBorderPane.Companion.graphical
 import javafx.util.Duration
+import ressourcix.app.app
+import ressourcix.gui.GuiBorderPane
+
 
 
 object dashboardView : StackPane() {
+
+
 
     private lateinit var barChart: BarChart<String, Number>
     private val xAxis = CategoryAxis().apply {
@@ -131,7 +136,7 @@ object dashboardView : StackPane() {
     fun updateBarChart() {
 
         val overlapCounts = try {
-            computeWeeklyOverlap(graphical.employees)
+            computeWeeklyOverlap(app.employees)
         } catch (e: UninitializedPropertyAccessException) {
             return
         }

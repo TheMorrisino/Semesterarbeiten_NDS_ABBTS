@@ -1,15 +1,21 @@
 package ressourcix.calendar
 
+import ressourcix.app.app
 import ressourcix.domain.Employee
+import ressourcix.domain.VacationEntry
 import ressourcix.domain.VacationStatus
+import ressourcix.domain.WeekRange
 import ressourcix.domain.code
 import ressourcix.domain.label
+import ressourcix.ui.ConsoleIO
+import ressourcix.gui.GuiBorderPane
+import ressourcix.main
 
 /**
  * Druckt eine Zeile pro Mitarbeiter und Spalten KW 1..52.
  */
-class ConsoleCalendarOutput : CalendarOutput {
-
+object consoleCalendarOutput : CalendarOutput {
+    private val year: UInt = 2026u
     override fun printYearPlan(year: UInt, employees: List<Employee>) {
         val weeks = 52u
 
@@ -17,6 +23,7 @@ class ConsoleCalendarOutput : CalendarOutput {
             append(String.format("%-12s", "EMP"))
             for (w in 1u..weeks) append(String.format("%4d", w.toInt()))
         }
+
 
         println()
         println("===== CALENDAR $year | Weeks 1..$weeks =====")
@@ -44,5 +51,19 @@ class ConsoleCalendarOutput : CalendarOutput {
 
         return entries.first().getStatus(week)
 
+    }
+
+    fun addVacation(empId: UInt, startWeek: UInt, endWeek: UInt) {
+        val entry = VacationEntry(
+            id = app.vacationIds.generateId(),
+            employeeId = empId,
+            year = year,
+            range = WeekRange(startWeek, endWeek),
+            initialStatus = VacationStatus.REQUESTED
+        )
+        println(app.management.addVacationSafe(app.management.employees[empId.toInt()-1],entry))
+    }
+    fun getYear(): UInt {
+        return year
     }
 }

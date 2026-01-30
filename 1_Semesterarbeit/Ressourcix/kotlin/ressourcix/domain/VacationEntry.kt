@@ -25,10 +25,7 @@ class VacationEntry(
 
     fun getStatus(week: UInt): VacationStatus? = statusByWeek[week]
 
-    /**
-     * Setzt den Status einer einzelnen Woche.
-     * Fehlerbehandlung: Woche muss im Bereich liegen.
-     */
+
     fun setStatus(week: UInt, status: VacationStatus) {
         require(hasWeek(week)) { "week $week is not part of this VacationEntry (range ${range.startWeek}-${range.endWeek})." }
         statusByWeek[week] = status

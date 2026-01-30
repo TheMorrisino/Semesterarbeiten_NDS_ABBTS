@@ -1,22 +1,25 @@
 package ressourcix.gui
 
-import Graphical
+//import Graphical
 import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.image.Image
 import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
+import ressourcix.app.app
+import ressourcix.domain.EmployeeManagement
 import ressourcix.gui.navigation.*
 import java.util.*
 import kotlin.system.exitProcess
 
 class GuiBorderPane : Application() {
 
-    companion object {
-        // Muss in Main.kt gesetzt werden: GuiBorderPane.graphical = app
-        lateinit var graphical: Graphical
-    }
+
+
+       var  guiEmployeeUpdatet = app.employees
+
+
 
     override fun start(stage: Stage) {
 

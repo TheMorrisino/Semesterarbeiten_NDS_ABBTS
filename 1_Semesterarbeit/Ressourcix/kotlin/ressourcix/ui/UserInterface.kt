@@ -1,7 +1,7 @@
 package ressourcix.ui
 
 import ressourcix.calendar.CalendarOutput
-import ressourcix.calendar.ConsoleCalendarOutput
+import ressourcix.calendar.consoleCalendarOutput
 import ressourcix.domain.Employee
 import ressourcix.domain.EmployeeManagement
 import ressourcix.util.IdProvider
