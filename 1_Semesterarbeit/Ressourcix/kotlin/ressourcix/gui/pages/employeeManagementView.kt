@@ -14,7 +14,9 @@ import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.text.TextAlignment
+import ressourcix.app.app
 import ressourcix.gui.popUp.filterPopUp
+import ressourcix.gui.popUp.filteredEmployee
 
 object employeeManagementView : BorderPane() {
 
@@ -72,7 +74,27 @@ object employeeManagementView : BorderPane() {
         alignment = Pos.CENTER
 
         val filterBtn = createButton("Filter").apply {
-            setOnAction { showPopup(filterPopUp.build { closePopup() }) }
+            setOnAction {
+                showPopup(
+                    filterPopUp.build(
+                        onClose = { closePopup() },
+                        onApply = { department, education ->
+                            val filtered = app.employees.filter { emp ->
+                                emp.getDepartment() == department && emp.getEducation() == education
+                            }
+                            closePopup()
+                            showPopup(
+                                filteredEmployee.build(
+                                    department = department,
+                                    education = education,
+                                    employees = filtered,
+                                    onClose = { closePopup() }
+                                )
+                            )
+                        }
+                    )
+                )
+            }
         }
 
         val idBox = HBox(10.0).apply {
@@ -168,8 +190,6 @@ object employeeManagementView : BorderPane() {
 
     fun closePopup() {
         popupHost.children.clear()
-        dim.isVisible = false
-        popupHost.isVisible = false
         dim.isVisible = false
         popupHost.isVisible = false
     }

@@ -8,6 +8,8 @@ class Employee(private val id: UInt) {
     private var role: Role = Role.STAFF
     var Abbreviation : String = ""
     private val vacationEntries: MutableList<VacationEntry> = mutableListOf()
+    private var department: Department? = null
+    private var education: Education? = null
 
     fun getId(): UInt = id
     fun getFirstName(): String = firstName
@@ -35,6 +37,9 @@ class Employee(private val id: UInt) {
     fun setRole(value: Role) {
         role = value
     }
+
+    fun getDepartment(): Department? = department
+    fun getEducation(): Education? = education
 
     fun getFullName(): String =
         listOf(firstName, lastName).filter { it.isNotBlank() }.joinToString(" ")
