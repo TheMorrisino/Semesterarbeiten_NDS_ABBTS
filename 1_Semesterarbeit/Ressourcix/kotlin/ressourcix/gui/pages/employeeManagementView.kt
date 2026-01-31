@@ -15,7 +15,6 @@ import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.text.TextAlignment
 import ressourcix.gui.popUp.filterPopUp
-import ressourcix.gui.popUp.vacationPopUp
 
 object employeeManagementView : BorderPane() {
 
@@ -128,21 +127,21 @@ object employeeManagementView : BorderPane() {
         children.addAll(leftColumm, rightColumm)
     }
 
-    private val vacationsBar = HBox(20.0).apply {
-        padding = Insets(20.0)
-        alignment = Pos.CENTER_RIGHT
-        children.add(
-            createButton("Ferien eintragen").apply {
-                setOnAction {
-                    showPopup(vacationPopUp.build(
-                            onClose = { closePopup() },
-                            onSave = { weeks -> println("Ferien gespeichert: $weeks") }
-                        )
-                    )
-                }
-            }
-        )
-    }
+//    private val vacationsBar = HBox(20.0).apply {
+//        padding = Insets(20.0)
+//        alignment = Pos.CENTER_RIGHT
+//        children.add(
+//            createButton("Ferien eintragen").apply {
+//                setOnAction {
+//                    showPopup(vacationPopUp.build(
+//                            onClose = { closePopup() },
+//                            onSave = { weeks -> println("Ferien gespeichert: $weeks") }
+//                        )
+//                    )
+//                }
+//            }
+//        )
+//    }
 
     private val functionsBox = VBox(30.0).apply {
         padding = Insets(30.0)
@@ -170,7 +169,7 @@ object employeeManagementView : BorderPane() {
     init {
         mainContent.top = filterBar
         mainContent.center = employeeInfoBox
-        mainContent.bottom = vacationsBar
+        //mainContent.bottom = vacationsBar
         mainContent.right = functionsBox
         center = centerStack
     }
