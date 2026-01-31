@@ -4,7 +4,6 @@ import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.Node
-import javafx.scene.control.Alert
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableRow
@@ -158,15 +157,11 @@ object calenderView : StackPane() {
         showYear(currentYear) // baut Spalten + Cache neu
     }
 
-
     private fun onEmployeeDoubleClick(employee: Employee) {
         val empId = employee.getId()
-        println("Doppelklick auf: $empId ${employee.abbreviationSting()}")
-
-        // optional: Felder im Popup vorbefüllen
+        println("Doppelklick auf: $empId ${employee.abbreviationSting()}") //TODO muss entfernt werden
         vacationPopUp.idField.text = empId.toString()
         vacationPopUp.abbreviationField.text = employee.abbreviationSting()
-
         showPopup(
             vacationPopUp.build(
                 onClose = { closePopup() },
@@ -195,19 +190,4 @@ fun closePopup() {
     dim.isVisible = false
     popupHost.isVisible = false
 }
-
-    fun showSimplePopup(
-        title: String = "Ferieneintrag hinzufügen",
-        header: String? = null,
-        message: String,
-        type: Alert.AlertType = Alert.AlertType.INFORMATION
-    ) {
-        Alert(type).apply {
-            this.title = title
-            this.headerText = header
-            this.contentText = message
-
-        }.showAndWait()
-    }
-
 }

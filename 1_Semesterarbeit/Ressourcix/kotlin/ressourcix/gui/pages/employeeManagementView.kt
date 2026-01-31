@@ -127,22 +127,6 @@ object employeeManagementView : BorderPane() {
         children.addAll(leftColumm, rightColumm)
     }
 
-//    private val vacationsBar = HBox(20.0).apply {
-//        padding = Insets(20.0)
-//        alignment = Pos.CENTER_RIGHT
-//        children.add(
-//            createButton("Ferien eintragen").apply {
-//                setOnAction {
-//                    showPopup(vacationPopUp.build(
-//                            onClose = { closePopup() },
-//                            onSave = { weeks -> println("Ferien gespeichert: $weeks") }
-//                        )
-//                    )
-//                }
-//            }
-//        )
-//    }
-
     private val functionsBox = VBox(30.0).apply {
         padding = Insets(30.0)
         alignment = Pos.CENTER_RIGHT
