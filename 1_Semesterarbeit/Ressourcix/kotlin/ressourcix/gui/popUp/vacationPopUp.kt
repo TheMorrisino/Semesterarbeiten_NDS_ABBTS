@@ -110,8 +110,12 @@ object vacationPopUp {
                     padding = Insets(10.0)
                     spacing = 10.0
                     children.addAll(
-                        createDataBox("Mitarbeiter ID:", idField),
-                        createDataBox("Mitarbeiter Kürzel:", abbreviationField)
+                        createDataBox("Mitarbeiter ID:", idField).apply {
+                            isDisable = true
+                        },
+                        createDataBox("Mitarbeiter Kürzel:", abbreviationField).apply {
+                            isDisable = true
+                        }
                     )
                 },
                 HBox().apply {
