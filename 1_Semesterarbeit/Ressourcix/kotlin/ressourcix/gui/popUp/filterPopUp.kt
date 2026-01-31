@@ -20,7 +20,7 @@ object filterPopUp {
 
     val departmentField = ComboBox<String>().apply {
         items = FXCollections.observableArrayList("Aussendienst", "Admin", "Planung")
-        promptText = "Abteilung asuwählen..."
+        promptText = "Abteilung auswählen..."
         prefHeight = 30.0
         prefWidth = 300.0
     }

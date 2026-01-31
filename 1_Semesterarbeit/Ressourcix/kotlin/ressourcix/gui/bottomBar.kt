@@ -10,15 +10,14 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
-import javafx.scene.text.Text
 import javafx.util.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 object bottomBar {
-    private val status = Text("Release Version 1.0").apply {   //Meldungen werden hier angezeigt
-        setDisable(false)
-//        isEditable = false
+    private var status = TextField("Meldungen werden hier angezeigt").apply {
+        setDisable(true)
+        isEditable = false
     }
 
     private val clockLabel = Label().apply {
@@ -33,7 +32,7 @@ object bottomBar {
         val spacer = Region().apply {
             HBox.setHgrow(this, Priority.ALWAYS)
         }
-        children.addAll(status, spacer,clockLabel )
+        children.addAll(status,clockLabel )
 
         HBox.setHgrow(status, Priority.ALWAYS)
         style = "-fx-border-color: #cccccc; -fx-border-width: 1 0 0 0;"
