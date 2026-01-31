@@ -63,7 +63,12 @@ class GuiBorderPane : Application() {
             title = "Ressourcix beenden"
             headerText = "Möchten Sie Ressourcix wirklich beenden?"
             contentText = "Nicht gespeicherte Daten gehen verloren."
+
         }
+        val pathIcon = "/Ressourcix_Icon_OhneB2.png"
+        val stage = alert.dialogPane.scene.window as Stage
+        stage.icons.add(Image(pathIcon))
+
 
         val result: Optional<ButtonType> = alert.showAndWait()
 
