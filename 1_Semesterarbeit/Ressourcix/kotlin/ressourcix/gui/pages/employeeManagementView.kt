@@ -5,6 +5,7 @@ package ressourcix.gui.pages
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
+import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
@@ -29,25 +30,9 @@ object employeeManagementView : BorderPane() {
     var idField = createTfl("", "ID eingeben...").apply {
         textFormatter = positiveIntNoZeroFormatter()
     }
-    val showByIdBtn = createButton("MA nach ID\nanzeigen").apply {
-        disableProperty().bind(idField.textProperty().isEmpty)
-        setOnAction {
-            val id = idField.text.toInt()
-        }
-    }
-
     var abbreviationField = createTfl("", "Kürzel eingeben").apply {
         textFormatter = lettersOnlyMax4Formatter()
     }
-    val showByAbbreviationBtn = createButton("MA nach Kürzel\nanzeigen").apply {
-        disableProperty().bind(abbreviationField.textProperty().isEmpty)
-        setOnAction {
-            val kuerzel = abbreviationField.text.trim().uppercase()
-            // TODO: hier deine Suchfunktion
-        }
-    }
-
-
     var nameField = createTfl("","")
     var roleField = createTfl("","")
     var departmentField = createTfl("","")
@@ -117,6 +102,19 @@ object employeeManagementView : BorderPane() {
             }
         }
 
+        val showByIdBtn = createButton("MA nach ID\nanzeigen").apply {
+            disableProperty().bind(idField.textProperty().isEmpty)
+            setOnAction {
+                val idUInt = idField.text.toUInt()
+                val emp = app.employees.firstOrNull { it.getId() == idUInt }
+                if (emp != null) {
+                    fillEmployeeFields(emp)
+                } else {
+                    showNotFoundAlert("Suche nach ID", idField.text)
+                    clearEmployeeFields()
+                }
+            }
+        }
         val idBox = HBox(10.0).apply {
             alignment = Pos.CENTER
             children.addAll(
@@ -124,6 +122,24 @@ object employeeManagementView : BorderPane() {
                 idField,
                 showByIdBtn
             )
+        }
+        val showByAbbreviationBtn = createButton("MA nach Kürzel\nanzeigen").apply {
+            disableProperty().bind(abbreviationField.textProperty().isEmpty)
+            setOnAction {
+                val kuerzel = abbreviationField.text.trim().uppercase()
+
+                val emp = app.employees.firstOrNull {
+                    val abbr = it.Abbreviation.ifBlank { it.abbreviationSting() }
+                    abbr == kuerzel
+                }
+
+                if (emp != null) {
+                    fillEmployeeFields(emp)
+                } else {
+                    showNotFoundAlert("Suche nach Kürzel", kuerzel)
+                    clearEmployeeFields()
+                }
+            }
         }
 
         val abbreviationBox = HBox(10.0).apply {
@@ -191,7 +207,6 @@ object employeeManagementView : BorderPane() {
     init {
         mainContent.top = filterBar
         mainContent.center = employeeInfoBox
-        //mainContent.bottom = vacationsBar
         mainContent.right = functionsBox
         center = centerStack
     }
@@ -252,4 +267,44 @@ object employeeManagementView : BorderPane() {
         }
     }
 
+    private fun fillEmployeeFields(emp: ressourcix.domain.Employee) {
+        idField.text = emp.getId().toString()
+        nameField.text = emp.getFirstName()
+        surnameField.text = emp.getLastName()
+        workloadField.text = "${emp.getWorkloadPercent()}"
+        roleField.text = emp.getRole().toString()
+        departmentField.text = emp.getDepartment()?.toString().orEmpty()
+        educationField.text = emp.getEducation()?.toString().orEmpty()
+        val abbr = emp.Abbreviation.ifBlank { emp.abbreviationSting() }
+        abbreviationField.text = abbr
+        cityField.clear()
+        birthdayField.clear()
+        remainingVacationWeeksField.clear()
+        usedVacationWeeksField.clear()
+    }
+
+    private fun clearEmployeeFields() {
+        idField.clear()
+        abbreviationField.clear()
+        nameField.clear()
+        surnameField.clear()
+        abbreviationField.clear()
+        roleField.clear()
+        departmentField.clear()
+        cityField.clear()
+        workloadField.clear()
+        educationField.clear()
+        birthdayField.clear()
+        remainingVacationWeeksField.clear()
+        usedVacationWeeksField.clear()
+    }
+
+    private fun showNotFoundAlert(title: String, searchValue: String) {
+        Alert(Alert.AlertType.WARNING).apply {
+            this.title = title
+            headerText = "Kein Mitarbeitender gefunden"
+            contentText = "Suchwert: $searchValue"
+            showAndWait()
+        }
+    }
 }
