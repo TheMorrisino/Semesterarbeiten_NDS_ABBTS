@@ -8,6 +8,7 @@ import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
+import javafx.scene.control.TextFormatter
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Region
@@ -25,8 +26,27 @@ object employeeManagementView : BorderPane() {
     private const val TFL_HEIGHT = 30.0
     private const val TFL_WIDTH = 300.0
 
-    var idField = createTfl("", "ID eingeben...")
-    var abbreviationField = createTfl("", "Kürzel eingeben")
+    var idField = createTfl("", "ID eingeben...").apply {
+        textFormatter = positiveIntNoZeroFormatter()
+    }
+    val showByIdBtn = createButton("MA nach ID\nanzeigen").apply {
+        disableProperty().bind(idField.textProperty().isEmpty)
+        setOnAction {
+            val id = idField.text.toInt()
+        }
+    }
+
+    var abbreviationField = createTfl("", "Kürzel eingeben").apply {
+        textFormatter = lettersOnlyMax4Formatter()
+    }
+    val showByAbbreviationBtn = createButton("MA nach Kürzel\nanzeigen").apply {
+        disableProperty().bind(abbreviationField.textProperty().isEmpty)
+        setOnAction {
+            val kuerzel = abbreviationField.text.trim().uppercase()
+            // TODO: hier deine Suchfunktion
+        }
+    }
+
 
     var nameField = createTfl("","")
     var roleField = createTfl("","")
@@ -102,9 +122,7 @@ object employeeManagementView : BorderPane() {
             children.addAll(
                 Label("ID:"),
                 idField,
-                createButton("MA nach ID\nanzeigen").apply {
-                    setOnAction {  } //TODO Funktion einfügen
-                }
+                showByIdBtn
             )
         }
 
@@ -113,9 +131,7 @@ object employeeManagementView : BorderPane() {
             children.addAll(
                 Label("Kürzel:"),
                 abbreviationField,
-                createButton("MA nach Kürzel\nanzeigen").apply {
-                    setOnAction {  } //TODO Funktion einfügen
-                }
+                showByAbbreviationBtn
             )
         }
         children.addAll(filterBtn, idBox, abbreviationBox)
@@ -215,4 +231,25 @@ object employeeManagementView : BorderPane() {
         VBox(6.0).apply {
             children.addAll(Label(labelText), field)
         }
+
+    private fun positiveIntNoZeroFormatter(): TextFormatter<String> {
+        return TextFormatter { change ->
+            val newText = change.controlNewText
+            val ok = newText.isEmpty() || (newText.matches(Regex("[1-9][0-9]*"))
+                    && newText.length <=4)
+            if (ok) change else null
+        }
+    }
+
+    private fun lettersOnlyMax4Formatter(): TextFormatter<String> {
+        return TextFormatter { change ->
+            val newText = change.controlNewText.uppercase()
+            val ok = newText.isEmpty() || newText.matches(Regex("[A-ZÄÖÜ]{1,4}"))
+            if (ok) {
+                change.text = change.text.uppercase()
+                change
+            } else null
+        }
+    }
+
 }
