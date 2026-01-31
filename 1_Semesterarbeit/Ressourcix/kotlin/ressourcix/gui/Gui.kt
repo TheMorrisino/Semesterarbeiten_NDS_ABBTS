@@ -49,7 +49,9 @@ class GuiBorderPane : Application() {
                 stage.icons.add(appIcon)
             }
             setResizable(true)
-            setOnCloseRequest { exit() }
+            setOnCloseRequest {  event ->
+                event.consume()
+                exit() }
             show()
         }
     }
@@ -66,7 +68,6 @@ class GuiBorderPane : Application() {
         val result: Optional<ButtonType> = alert.showAndWait()
 
         if (result.isPresent && result.get() == ButtonType.OK) {
-
             exitProcess(0)
         }
     }
