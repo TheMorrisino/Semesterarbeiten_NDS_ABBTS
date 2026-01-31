@@ -90,6 +90,7 @@ object vacationPopUp {
         firstVacationWeek.textProperty().addListener { _, _, _ -> updateError() }
         lastVacationWeek.textProperty().addListener { _, _, _ -> updateError() }
 
+        updateError()
 
         return VBox().apply {
             padding = Insets(10.0)
@@ -121,6 +122,9 @@ object vacationPopUp {
                         createDataBox("Ferien von Woche:", firstVacationWeek),
                         createDataBox("Ferien bis Woche:", lastVacationWeek)
                     )
+                },
+                errorLabel.apply {
+                    padding = Insets(0.0,10.0,0.0,10.0)
                 },
                 HBox().apply {
                     alignment = Pos.CENTER
