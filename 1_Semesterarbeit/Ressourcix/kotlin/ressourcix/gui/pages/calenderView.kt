@@ -1,81 +1,236 @@
 package ressourcix.gui.pages
 
+import javafx.application.Platform
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.beans.property.SimpleStringProperty
-import javafx.scene.control.Alert
-import javafx.scene.control.ScrollPane
-import javafx.scene.control.TableColumn
-import javafx.scene.control.TableRow
-import javafx.scene.control.TableView
+import javafx.geometry.Orientation
+import javafx.scene.control.*
+import javafx.scene.input.ScrollEvent
+import javafx.scene.layout.BorderPane
+import javafx.scene.layout.HBox
+import javafx.scene.layout.Priority
+import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
+import ressourcix.app.app
+import ressourcix.calendar.consoleCalendarOutput
 import ressourcix.domain.Employee
 import ressourcix.domain.VacationStatus
 import ressourcix.domain.code
-import ressourcix.gui.GuiBorderPane
 import ressourcix.gui.popUp.FerienantragKwPopup
-import ressourcix.calendar.consoleCalendarOutput
-import ressourcix.app.app
 
-
-
-
+/**
+ * Kalender:
+ * - links: fixedTable (ID + Abkürzung) frozen
+ * - rechts: weekTable (KW01..KW52) scrollt horizontal
+ * - NUR eine sichtbare vertikale Scrollbar (rechts)
+ * - vertikales Scrollen synchron: rechts steuert links
+ * - KEIN Spacer zwischen Tabellen
+ * - Stattdessen: Spacer UNTEN bei fixedTable, gebunden an Höhe der horizontalen Scrollbar rechts
+ */
 object calenderView : StackPane() {
 
-    private val employeecalenderView = app.employees
-    private val tableView = TableView<Employee>()
+    private val employees = app.employees
+
+    private val fixedTable = TableView<Employee>()
+    private val weekTable = TableView<Employee>()
+
+    // (Name bleibt, nicht genutzt)
+    private val vScroll = ScrollBar().apply {
+        orientation = Orientation.VERTICAL
+        isVisible = false
+        isManaged = false
+    }
 
     private val idColumn = TableColumn<Employee, UInt>("ID").apply {
         setCellValueFactory { ReadOnlyObjectWrapper(it.value.getId()) }
         prefWidth = 60.0
+        isSortable = false
+        isReorderable = false
     }
 
     private val abbrevColumn = TableColumn<Employee, String>("Abkürzung").apply {
         setCellValueFactory { SimpleStringProperty(it.value.abbreviationSting()) }
         prefWidth = 120.0
+        isSortable = false
+        isReorderable = false
     }
 
-    // Cache: employeeId -> codes[week]
     private var currentYear: UInt = 2026u
     private val weekCodeCache: MutableMap<UInt, Array<String>> = mutableMapOf()
 
-    init {
-        tableView.columns.setAll(idColumn, abbrevColumn)
-        tableView.items.addAll(employeecalenderView)
-
-
-        val scroll = ScrollPane(tableView).apply {
-            isFitToHeight = true
-            isFitToWidth = true
-            pannableProperty().set(true)
-
-
-            tableView.setRowFactory {
-                val row = TableRow<Employee>()
-                row.setOnMouseClicked { event ->
-                    if (event.clickCount == 2 && !row.isEmpty) {
-                        val employee = row.item
-                        onEmployeeDoubleClick(employee)
-                    }
-                }
-                row
-            }
-
-        }
-        children.add(scroll)
-
-        // Standardjahr anzeigen
-        showYear(2026u)
+    /**
+     * WICHTIG: spacer ist jetzt der Bottom-Spacer unter der linken Tabelle
+     * (damit links unten die gleiche Höhe entsteht wie die horizontale Scrollbar rechts)
+     */
+    private val spacer = Region().apply {
+        minHeight = 0.0
+        prefHeight = 0.0
+        maxHeight = 0.0
     }
 
-    /** Baut Cache für alle Mitarbeiter für ein Jahr: KW1.KW52 */
+    // Guards
+    private var scrollSyncInstalled = false
+    private var wheelForwardInstalled = false
+    private var selectionSyncInstalled = false
+
+    init {
+        // --- Tabellen Setup ---
+        fixedTable.columns.setAll(idColumn, abbrevColumn)
+        fixedTable.columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
+        fixedTable.isFocusTraversable = false
+
+        weekTable.columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
+        weekTable.isFocusTraversable = false
+
+        // gleiche Zeilenhöhe gegen Drift/Offset
+        val rowHeight = 24.0
+        fixedTable.fixedCellSize = rowHeight
+        weekTable.fixedCellSize = rowHeight
+
+        // Items teilen (gleiche Reihenfolge!)
+        fixedTable.items.setAll(employees)
+        weekTable.items = fixedTable.items
+
+        // linke Tabelle: Breite fix
+        val fixedWidth = idColumn.prefWidth + abbrevColumn.prefWidth + 24.0
+        fixedTable.minWidth = fixedWidth
+        fixedTable.prefWidth = fixedWidth
+        fixedTable.maxWidth = fixedWidth
+
+        // Layout:
+        // leftPane = fixedTable + spacer unten
+        val leftPane = BorderPane().apply {
+            center = fixedTable
+            bottom = spacer
+        }
+
+        // center = leftPane direkt neben weekTable (kein Abstand dazwischen)
+        val center = HBox(leftPane, weekTable).apply {
+            HBox.setHgrow(leftPane, Priority.NEVER)
+            HBox.setHgrow(weekTable, Priority.ALWAYS)
+        }
+
+        val root = BorderPane().apply { this.center = center }
+        children.add(root)
+
+        // RowFactory ohne updateItem-style-spam (weniger Flackern)
+        fixedTable.setRowFactory { makeRow() }
+        weekTable.setRowFactory { makeRow() }
+
+        // Standardjahr
+        showYear(2026u)
+
+        // Skin-Listener: bei Skin-Rebuild nochmal installieren
+        fixedTable.skinProperty().addListener { _, _, _ -> Platform.runLater { installOnceOrRefresh() } }
+        weekTable.skinProperty().addListener { _, _, _ -> Platform.runLater { installOnceOrRefresh() } }
+        Platform.runLater { installOnceOrRefresh() }
+    }
+
+    private fun makeRow(): TableRow<Employee> {
+        val row = TableRow<Employee>()
+
+        row.selectedProperty().addListener { _, _, selected ->
+            row.style = if (selected) {
+                """
+                -fx-background-color: rgba(30, 144, 255, 0.25);
+                -fx-border-color: #1e90ff;
+                -fx-border-width: 0 0 0 4px;
+                """.trimIndent()
+            } else ""
+        }
+
+        row.setOnMouseClicked { e ->
+            if (e.clickCount == 2 && !row.isEmpty) onEmployeeDoubleClick(row.item)
+        }
+        return row
+    }
+
+    private fun installOnceOrRefresh() {
+        val leftV = findScrollBar(fixedTable, Orientation.VERTICAL)
+        val rightV = findScrollBar(weekTable, Orientation.VERTICAL)
+        if (leftV == null || rightV == null) return
+
+        // Linke vertikale Scrollbar verstecken (nur rechts sichtbar)
+        hideVerticalBar(leftV)
+
+        // Linke horizontale Scrollbar verstecken (frozen)
+        findScrollBar(fixedTable, Orientation.HORIZONTAL)?.let { hideHorizontalBar(it) }
+
+        // Bottom-Spacer unter links: Höhe = Höhe der horizontalen Scrollbar rechts
+        val rightH = findScrollBar(weekTable, Orientation.HORIZONTAL)
+        if (rightH != null && !spacer.prefHeightProperty().isBound) {
+            spacer.prefHeightProperty().bind(rightH.heightProperty())
+            spacer.minHeightProperty().bind(rightH.heightProperty())
+            spacer.maxHeightProperty().bind(rightH.heightProperty())
+        }
+
+        // Scroll Sync: rechts steuert links (one-way)
+        if (!scrollSyncInstalled) {
+            scrollSyncInstalled = true
+            rightV.valueProperty().addListener { _, _, v ->
+                leftV.value = v.toDouble()
+            }
+        }
+        leftV.value = rightV.value
+
+        // Wheel Forward nur einmal
+        if (!wheelForwardInstalled) {
+            wheelForwardInstalled = true
+            forwardWheelScrollToWeekTable()
+        }
+
+        // Selection Sync einmal
+        if (!selectionSyncInstalled) {
+            selectionSyncInstalled = true
+            fixedTable.selectionModel.selectedIndexProperty().addListener { _, _, idx ->
+                val i = idx.toInt()
+                if (i >= 0 && i != weekTable.selectionModel.selectedIndex) weekTable.selectionModel.select(i)
+            }
+            weekTable.selectionModel.selectedIndexProperty().addListener { _, _, idx ->
+                val i = idx.toInt()
+                if (i >= 0 && i != fixedTable.selectionModel.selectedIndex) fixedTable.selectionModel.select(i)
+            }
+        }
+    }
+
+    private fun forwardWheelScrollToWeekTable() {
+        fixedTable.addEventFilter(ScrollEvent.SCROLL) { e ->
+            weekTable.fireEvent(e.copyFor(weekTable, weekTable))
+            e.consume()
+        }
+    }
+
+    private fun findScrollBar(table: TableView<*>, orientation: Orientation): ScrollBar? {
+        return table.lookupAll(".scroll-bar")
+            .filterIsInstance<ScrollBar>()
+            .firstOrNull { it.orientation == orientation }
+    }
+
+    private fun hideVerticalBar(bar: ScrollBar) {
+        if (bar.orientation != Orientation.VERTICAL) return
+        bar.isVisible = false
+        bar.isManaged = false
+        bar.isDisable = true
+        bar.prefWidth = 0.0
+        bar.maxWidth = 0.0
+    }
+
+    private fun hideHorizontalBar(bar: ScrollBar) {
+        if (bar.orientation != Orientation.HORIZONTAL) return
+        bar.isVisible = false
+        bar.isManaged = false
+        bar.isDisable = true
+        bar.prefHeight = 0.0
+        bar.maxHeight = 0.0
+    }
+
+    /** Cache für alle Mitarbeiter für ein Jahr: KW1..KW52 */
     private fun rebuildCache(year: UInt, weeks: UInt = 52u) {
         weekCodeCache.clear()
 
-        for (employee in employeecalenderView) {
-            val codes = Array(weeks.toInt() + 1) { "." } // index 0 unbenutzt, Wochen starten bei 1
-
+        for (employee in employees) {
+            val codes = Array(weeks.toInt() + 1) { "." } // index 0 unbenutzt
             val entries = employee.getVacationEntries().filter { it.year == year }
-
             val seen = BooleanArray(weeks.toInt() + 1)
 
             for (entry in entries) {
@@ -85,7 +240,6 @@ object calenderView : StackPane() {
                 for (week in start..end) {
                     val wi = week.toInt()
                     if (seen[wi]) {
-
                         throw IllegalStateException("Overlap detected: empId=${employee.getId()} year=$year week=$week")
                     }
                     seen[wi] = true
@@ -94,7 +248,6 @@ object calenderView : StackPane() {
                     codes[wi] = status?.code ?: "."
                 }
             }
-
             weekCodeCache[employee.getId()] = codes
         }
     }
@@ -102,68 +255,103 @@ object calenderView : StackPane() {
     fun showYear(year: UInt, weeks: UInt = 52u) {
         currentYear = year
 
-        tableView.items.setAll(employeecalenderView)
+        fixedTable.items.setAll(employees)
+        weekTable.items = fixedTable.items
 
         rebuildCache(year, weeks)
 
-        while (tableView.columns.size > 2) {
-            tableView.columns.removeAt(tableView.columns.lastIndex)
-        }
+        weekTable.columns.clear()
 
         for (week in 1u..weeks) {
+            val weekIndex = week.toInt()
+            val overlapIndex = weekIndex - 1
             val title = "KW" + week.toString().padStart(2, '0')
 
             val weekCol = TableColumn<Employee, String>(title).apply {
                 prefWidth = 45.0
+                isSortable = false
+                isReorderable = false
+
                 setCellValueFactory { cell ->
                     val empId = cell.value.getId()
-                    val code = weekCodeCache[empId]?.get(week.toInt()) ?: "."
+                    val code = weekCodeCache[empId]?.get(weekIndex) ?: "."
                     SimpleStringProperty(code)
+                }
+
+                setCellFactory {
+                    object : TableCell<Employee, String>() {
+                        override fun updateItem(code: String?, empty: Boolean) {
+                            super.updateItem(code, empty)
+                            if (empty) {
+                                text = null
+                                style = ""
+                                return
+                            }
+
+                            text = code ?: "."
+
+                            val overlaps = app.management.overlapList.getOrElse(overlapIndex) { 0 }
+                            val bg = colorForOverlap(overlaps)
+                            style = "-fx-background-color: $bg;"
+                        }
+                    }
                 }
             }
 
-            tableView.columns.add(weekCol)
+            weekTable.columns.add(weekCol)
         }
 
-        tableView.refresh()
+        fixedTable.refresh()
+        weekTable.refresh()
+
+        Platform.runLater { installOnceOrRefresh() }
     }
 
-    /** Aufrufen, wenn Ferien/Status **/
     fun refreshVacations() {
         rebuildCache(currentYear, 52u)
-        tableView.refresh()
+        fixedTable.refresh()
+        weekTable.refresh()
+        Platform.runLater { installOnceOrRefresh() }
     }
 
-    /** Falls Mitarbeiterliste geändert wurde */
     fun updateEmployees() {
-        tableView.items.setAll(employeecalenderView)
-        showYear(currentYear) // baut Spalten + Cache neu
+        fixedTable.items.setAll(employees)
+        weekTable.items = fixedTable.items
+        showYear(currentYear)
     }
-
 
     private fun onEmployeeDoubleClick(employee: Employee) {
         val empId = employee.getId()
-        println("empId: $empId")
         FerienantragKwPopup.empId = empId
-        println("Doppelklick auf: ${empId} ${employee.abbreviationSting()}")
+
         FerienantragKwPopup.show()?.let {
             consoleCalendarOutput.addVacation(empId, it.startKW, it.endKW)
-            println("Ferien: ${it.startKW} - ${it.endKW}")
-
+            refreshVacations()
         }
     }
-    fun showSimplePopup(
-        title: String = "Ferieneintrag hinzufügen",
-        header: String? = null,
-        message: String,
-        type: Alert.AlertType = Alert.AlertType.INFORMATION
-    ) {
-        Alert(type).apply {
-            this.title = title
-            this.headerText = header
-            this.contentText = message
 
-        }.showAndWait()
+    // ----------------- Farben -----------------
+
+    private fun clamp01(x: Double) = x.coerceIn(0.0, 1.0)
+    private fun lerp(a: Int, b: Int, t: Double): Int = (a + (b - a) * t).toInt()
+    private fun rgb(r: Int, g: Int, b: Int) = String.format("#%02X%02X%02X", r, g, b)
+
+    private fun colorForOverlap(count: Int): String {
+        val green = intArrayOf(200, 255, 200)
+        val yellow = intArrayOf(255, 250, 200)
+        val red = intArrayOf(255, 200, 200)
+
+        return when {
+            count <= 2 -> rgb(green[0], green[1], green[2])
+            count <= 4 -> {
+                val t = clamp01((count - 2) / 2.0)
+                rgb(
+                    lerp(green[0], yellow[0], t),
+                    lerp(green[1], yellow[1], t),
+                    lerp(green[2], yellow[2], t)
+                )
+            }
+            else -> rgb(red[0], red[1], red[2])
+        }
     }
-
 }
