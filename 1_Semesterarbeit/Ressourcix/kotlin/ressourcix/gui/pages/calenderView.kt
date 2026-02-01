@@ -4,6 +4,8 @@ import javafx.application.Platform
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Orientation
+import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.control.*
 import javafx.scene.input.ScrollEvent
 import javafx.scene.layout.BorderPane
@@ -16,7 +18,8 @@ import ressourcix.calendar.consoleCalendarOutput
 import ressourcix.domain.Employee
 import ressourcix.domain.VacationStatus
 import ressourcix.domain.code
-import ressourcix.gui.popUp.FerienantragKwPopup
+import ressourcix.gui.popUp.vacationPopUp
+import kotlin.text.clear
 
 /**
  * Kalender:
@@ -28,6 +31,24 @@ import ressourcix.gui.popUp.FerienantragKwPopup
  * - Stattdessen: Spacer UNTEN bei fixedTable, gebunden an Höhe der horizontalen Scrollbar rechts
  */
 object calenderView : StackPane() {
+
+    private val dim = Region().apply {
+        style = "-fx-background-color: rgba(0,0,0,0.35);"
+        isVisible = false
+        isMouseTransparent = false
+        isManaged = true
+        setOnMouseClicked { closePopup() }
+    }
+
+    private val popupHost = StackPane().apply {
+        isVisible = false
+        isMouseTransparent = false
+        isManaged = true
+        alignment = Pos.CENTER
+        maxWidth = Double.MAX_VALUE
+        maxHeight = Double.MAX_VALUE
+
+    }
 
     private val employees = app.employees
 
@@ -178,7 +199,7 @@ object calenderView : StackPane() {
             wheelForwardInstalled = true
             forwardWheelScrollToWeekTable()
         }
-        children.addAll(scroll,dim,popupHost)
+        children.addAll(vScroll,dim,popupHost)
 
         // Selection Sync einmal
         if (!selectionSyncInstalled) {
@@ -323,12 +344,21 @@ object calenderView : StackPane() {
 
     private fun onEmployeeDoubleClick(employee: Employee) {
         val empId = employee.getId()
-        FerienantragKwPopup.empId = empId
+        println("Doppelklick auf: $empId ${employee.abbreviationSting()}") //TODO muss entfernt werden
+        vacationPopUp.idField.text = empId.toString()
+        vacationPopUp.abbreviationField.text = employee.abbreviationSting()
+        showPopup(
+            vacationPopUp.build(
+                onClose = { closePopup() },
+                onSave = { kw ->
+                    consoleCalendarOutput.addVacation(empId, kw.startKW, kw.endKW)
+                    println("Ferien: ${kw.startKW} - ${kw.endKW}")
+                    refreshVacations()
+                    closePopup()
+                }
+            )
+        )
 
-        FerienantragKwPopup.show()?.let {
-            consoleCalendarOutput.addVacation(empId, it.startKW, it.endKW)
-            refreshVacations()
-        }
     }
 
     // ----------------- Farben -----------------
@@ -355,5 +385,20 @@ object calenderView : StackPane() {
             else -> rgb(red[0], red[1], red[2])
         }
     }
+
+    fun showPopup(popupContent: Node) {
+        popupHost.children.setAll(popupContent)
+        dim.isVisible = true
+        popupHost.isVisible = true
+        dim.toFront()
+        popupHost.toFront()
+    }
+
+    fun closePopup() {
+        popupHost.children.clear()
+        dim.isVisible = false
+        popupHost.isVisible = false
+    }
 }
-}
+
+
