@@ -38,7 +38,7 @@ class GuiBorderPane : Application() {
         router.navigate(Route.DASHBOARD)
 
         stage.apply {
-            scene = Scene(root,1000.0,700.0)
+            scene = Scene(root,1300.0,800.0)
             title = "Ressourcix"
 
             if (stream == null) {
@@ -49,7 +49,9 @@ class GuiBorderPane : Application() {
                 stage.icons.add(appIcon)
             }
             setResizable(true)
-            setOnCloseRequest { exit() }
+            setOnCloseRequest {  event ->
+                event.consume()
+                exit() }
             show()
         }
     }
@@ -61,12 +63,16 @@ class GuiBorderPane : Application() {
             title = "Ressourcix beenden"
             headerText = "Möchten Sie Ressourcix wirklich beenden?"
             contentText = "Nicht gespeicherte Daten gehen verloren."
+
         }
+        val pathIcon = "/Ressourcix_Icon_OhneB2.png"
+        val stage = alert.dialogPane.scene.window as Stage
+        stage.icons.add(Image(pathIcon))
+
 
         val result: Optional<ButtonType> = alert.showAndWait()
 
         if (result.isPresent && result.get() == ButtonType.OK) {
-
             exitProcess(0)
         }
     }

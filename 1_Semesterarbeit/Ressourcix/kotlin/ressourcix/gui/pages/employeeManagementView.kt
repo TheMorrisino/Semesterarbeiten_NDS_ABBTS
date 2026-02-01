@@ -5,17 +5,20 @@ package ressourcix.gui.pages
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
+import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
+import javafx.scene.control.TextFormatter
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.text.TextAlignment
+import ressourcix.app.app
 import ressourcix.gui.popUp.filterPopUp
-import ressourcix.gui.popUp.vacationPopUp
+import ressourcix.gui.popUp.filteredEmployee
 
 object employeeManagementView : BorderPane() {
 
@@ -24,9 +27,12 @@ object employeeManagementView : BorderPane() {
     private const val TFL_HEIGHT = 30.0
     private const val TFL_WIDTH = 300.0
 
-    var idField = createTfl("", "ID eingeben...")
-    var abbreviationField = createTfl("", "Kürzel eingeben")
-
+    var idField = createTfl("", "ID eingeben...").apply {
+        textFormatter = positiveIntNoZeroFormatter()
+    }
+    var abbreviationField = createTfl("", "Kürzel eingeben").apply {
+        textFormatter = lettersOnlyMax4Formatter()
+    }
     var nameField = createTfl("","")
     var roleField = createTfl("","")
     var departmentField = createTfl("","")
@@ -73,18 +79,67 @@ object employeeManagementView : BorderPane() {
         alignment = Pos.CENTER
 
         val filterBtn = createButton("Filter").apply {
-            setOnAction { showPopup(filterPopUp.build { closePopup() }) }
+            setOnAction {
+                showPopup(
+                    filterPopUp.build(
+                        onClose = { closePopup() },
+                        onApply = { department, education ->
+                            val filtered = app.employees.filter { emp ->
+                                emp.getDepartment() == department && emp.getEducation() == education
+                            }
+                            closePopup()
+                            showPopup(
+                                filteredEmployee.build(
+                                    department = department,
+                                    education = education,
+                                    employees = filtered,
+                                    onClose = { closePopup() }
+                                )
+                            )
+                        }
+                    )
+                )
+            }
         }
 
+        val showByIdBtn = createButton("MA nach ID\nanzeigen").apply {
+            disableProperty().bind(idField.textProperty().isEmpty)
+            setOnAction {
+                val idUInt = idField.text.toUInt()
+                val emp = app.employees.firstOrNull { it.getId() == idUInt }
+                if (emp != null) {
+                    fillEmployeeFields(emp)
+                } else {
+                    showNotFoundAlert("Suche nach ID", idField.text)
+                    clearEmployeeFields()
+                }
+            }
+        }
         val idBox = HBox(10.0).apply {
             alignment = Pos.CENTER
             children.addAll(
                 Label("ID:"),
                 idField,
-                createButton("MA nach ID\nanzeigen").apply {
-                    setOnAction {  } //TODO Funktion einfügen
-                }
+                showByIdBtn
             )
+        }
+        val showByAbbreviationBtn = createButton("MA nach Kürzel\nanzeigen").apply {
+            disableProperty().bind(abbreviationField.textProperty().isEmpty)
+            setOnAction {
+                val kuerzel = abbreviationField.text.trim().uppercase()
+
+                val emp = app.employees.firstOrNull {
+                    val abbr = it.Abbreviation.ifBlank { it.abbreviationSting() }
+                    abbr == kuerzel
+                }
+
+                if (emp != null) {
+                    fillEmployeeFields(emp)
+                } else {
+                    showNotFoundAlert("Suche nach Kürzel", kuerzel)
+                    clearEmployeeFields()
+                }
+            }
         }
 
         val abbreviationBox = HBox(10.0).apply {
@@ -92,9 +147,7 @@ object employeeManagementView : BorderPane() {
             children.addAll(
                 Label("Kürzel:"),
                 abbreviationField,
-                createButton("MA nach Kürzel\nanzeigen").apply {
-                    setOnAction {  } //TODO Funktion einfügen
-                }
+                showByAbbreviationBtn
             )
         }
         children.addAll(filterBtn, idBox, abbreviationBox)
@@ -128,22 +181,6 @@ object employeeManagementView : BorderPane() {
         children.addAll(leftColumm, rightColumm)
     }
 
-    private val vacationsBar = HBox(20.0).apply {
-        padding = Insets(20.0)
-        alignment = Pos.CENTER_RIGHT
-        children.add(
-            createButton("Ferien eintragen").apply {
-                setOnAction {
-                    showPopup(vacationPopUp.build(
-                            onClose = { closePopup() },
-                            onSave = { weeks -> println("Ferien gespeichert: $weeks") }
-                        )
-                    )
-                }
-            }
-        )
-    }
-
     private val functionsBox = VBox(30.0).apply {
         padding = Insets(30.0)
         alignment = Pos.CENTER_RIGHT
@@ -170,7 +207,6 @@ object employeeManagementView : BorderPane() {
     init {
         mainContent.top = filterBar
         mainContent.center = employeeInfoBox
-        mainContent.bottom = vacationsBar
         mainContent.right = functionsBox
         center = centerStack
     }
@@ -185,8 +221,6 @@ object employeeManagementView : BorderPane() {
 
     fun closePopup() {
         popupHost.children.clear()
-        dim.isVisible = false
-        popupHost.isVisible = false
         dim.isVisible = false
         popupHost.isVisible = false
     }
@@ -212,4 +246,65 @@ object employeeManagementView : BorderPane() {
         VBox(6.0).apply {
             children.addAll(Label(labelText), field)
         }
+
+    private fun positiveIntNoZeroFormatter(): TextFormatter<String> {
+        return TextFormatter { change ->
+            val newText = change.controlNewText
+            val ok = newText.isEmpty() || (newText.matches(Regex("[1-9][0-9]*"))
+                    && newText.length <=4)
+            if (ok) change else null
+        }
+    }
+
+    private fun lettersOnlyMax4Formatter(): TextFormatter<String> {
+        return TextFormatter { change ->
+            val newText = change.controlNewText.uppercase()
+            val ok = newText.isEmpty() || newText.matches(Regex("[A-ZÄÖÜ]{1,4}"))
+            if (ok) {
+                change.text = change.text.uppercase()
+                change
+            } else null
+        }
+    }
+
+    private fun fillEmployeeFields(emp: ressourcix.domain.Employee) {
+        idField.text = emp.getId().toString()
+        nameField.text = emp.getFirstName()
+        surnameField.text = emp.getLastName()
+        workloadField.text = "${emp.getWorkloadPercent()}"
+        roleField.text = emp.getRole().toString()
+        departmentField.text = emp.getDepartment()?.toString().orEmpty()
+        educationField.text = emp.getEducation()?.toString().orEmpty()
+        val abbr = emp.Abbreviation.ifBlank { emp.abbreviationSting() }
+        abbreviationField.text = abbr
+        cityField.clear()
+        birthdayField.clear()
+        remainingVacationWeeksField.clear()
+        usedVacationWeeksField.clear()
+    }
+
+    private fun clearEmployeeFields() {
+        idField.clear()
+        abbreviationField.clear()
+        nameField.clear()
+        surnameField.clear()
+        abbreviationField.clear()
+        roleField.clear()
+        departmentField.clear()
+        cityField.clear()
+        workloadField.clear()
+        educationField.clear()
+        birthdayField.clear()
+        remainingVacationWeeksField.clear()
+        usedVacationWeeksField.clear()
+    }
+
+    private fun showNotFoundAlert(title: String, searchValue: String) {
+        Alert(Alert.AlertType.WARNING).apply {
+            this.title = title
+            headerText = "Kein Mitarbeitender gefunden"
+            contentText = "Suchwert: $searchValue"
+            showAndWait()
+        }
+    }
 }
