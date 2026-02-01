@@ -178,6 +178,7 @@ object calenderView : StackPane() {
             wheelForwardInstalled = true
             forwardWheelScrollToWeekTable()
         }
+        children.addAll(scroll,dim,popupHost)
 
         // Selection Sync einmal
         if (!selectionSyncInstalled) {
@@ -354,4 +355,5 @@ object calenderView : StackPane() {
             else -> rgb(red[0], red[1], red[2])
         }
     }
+}
 }
