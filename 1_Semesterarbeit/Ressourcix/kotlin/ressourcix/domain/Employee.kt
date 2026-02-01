@@ -18,7 +18,8 @@ class Employee(private val id: UInt) {
     fun getWorkloadPercent(): UByte = workloadPercent
     fun getRole(): Role = role
     fun getVacationEntries(): List<VacationEntry> = vacationEntries.toList()
-
+    fun getDepartment(): Department? = department
+    fun getEducation(): Education? = education
 
     fun setFirstName(value: String) {
         require(value.isNotBlank()) { "firstName must not be blank" }
@@ -39,8 +40,8 @@ class Employee(private val id: UInt) {
         role = value
     }
 
-    fun getDepartment(): Department? = department
-    fun getEducation(): Education? = education
+    fun setDepartment(value: Department?) { department = value }
+    fun setEducation(value: Education?) { education = value }
 
     fun getFullName(): String =
         listOf(firstName, lastName).filter { it.isNotBlank() }.joinToString(" ")
