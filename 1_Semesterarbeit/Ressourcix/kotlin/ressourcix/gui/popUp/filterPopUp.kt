@@ -16,32 +16,50 @@ import ressourcix.domain.Education
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
-private const val BOX_HEIGHT = 250.0
+private const val BOX_HEIGHT = 270.0
 private const val BOX_WIDTH = 520.0
 
 object filterPopUp {
-    val departmentField = ComboBox<Department>().apply {
-        items = FXCollections.observableArrayList(Department.values().toList())
-        promptText = "Abteilung auswählen..."
-        prefHeight = 30.0
-        prefWidth = 300.0
-    }
-    val educationField = ComboBox<Education>().apply {
-        items = FXCollections.observableArrayList(Education.values().toList())
-        promptText = "Ausbildung auswählen..."
-        prefHeight = 30.0
-        prefWidth = 300.0
-    }
 
-    private fun resetFields() {
-        departmentField.value = null
-        educationField.value = null
-        departmentField.requestLayout()
-        educationField.requestLayout()
-    }
+    fun build(onClose: () -> Unit, onApply: (department: Department, education: Education) -> Unit): Node {
+        val departmentField = ComboBox<Department>().apply {
+            items = FXCollections.observableArrayList(Department.values().toList())
+            promptText = "Abteilung auswählen..."
+            prefHeight = 30.0
+            prefWidth = 300.0
+        }
+        val educationField = ComboBox<Education>().apply {
+            items = FXCollections.observableArrayList(Education.values().toList())
+            promptText = "Ausbildung auswählen..."
+            prefHeight = 30.0
+            prefWidth = 300.0
+        }
 
-    fun build(onClose: () -> Unit, onApply: (department: Department, education: Education) -> Unit): Node =
-        VBox(12.0).apply {
+        fun isValid(): Boolean = departmentField.value != null && educationField.value != null
+
+        val applyBtn = createButton("Filter\neinsetzen").apply {
+            disableProperty().bind(
+                Bindings.createBooleanBinding(
+                    { !isValid() },
+                    departmentField.valueProperty(),
+                    educationField.valueProperty()
+                )
+            )
+            setOnAction {
+                val dep = departmentField.value ?: return@setOnAction
+                val edu = educationField.value ?: return@setOnAction
+
+                onApply(dep, edu)
+            }
+        }
+
+        val cancelBtn = createButton("Abbrechen").apply {
+            setOnAction {
+                onClose()
+            }
+        }
+
+        return VBox(12.0).apply {
             padding = Insets(20.0)
             maxWidth = BOX_WIDTH
             maxHeight = BOX_HEIGHT
@@ -53,34 +71,10 @@ object filterPopUp {
                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0.2, 0, 4);
             """.trimIndent()
 
-            fun isValid(): Boolean = departmentField.value != null && educationField.value != null
-
-            val applyBtn = createButton("Filter\neinsetzen").apply {
-                disableProperty().bind(
-                    Bindings.createBooleanBinding(
-                        { !isValid() },
-                        departmentField.valueProperty(),
-                        educationField.valueProperty()
-                    )
-                )
-                setOnAction {
-                    val dep = departmentField.value ?: return@setOnAction
-                    val edu = educationField.value ?: return@setOnAction
-
-                    onApply(dep, edu)
-                    resetFields()
-                }
-            }
-
-            val cancelBtn = createButton("Abbrechen").apply {
-                setOnAction {
-                    resetFields()
-                    onClose()
-                }
-            }
-
             children.addAll(
-                Label("Mitarbeiter suchen"),
+                Label("Mitarbeiter suchen").apply {
+                    style = "-fx-font-size: 18px; -fx-font-weight: bold;"
+                },
                 VBox().apply {
                     children.addAll(
                         HBox().apply {
@@ -99,10 +93,13 @@ object filterPopUp {
                 }
             )
         }
+    }
 }
 private fun createComboBox(labelText: String, choise: ComboBox<*>) = VBox(6.0).apply {
     padding = Insets(20.0)
-    children.addAll(Label(labelText), choise)
+    children.addAll(Label(labelText).apply {
+        style = "-fx-font-weight: bold;"
+    }, choise)
     }
 
 private fun createButton(text: String) = Button(text).apply {
@@ -111,6 +108,7 @@ private fun createButton(text: String) = Button(text).apply {
     textAlignment = TextAlignment.CENTER
     alignment = Pos.CENTER
     isFocusTraversable = false
+    style = " -fx-font-weight: bold;"
     }
 
 

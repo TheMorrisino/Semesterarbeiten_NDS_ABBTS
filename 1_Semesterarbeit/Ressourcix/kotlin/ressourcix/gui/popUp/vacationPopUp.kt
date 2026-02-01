@@ -9,6 +9,8 @@ import javafx.scene.control.Label
 import javafx.scene.control.TextField
 import javafx.scene.control.TextFormatter
 import javafx.scene.layout.HBox
+import javafx.scene.layout.Priority
+import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.text.TextAlignment
 
@@ -16,7 +18,7 @@ private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
 private const val TFL_HEIGHT = 30.0
 private const val TFL_WIDTH = 300.0
-private const val BOX_HEIGHT = 300.0
+private const val BOX_HEIGHT = 340.0
 private const val BOX_WIDTH = 600.0
 
 
@@ -27,10 +29,9 @@ object vacationPopUp {
     var idField = createTfl("", "")
     var abbreviationField = createTfl("", "")
 
-    var firstVacationWeek = createTfl("", "Erste Ferien Woche eintragen...")
-    var lastVacationWeek = createTfl("", "Letzte Ferien Woche eintragen...")
-
     fun build(onClose: () -> Unit, onSave: (vacationRequestWK) -> Unit): Node {
+        var firstVacationWeek = createTfl("", "Erste Ferien Woche eintragen...")
+        var lastVacationWeek = createTfl("", "Letzte Ferien Woche eintragen...")
 
         // nur Zahlen erlauben
         numbersOnly(firstVacationWeek)
@@ -83,7 +84,31 @@ object vacationPopUp {
         }
 
         val deleteBtn = createButton("Antrag\nLöschen").apply {
-            setOnAction { onClose() }
+            setOnAction { onClose() } //TODO Antrag löschen implementieren
+        }
+
+        val closeBtn = createButton("X").apply {
+            style = """
+                -fx-background-color: transparent;
+                -fx-font-size: 20px;
+                -fx-font-weight: bold;
+                -fx-cursor: hand;
+                -fx-padding: 2 8 2 8;
+            """.trimIndent()
+            isFocusTraversable = false
+            alignment = Pos.TOP_RIGHT
+            setOnAction { onClose()}
+        }
+        val title = Label("Ferien eintragen").apply {
+            style = "-fx-font-size: 18px; -fx-font-weight: bold;"
+        }
+        val spacer = Region().apply {
+            HBox.setHgrow(this, Priority.ALWAYS)
+        }
+        val header = HBox().apply {
+            alignment = Pos.CENTER_LEFT
+            padding = Insets(0.0, 0.0, 10.0, 0.0)
+            children.addAll(title, spacer, closeBtn)
         }
 
         // Fehler live updaten
@@ -104,7 +129,7 @@ object vacationPopUp {
                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0.2, 0, 4);
             """.trimIndent()
             children.addAll(
-                Label("Ferien eintragen"),
+                header,
                 HBox().apply {
                     alignment = Pos.CENTER
                     padding = Insets(10.0)
@@ -146,6 +171,7 @@ object vacationPopUp {
         textAlignment = TextAlignment.CENTER
         alignment = Pos.CENTER
         isFocusTraversable = false
+        style = " -fx-font-weight: bold;"
     }
 
     private fun createTfl(text: String, prompt: String): TextField =
@@ -158,7 +184,9 @@ object vacationPopUp {
 
     private fun createDataBox(labelText: String, field: TextField): VBox =
         VBox(6.0).apply {
-            children.addAll(Label(labelText), field)
+            children.addAll(Label(labelText).apply {
+                style = " -fx-font-weight: bold;"
+            }, field)
         }
 
     private fun numbersOnly(tf: TextField) {
