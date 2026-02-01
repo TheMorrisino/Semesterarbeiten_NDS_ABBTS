@@ -118,7 +118,9 @@ object employeeManagementView : BorderPane() {
         val idBox = HBox(10.0).apply {
             alignment = Pos.CENTER
             children.addAll(
-                Label("ID:"),
+                Label("ID:").apply {
+                    style = "-fx-font-weight: bold;"
+                },
                 idField,
                 showByIdBtn
             )
@@ -145,7 +147,9 @@ object employeeManagementView : BorderPane() {
         val abbreviationBox = HBox(10.0).apply {
             alignment = Pos.CENTER
             children.addAll(
-                Label("Kürzel:"),
+                Label("Kürzel:").apply {
+                    style = " -fx-font-weight: bold;"
+                },
                 abbreviationField,
                 showByAbbreviationBtn
             )
@@ -240,11 +244,14 @@ object employeeManagementView : BorderPane() {
             textAlignment = TextAlignment.CENTER
             alignment = Pos.CENTER
             isFocusTraversable = false
+            style = " -fx-font-weight: bold;"
         }
 
     private fun createDataBox(labelText: String, field: TextField): VBox =
         VBox(6.0).apply {
-            children.addAll(Label(labelText), field)
+            children.addAll(Label(labelText).apply {
+                style = " -fx-font-weight: bold;"
+            }, field)
         }
 
     private fun positiveIntNoZeroFormatter(): TextFormatter<String> {
