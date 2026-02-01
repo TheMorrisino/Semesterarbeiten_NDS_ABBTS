@@ -1,5 +1,10 @@
 package ressourcix.domain
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.ResolverStyle
+import kotlin.text.format
+
 
 class Employee(private val id: UInt) {
     private var firstName: String = ""
@@ -11,6 +16,12 @@ class Employee(private val id: UInt) {
     var vacationList: MutableList<Int> = MutableList(52) { 0 }
     private var department: Department? = null
     private var education: Education? = null
+    private var birthday: LocalDate? = null
+    private var city: String = ""
+
+    private val birthdayFormatter: DateTimeFormatter =
+        DateTimeFormatter.ofPattern("dd.MM.uuuu")
+            .withResolverStyle(ResolverStyle.STRICT)
 
     fun getId(): UInt = id
     fun getFirstName(): String = firstName
@@ -20,6 +31,8 @@ class Employee(private val id: UInt) {
     fun getVacationEntries(): List<VacationEntry> = vacationEntries.toList()
     fun getDepartment(): Department? = department
     fun getEducation(): Education? = education
+    fun getBirthday(): LocalDate? = birthday
+    fun getCity(): String = city
 
     fun setFirstName(value: String) {
         require(value.isNotBlank()) { "firstName must not be blank" }
@@ -42,6 +55,19 @@ class Employee(private val id: UInt) {
 
     fun setDepartment(value: Department?) { department = value }
     fun setEducation(value: Education?) { education = value }
+    fun setCity(value: String) {
+        city = value.trim()
+    }
+
+    fun setBirthdayFromString(value: String) {
+        val text = value.trim()
+        if (text.isBlank()) {
+            birthday = null
+            return
+        }
+        birthday = LocalDate.parse(text, birthdayFormatter) // wirft Exception bei ungültig
+    }
+
 
     fun getFullName(): String =
         listOf(firstName, lastName).filter { it.isNotBlank() }.joinToString(" ")
@@ -74,6 +100,7 @@ class Employee(private val id: UInt) {
 
 
     }
+    fun getBirthdayAsString(): String = birthday?.format(birthdayFormatter).orEmpty()
 }
 
 fun Employee.label(): String =

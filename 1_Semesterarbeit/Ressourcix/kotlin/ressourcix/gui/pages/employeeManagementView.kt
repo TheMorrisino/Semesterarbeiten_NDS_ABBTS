@@ -251,6 +251,9 @@ object employeeManagementView : BorderPane() {
                         emp.setRole(roleField.value!!)
                         emp.setDepartment(departmentField.value)
                         emp.setEducation(educationField.value)
+                        emp.setCity(cityField.text)
+                        emp.setBirthdayFromString(birthdayField.text)
+
 
                         setFieldsEditable(false)
                         fillEmployeeFields(emp)
@@ -381,8 +384,8 @@ object employeeManagementView : BorderPane() {
         educationField.value = emp.getEducation()
         val abbr = emp.Abbreviation.ifBlank { emp.abbreviationSting() }
         abbreviationField.text = abbr
-        cityField.clear()
-        birthdayField.clear()
+        cityField.text = emp.getCity()
+        birthdayField.text = emp.getBirthdayAsString()
         remainingVacationWeeksField.clear()
         usedVacationWeeksField.clear()
     }
@@ -437,5 +440,4 @@ object employeeManagementView : BorderPane() {
         selectedEmployee = null
         setFieldsEditable(false)
     }
-
-}
+    }
