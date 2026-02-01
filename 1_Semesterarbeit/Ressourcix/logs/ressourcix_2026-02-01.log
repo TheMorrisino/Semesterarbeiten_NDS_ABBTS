@@ -1,0 +1,201 @@
+2026-02-01 17:14:15.584 [App-Logic-Thread] INFO  [MainKt] Anwendung gestartet
+2026-02-01 17:14:15.584 [UI-Update-Thread] INFO  [MainKt] GUI wird gestartet
+2026-02-01 17:14:16.185 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert: 52 Wochen
+2026-02-01 17:14:30.786 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert: 52 Wochen
+2026-02-01 17:14:43.428 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert: 52 Wochen
+2026-02-01 17:17:13.708 [App-Logic-Thread] INFO  [MainKt] Anwendung gestartet
+2026-02-01 17:17:13.708 [UI-Update-Thread] INFO  [MainKt] GUI wird gestartet
+2026-02-01 17:17:14.291 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert: 52 Wochen
+2026-02-01 17:17:22.329 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert: 52 Wochen
+2026-02-01 17:17:33.199 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert: 52 Wochen
+2026-02-01 17:25:18.032 [UI-Update-Thread] INFO  [MainKt] GUI wird gestartet
+2026-02-01 17:25:18.032 [App-Logic-Thread] INFO  [MainKt] Anwendung gestartet
+2026-02-01 17:25:18.652 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert: 52 Wochen
+2026-02-01 17:25:37.692 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert: 52 Wochen
+2026-02-01 17:25:39.463 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert: 52 Wochen
+2026-02-01 17:30:08.363 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert: 52 Wochen
+2026-02-01 17:33:52.597 [UI-Update-Thread] INFO  [MainKt] GUI wird gestartet
+2026-02-01 17:33:52.597 [App-Logic-Thread] INFO  [MainKt] Anwendung gestartet
+2026-02-01 17:33:53.259 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert: 52 Wochen
+2026-02-01 17:37:39.652 [App-Logic-Thread] INFO  [MainKt] Anwendung gestartet
+2026-02-01 17:37:39.652 [UI-Update-Thread] INFO  [MainKt] GUI wird gestartet
+2026-02-01 17:37:40.274 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-01 17:37:50.675 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-01 17:38:04.222 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-01 17:38:05.677 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-01 17:40:51.889 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-01 17:40:51.896 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:40:51.896 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-01 17:40:51.897 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:40:51.898 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-01 17:40:51.898 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-01 17:40:51.899 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-01 17:40:52.539 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-01 17:41:28.685 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-01 17:41:28.699 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:41:28.700 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-01 17:41:28.701 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:41:28.704 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-01 17:41:28.704 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-01 17:41:28.705 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-01 17:44:15.118 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-01 17:44:15.126 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:44:15.126 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-01 17:44:15.127 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:44:15.128 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-01 17:44:15.128 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-01 17:44:15.129 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-01 17:44:58.959 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-01 17:44:58.967 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:44:58.968 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-01 17:44:58.968 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:44:58.970 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-01 17:44:58.970 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-01 17:44:58.970 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-01 17:45:04.277 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-01 17:45:21.252 [JavaFX Application Thread] INFO  [dashboardView] PieChart aktualisiert
+2026-02-01 17:45:33.604 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-01 17:49:23.022 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-01 17:49:23.028 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:49:23.029 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-01 17:49:23.029 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:49:23.030 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-01 17:49:23.031 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-01 17:49:23.031 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-01 17:49:30.427 [JavaFX Application Thread] INFO  [dashboardView] PieChart aktualisiert
+2026-02-01 17:49:31.147 [JavaFX Application Thread] INFO  [dashboardView] PieChart aktualisiert
+2026-02-01 17:49:32.320 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-01 17:49:32.695 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-01 17:49:41.379 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-01 17:49:42.836 [JavaFX Application Thread] INFO  [dashboardView] PieChart aktualisiert
+2026-02-01 17:49:43.387 [JavaFX Application Thread] INFO  [dashboardView] PieChart aktualisiert
+2026-02-01 17:51:04.920 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-01 17:51:04.928 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:51:04.928 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-01 17:51:04.928 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:51:04.930 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-01 17:51:04.930 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-01 17:51:04.930 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-01 17:51:10.743 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-01 17:57:15.345 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-01 17:57:15.355 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:57:15.355 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-01 17:57:15.356 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:57:15.357 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-01 17:57:15.357 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-01 17:57:15.358 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-01 17:57:16.458 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:17.460 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:18.461 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:18.963 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:19.965 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:20.966 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:21.469 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:22.471 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:23.472 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:23.976 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:24.977 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:25.979 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:26.482 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:27.485 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:28.488 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:28.989 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:29.990 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:30.991 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:31.494 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:32.496 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:33.499 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:34.000 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:35.001 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:36.003 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:36.504 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:37.507 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:38.507 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:39.009 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:40.011 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:41.012 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:41.513 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:42.514 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:43.515 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:44.017 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:45.020 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:46.021 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:46.523 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:47.525 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:48.527 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:49.029 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:50.031 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:51.033 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:51.534 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:52.536 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:53.538 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:54.040 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:55.041 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:56.042 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:56.543 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:57:57.545 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:57:58.547 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:57:59.048 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:00.049 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:01.051 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:01.553 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:02.554 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:03.555 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:04.057 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:05.060 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:06.062 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:06.564 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:09.645 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-01 17:58:09.653 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:58:09.654 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-01 17:58:09.654 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:58:09.655 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-01 17:58:09.656 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-01 17:58:09.656 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-01 17:58:11.244 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:12.247 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:13.249 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:14.250 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:15.252 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:16.255 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:17.257 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:18.260 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:19.263 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:20.265 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:21.266 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:22.268 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:23.270 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:24.272 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:25.274 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:26.276 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:27.323 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:28.325 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:29.326 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:30.329 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:31.332 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:32.334 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:33.336 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:34.337 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:35.340 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:36.343 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:37.344 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:38.346 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:39.348 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:40.350 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:41.352 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:58:42.354 [BottomBar-Status-Updater] WARN  [bottomBar] Test 2
+2026-02-01 17:58:43.357 [BottomBar-Status-Updater] ERROR [bottomBar] Test 3
+2026-02-01 17:58:44.359 [BottomBar-Status-Updater] INFO  [bottomBar] Test 1
+2026-02-01 17:59:37.309 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-01 17:59:37.316 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:59:37.317 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-01 17:59:37.317 [main] INFO  [MainKt] ==================================================
+2026-02-01 17:59:37.319 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-01 17:59:37.319 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-01 17:59:37.319 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-01 17:59:37.547 [JavaFX Application Thread] INFO  [GuiBorderPane] Test 1
+2026-02-01 17:59:38.549 [JavaFX Application Thread] WARN  [GuiBorderPane] Test 2
+2026-02-01 17:59:39.549 [JavaFX Application Thread] ERROR [GuiBorderPane] Test 3
+2026-02-01 17:59:50.362 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-01 18:00:14.166 [JavaFX Application Thread] INFO  [dashboardView] PieChart aktualisiert
+2026-02-01 18:00:21.754 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert

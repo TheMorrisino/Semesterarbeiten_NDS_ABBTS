@@ -14,17 +14,12 @@ import java.util.*
 import kotlin.system.exitProcess
 import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.dashboardView
+import ressourcix.logger.logger
 
 class GuiBorderPane : Application() {
-
-
-
-
-
-
-
-
     override fun start(stage: Stage) {
+
+
 
         val pathIcon = "/Ressourcix_Icon_OhneB2.png"
         val stream = javaClass.getResourceAsStream(pathIcon)
@@ -79,4 +74,5 @@ class GuiBorderPane : Application() {
             exitProcess(0)
         }
     }
+
 }
