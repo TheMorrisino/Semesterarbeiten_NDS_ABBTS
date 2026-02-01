@@ -4,7 +4,7 @@ package ressourcix.domain
  * Automatischer Ferien-Generator (Demo):
  * Generiert feste 2-Wochen-Blöcke.
  */
-object VacationPlanner {
+object vacationPlanner {
 
     fun generateForAll(
         year: UInt,

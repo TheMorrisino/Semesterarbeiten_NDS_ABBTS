@@ -103,6 +103,29 @@ class EmployeeManagement () {
             "Emma" to "Brunner",
             "Paul" to "Baumann",
             "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
+            "Nina" to "Steiner",
             "Tom" to "Hug"
         )
         for ((first, last) in names) {
@@ -116,9 +139,17 @@ class EmployeeManagement () {
         }
     }
 
+    fun allVacationInKwFiltern() {
+        val allVacation = employees.flatMap { it.getVacationEntries() }
 
+
+
+    }
 
     fun addVacationSafe(employee: Employee, entry: VacationEntry, maxAllowed: Int = 1) {
+        // To Do Ferienliste erstelle aller Mitableitern mit Index 1 = KW1 = alle Mitarbeiterferien aufrufen in KW 1 etc.
+        //
+
 
         val currentOverlaps = countAllOverlaps()
 
@@ -183,7 +214,25 @@ class EmployeeManagement () {
             println(message)
         }
         employee.addVacationEntry(entry)
+        Thread.sleep(1000)
+        updateOverlapList()
     }
+
+
+
+    //Die FerienListe mit 52 Einträgen aus Employee wird bei jedem Employee durchgegangen
+    val overlapList : MutableList<Int> = MutableList(52) { 0 }
+    fun updateOverlapList (){
+        overlapList.replaceAll { 0 }
+        for (i in 0 .. 51)
+            for (e in 0 .. employees.size - 1){
+                //overlapList[i] = 0
+                overlapList[i] += employees[e].vacationList[i]
+                //println(overlapList)
+        }
+        println(overlapList)
+    }
+
 
     fun VacationEntry.overlapsWith(other: VacationEntry): Boolean {
         // Nur überlappen wenn gleiches Jahr

@@ -31,6 +31,7 @@ fun main() {
                 Thread.sleep(1000)
                 calenderView.refreshVacations()
                 dashboardView.updateBarChart()
+
             } catch (e: InterruptedException) {
                 // Thread wurde unterbrochen, beenden
                 break
