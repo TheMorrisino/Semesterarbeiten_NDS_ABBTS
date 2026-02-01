@@ -1,7 +1,11 @@
 package ressourcix.gui.navigation
 
+import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.layout.HBox
+import javafx.scene.layout.Priority
+import javafx.scene.layout.Region
+import javafx.scene.text.Text
 
 object TopNavigationBar {
 
@@ -11,6 +15,13 @@ object TopNavigationBar {
     private val calenderBtn = createNavButton("Kalender")
     private val employeeManagementBtn = createNavButton("Mitarbeiter Verwaltung")
     private val parameterBtn = createNavButton("Parameter")
+    private val version = Text("V1.0").apply {
+        setDisable(false)
+        style = "-fx-fill: #b0b0b0;"
+    }
+    private val spacer = Region().apply {
+        HBox.setHgrow(this, Priority.ALWAYS)
+    }
 
     private val navBar = HBox().apply {
         prefHeight = NAV_HEIGHT
@@ -22,7 +33,8 @@ object TopNavigationBar {
             calenderBtn,
             employeeManagementBtn,
             parameterBtn,
-
+            spacer,
+            version
             )
     }
 

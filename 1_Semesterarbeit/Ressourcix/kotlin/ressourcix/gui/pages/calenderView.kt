@@ -2,24 +2,41 @@ package ressourcix.gui.pages
 
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.beans.property.SimpleStringProperty
-import javafx.scene.control.Alert
+import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableRow
 import javafx.scene.control.TableView
+import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import ressourcix.domain.Employee
 import ressourcix.domain.VacationStatus
 import ressourcix.domain.code
-import ressourcix.gui.GuiBorderPane
-import ressourcix.gui.popUp.FerienantragKwPopup
 import ressourcix.calendar.consoleCalendarOutput
 import ressourcix.app.app
-
-
+import ressourcix.gui.popUp.vacationPopUp
 
 
 object calenderView : StackPane() {
+
+    private val dim = Region().apply {
+        style = "-fx-background-color: rgba(0,0,0,0.35);"
+        isVisible = false
+        isMouseTransparent = false
+        isManaged = true
+        setOnMouseClicked { closePopup() }
+    }
+
+    private val popupHost = StackPane().apply {
+        isVisible = false
+        isMouseTransparent = false
+        isManaged = true
+        alignment = Pos.CENTER
+        maxWidth = Double.MAX_VALUE
+        maxHeight = Double.MAX_VALUE
+
+    }
 
     private val employeecalenderView = app.employees
     private val tableView = TableView<Employee>()
@@ -61,7 +78,7 @@ object calenderView : StackPane() {
             }
 
         }
-        children.add(scroll)
+        children.addAll(scroll,dim,popupHost)
 
         // Standardjahr anzeigen
         showYear(2026u)
@@ -140,30 +157,37 @@ object calenderView : StackPane() {
         showYear(currentYear) // baut Spalten + Cache neu
     }
 
-
     private fun onEmployeeDoubleClick(employee: Employee) {
         val empId = employee.getId()
-        println("empId: $empId")
-        FerienantragKwPopup.empId = empId
-        println("Doppelklick auf: ${empId} ${employee.abbreviationSting()}")
-        FerienantragKwPopup.show()?.let {
-            consoleCalendarOutput.addVacation(empId, it.startKW, it.endKW)
-            println("Ferien: ${it.startKW} - ${it.endKW}")
-
-        }
-    }
-    fun showSimplePopup(
-        title: String = "Ferieneintrag hinzufügen",
-        header: String? = null,
-        message: String,
-        type: Alert.AlertType = Alert.AlertType.INFORMATION
-    ) {
-        Alert(type).apply {
-            this.title = title
-            this.headerText = header
-            this.contentText = message
-
-        }.showAndWait()
+        println("Doppelklick auf: $empId ${employee.abbreviationSting()}") //TODO muss entfernt werden
+        vacationPopUp.idField.text = empId.toString()
+        vacationPopUp.abbreviationField.text = employee.abbreviationSting()
+        showPopup(
+            vacationPopUp.build(
+                onClose = { closePopup() },
+                onSave = { kw ->
+                    consoleCalendarOutput.addVacation(empId, kw.startKW, kw.endKW)
+                    println("Ferien: ${kw.startKW} - ${kw.endKW}")
+                    refreshVacations()
+                    closePopup()
+                }
+            )
+        )
     }
 
+fun showPopup(popupContent: Node) {
+    popupHost.children.setAll(popupContent)
+    dim.isVisible = true
+    popupHost.isVisible = true
+    dim.toFront()
+    popupHost.toFront()
+}
+
+fun closePopup() {
+    popupHost.children.clear()
+    dim.isVisible = false
+    popupHost.isVisible = false
+    dim.isVisible = false
+    popupHost.isVisible = false
+}
 }
