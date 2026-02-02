@@ -43,7 +43,7 @@ object topNavigationBar {
             minHeight = NAV_HEIGHT
             maxHeight = NAV_HEIGHT
             isFocusTraversable = false
-            style = baseButtonStyle()
+            style = "-fx-font-size: 18px;-fx-font-weight: bold;"
         }
 
         btn.setOnMouseEntered {
