@@ -1,6 +1,5 @@
 package ressourcix.app
 
-//import Graphical
 import ressourcix.domain.EmployeeManagement
 import ressourcix.ui.ConsoleIO
 import ressourcix.ui.menu.mainMenu
