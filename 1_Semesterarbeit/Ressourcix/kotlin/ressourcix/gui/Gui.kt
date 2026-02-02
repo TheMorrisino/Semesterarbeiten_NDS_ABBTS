@@ -7,14 +7,9 @@ import javafx.scene.control.*
 import javafx.scene.image.Image
 import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
-import ressourcix.app.app
-import ressourcix.domain.EmployeeManagement
 import ressourcix.gui.navigation.*
 import java.util.*
 import kotlin.system.exitProcess
-import ressourcix.gui.pages.calenderView
-import ressourcix.gui.pages.dashboardView
-import ressourcix.logger.logger
 
 class GuiBorderPane : Application() {
     override fun start(stage: Stage) {
@@ -26,13 +21,13 @@ class GuiBorderPane : Application() {
 
 
         val root = BorderPane().apply {
-            top = TopNavigationBar.getView()
+            top = topNavigationBar.getView()
             bottom = bottomBar.getView()
 
         }
 
         val router = NavigationsController(root)
-        TopNavigationBar.bind(router)
+        topNavigationBar.bind(router)
         router.navigate(Route.DASHBOARD)
 
         stage.apply {

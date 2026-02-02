@@ -43,9 +43,6 @@ object logger {
         }
     }
 
-    /**
-     * Datenklasse für Log-Einträge
-     */
     data class LogEntry(
         val timestamp: LocalDateTime,
         val level: Level,
@@ -65,24 +62,18 @@ object logger {
         }
     }
 
-    /**
-     * Setzt das minimale Log-Level
-     */
+
     fun setLevel(level: Level) {
         currentLevel = level
         info("Log-Level gesetzt auf: $level")
     }
 
-    /**
-     * Aktiviert/Deaktiviert File-Logging
-     */
+
     fun setFileLogging(enabled: Boolean) {
         logToFile = enabled
     }
 
-    /**
-     * Aktiviert/Deaktiviert Console-Logging
-     */
+
     fun setConsoleLogging(enabled: Boolean) {
         logToConsole = enabled
     }
@@ -111,9 +102,6 @@ object logger {
         log(Level.FATAL, message, exception)
     }
 
-    /**
-     * Zentrale Log-Methode
-     */
     private fun log(level: Level, message: String, exception: Throwable? = null) {
         // Prüfen ob Level aktiv ist
         if (level.ordinal < currentLevel.ordinal) {
@@ -153,9 +141,6 @@ object logger {
         }
     }
 
-    /**
-     * Fügt Entry zum In-Memory Buffer hinzu
-     */
     private fun addToBuffer(entry: LogEntry) {
         logBuffer.offer(entry)
 
@@ -165,9 +150,9 @@ object logger {
         }
     }
 
-    /**
-     * Gibt Log auf Console aus
-     */
+    // ====================================================================================
+    // Gibt Log auf der Console aus
+    // ====================================================================================
     private fun printToConsole(entry: LogEntry) {
         val output = entry.toFormattedString()
 
@@ -177,9 +162,9 @@ object logger {
         }
     }
 
-    /**
-     * Schreibt Log in Datei
-     */
+    // ====================================================================================
+    // Schreibt die Logs in Datei
+    // ====================================================================================
     private fun writeToFile(entry: LogEntry) {
         try {
             val today = LocalDateTime.now().format(fileDateFormatter)
@@ -194,8 +179,6 @@ object logger {
 //    // ====================================================================================
 //    // Log-Abruf für UI
 //    // ====================================================================================
-
-
     fun getLastLogMessage(): String? {
         return logBuffer.lastOrNull()?.message
     }

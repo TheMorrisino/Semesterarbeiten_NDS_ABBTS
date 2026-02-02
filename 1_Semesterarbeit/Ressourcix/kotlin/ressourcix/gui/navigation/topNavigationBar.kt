@@ -1,13 +1,12 @@
 package ressourcix.gui.navigation
 
-import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.text.Text
 
-object TopNavigationBar {
+object topNavigationBar {
 
     private const val NAV_HEIGHT = 30.0
 
