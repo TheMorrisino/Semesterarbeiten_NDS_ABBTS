@@ -19,7 +19,6 @@ import ressourcix.domain.Employee
 import ressourcix.domain.VacationStatus
 import ressourcix.domain.code
 import ressourcix.gui.popUp.vacationPopUp
-import kotlin.text.clear
 
 /**
  * Kalender:
@@ -27,28 +26,31 @@ import kotlin.text.clear
  * - rechts: weekTable (KW01..KW52) scrollt horizontal
  * - NUR eine sichtbare vertikale Scrollbar (rechts)
  * - vertikales Scrollen synchron: rechts steuert links
- * - KEIN Spacer zwischen Tabellen
- * - Stattdessen: Spacer UNTEN bei fixedTable, gebunden an Höhe der horizontalen Scrollbar rechts
+ * - Spacer UNTEN bei fixedTable, gebunden an Höhe der horizontalen Scrollbar rechts
+ * - Popup Overlay (dim + popupHost) sauber im StackPane integriert
  */
 object calenderView : StackPane() {
+
+    // ---------------- Overlay (Popup) ----------------
 
     private val dim = Region().apply {
         style = "-fx-background-color: rgba(0,0,0,0.35);"
         isVisible = false
+        isManaged = false
         isMouseTransparent = false
-        isManaged = true
         setOnMouseClicked { closePopup() }
     }
 
     private val popupHost = StackPane().apply {
         isVisible = false
+        isManaged = false
         isMouseTransparent = false
-        isManaged = true
         alignment = Pos.CENTER
         maxWidth = Double.MAX_VALUE
         maxHeight = Double.MAX_VALUE
-
     }
+
+    // ---------------- Data / Tables ----------------
 
     private val employees = app.employees
 
@@ -80,8 +82,7 @@ object calenderView : StackPane() {
     private val weekCodeCache: MutableMap<UInt, Array<String>> = mutableMapOf()
 
     /**
-     * WICHTIG: spacer ist jetzt der Bottom-Spacer unter der linken Tabelle
-     * (damit links unten die gleiche Höhe entsteht wie die horizontale Scrollbar rechts)
+     * Spacer unten links: gleiche Höhe wie horizontale Scrollbar rechts
      */
     private val spacer = Region().apply {
         minHeight = 0.0
@@ -89,7 +90,7 @@ object calenderView : StackPane() {
         maxHeight = 0.0
     }
 
-    // Guards
+    // Guards (damit nichts doppelt installiert wird)
     private var scrollSyncInstalled = false
     private var wheelForwardInstalled = false
     private var selectionSyncInstalled = false
@@ -118,21 +119,22 @@ object calenderView : StackPane() {
         fixedTable.prefWidth = fixedWidth
         fixedTable.maxWidth = fixedWidth
 
-        // Layout:
         // leftPane = fixedTable + spacer unten
         val leftPane = BorderPane().apply {
             center = fixedTable
             bottom = spacer
         }
 
-        // center = leftPane direkt neben weekTable (kein Abstand dazwischen)
+        // center = leftPane direkt neben weekTable (kein Abstand)
         val center = HBox(leftPane, weekTable).apply {
             HBox.setHgrow(leftPane, Priority.NEVER)
             HBox.setHgrow(weekTable, Priority.ALWAYS)
         }
 
         val root = BorderPane().apply { this.center = center }
-        children.add(root)
+
+        // ✅ children NUR EINMAL füllen -> kein duplicate children
+        children.setAll(root, dim, popupHost, vScroll)
 
         // RowFactory ohne updateItem-style-spam (weniger Flackern)
         fixedTable.setRowFactory { makeRow() }
@@ -141,7 +143,7 @@ object calenderView : StackPane() {
         // Standardjahr
         showYear(2026u)
 
-        // Skin-Listener: bei Skin-Rebuild nochmal installieren
+        // Bei Skin-Rebuild neu verknüpfen (keine children-Adds!)
         fixedTable.skinProperty().addListener { _, _, _ -> Platform.runLater { installOnceOrRefresh() } }
         weekTable.skinProperty().addListener { _, _, _ -> Platform.runLater { installOnceOrRefresh() } }
         Platform.runLater { installOnceOrRefresh() }
@@ -150,6 +152,7 @@ object calenderView : StackPane() {
     private fun makeRow(): TableRow<Employee> {
         val row = TableRow<Employee>()
 
+        // Style nur bei selected-change -> deutlich weniger Flackern
         row.selectedProperty().addListener { _, _, selected ->
             row.style = if (selected) {
                 """
@@ -166,6 +169,15 @@ object calenderView : StackPane() {
         return row
     }
 
+    /**
+     * Installiert/aktualisiert:
+     * - Linke vertikale Scrollbar verstecken
+     * - Linke horizontale Scrollbar verstecken
+     * - Spacer-Höhe binden (nur einmal)
+     * - Scroll-Sync (rechts -> links) nur einmal Listener
+     * - Wheel-Forward nur einmal
+     * - Selection-Sync nur einmal
+     */
     private fun installOnceOrRefresh() {
         val leftV = findScrollBar(fixedTable, Orientation.VERTICAL)
         val rightV = findScrollBar(weekTable, Orientation.VERTICAL)
@@ -177,7 +189,7 @@ object calenderView : StackPane() {
         // Linke horizontale Scrollbar verstecken (frozen)
         findScrollBar(fixedTable, Orientation.HORIZONTAL)?.let { hideHorizontalBar(it) }
 
-        // Bottom-Spacer unter links: Höhe = Höhe der horizontalen Scrollbar rechts
+        // Spacer unten links: Höhe = Höhe der horizontalen Scrollbar rechts
         val rightH = findScrollBar(weekTable, Orientation.HORIZONTAL)
         if (rightH != null && !spacer.prefHeightProperty().isBound) {
             spacer.prefHeightProperty().bind(rightH.heightProperty())
@@ -185,13 +197,14 @@ object calenderView : StackPane() {
             spacer.maxHeightProperty().bind(rightH.heightProperty())
         }
 
-        // Scroll Sync: rechts steuert links (one-way)
+        // Scroll Sync: rechts steuert links (one-way) -> Listener nur einmal
         if (!scrollSyncInstalled) {
             scrollSyncInstalled = true
             rightV.valueProperty().addListener { _, _, v ->
                 leftV.value = v.toDouble()
             }
         }
+        // direkt angleichen
         leftV.value = rightV.value
 
         // Wheel Forward nur einmal
@@ -199,7 +212,6 @@ object calenderView : StackPane() {
             wheelForwardInstalled = true
             forwardWheelScrollToWeekTable()
         }
-        children.addAll(vScroll,dim,popupHost)
 
         // Selection Sync einmal
         if (!selectionSyncInstalled) {
@@ -245,6 +257,8 @@ object calenderView : StackPane() {
         bar.prefHeight = 0.0
         bar.maxHeight = 0.0
     }
+
+    // ----------------- Cache / Table Generation -----------------
 
     /** Cache für alle Mitarbeiter für ein Jahr: KW1..KW52 */
     private fun rebuildCache(year: UInt, weeks: UInt = 52u) {
@@ -342,23 +356,41 @@ object calenderView : StackPane() {
         showYear(currentYear)
     }
 
+    // ----------------- Popup Handling -----------------
+
     private fun onEmployeeDoubleClick(employee: Employee) {
         val empId = employee.getId()
-        println("Doppelklick auf: $empId ${employee.abbreviationSting()}") //TODO muss entfernt werden
         vacationPopUp.idField.text = empId.toString()
         vacationPopUp.abbreviationField.text = employee.abbreviationSting()
+
         showPopup(
             vacationPopUp.build(
                 onClose = { closePopup() },
                 onSave = { kw ->
                     consoleCalendarOutput.addVacation(empId, kw.startKW, kw.endKW)
-                    println("Ferien: ${kw.startKW} - ${kw.endKW}")
                     refreshVacations()
                     closePopup()
                 }
             )
         )
+    }
 
+    fun showPopup(popupContent: Node) {
+        popupHost.children.setAll(popupContent)
+        dim.isVisible = true
+        dim.isManaged = true
+        popupHost.isVisible = true
+        popupHost.isManaged = true
+        dim.toFront()
+        popupHost.toFront()
+    }
+
+    fun closePopup() {
+        popupHost.children.clear()
+        dim.isVisible = false
+        dim.isManaged = false
+        popupHost.isVisible = false
+        popupHost.isManaged = false
     }
 
     // ----------------- Farben -----------------
@@ -385,20 +417,4 @@ object calenderView : StackPane() {
             else -> rgb(red[0], red[1], red[2])
         }
     }
-
-    fun showPopup(popupContent: Node) {
-        popupHost.children.setAll(popupContent)
-        dim.isVisible = true
-        popupHost.isVisible = true
-        dim.toFront()
-        popupHost.toFront()
-    }
-
-    fun closePopup() {
-        popupHost.children.clear()
-        dim.isVisible = false
-        popupHost.isVisible = false
-    }
 }
-
-
