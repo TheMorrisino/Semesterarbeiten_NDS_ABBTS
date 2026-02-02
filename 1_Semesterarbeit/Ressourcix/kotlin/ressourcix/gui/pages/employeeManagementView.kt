@@ -2,11 +2,13 @@
 
 package ressourcix.gui.pages
 
+import javafx.collections.FXCollections
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
+import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
 import javafx.scene.control.TextFormatter
@@ -17,15 +19,21 @@ import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.text.TextAlignment
 import ressourcix.app.app
+import ressourcix.domain.Department
+import ressourcix.domain.Education
+import ressourcix.domain.Role
 import ressourcix.gui.popUp.filterPopUp
 import ressourcix.gui.popUp.filteredEmployee
 
+private const val BTN_HEIGHT = 50.0
+private const val BTN_WIDTH = 140.0
+private const val TFL_HEIGHT = 30.0
+private const val TFL_WIDTH = 300.0
+
 object employeeManagementView : BorderPane() {
 
-    private const val BTN_HEIGHT = 50.0
-    private const val BTN_WIDTH = 140.0
-    private const val TFL_HEIGHT = 30.0
-    private const val TFL_WIDTH = 300.0
+    private var selectedEmployee: ressourcix.domain.Employee? = null
+    private var isEditMode: Boolean = false
 
     var idField = createTfl("", "ID eingeben...").apply {
         textFormatter = positiveIntNoZeroFormatter()
@@ -34,13 +42,30 @@ object employeeManagementView : BorderPane() {
         textFormatter = lettersOnlyMax4Formatter()
     }
     var nameField = createTfl("","")
-    var roleField = createTfl("","")
-    var departmentField = createTfl("","")
+    val roleField = ComboBox<Role>().apply {
+        items = FXCollections.observableArrayList(Role.values().toList())
+        promptText = "Rolle auswählen..."
+        prefHeight = TFL_HEIGHT
+        prefWidth = TFL_WIDTH
+    }
+    val departmentField = ComboBox<Department>().apply {
+        items = FXCollections.observableArrayList(Department.values().toList())
+        promptText = "Abteilung auswählen..."
+        prefHeight = TFL_HEIGHT
+        prefWidth = TFL_WIDTH
+        isFocusTraversable = false
+    }
     var cityField = createTfl("","")
 
     var surnameField = createTfl("","")
     var workloadField = createTfl("","")
-    var educationField = createTfl("","")
+    val educationField = ComboBox<Education>().apply {
+        items = FXCollections.observableArrayList(Education.values().toList())
+        promptText = "Ausbildung auswählen..."
+        prefHeight = TFL_HEIGHT
+        prefWidth = TFL_WIDTH
+        isFocusTraversable = false
+    }
     var birthdayField = createTfl("","")
 
     var remainingVacationWeeksField = createTfl("","")
@@ -108,17 +133,23 @@ object employeeManagementView : BorderPane() {
                 val idUInt = idField.text.toUInt()
                 val emp = app.employees.firstOrNull { it.getId() == idUInt }
                 if (emp != null) {
+                    selectedEmployee = emp
                     fillEmployeeFields(emp)
+                    setFieldsEditable(false)
                 } else {
+                    selectedEmployee = null
                     showNotFoundAlert("Suche nach ID", idField.text)
                     clearEmployeeFields()
+                    setFieldsEditable(false)
                 }
             }
         }
         val idBox = HBox(10.0).apply {
             alignment = Pos.CENTER
             children.addAll(
-                Label("ID:"),
+                Label("ID:").apply {
+                    style = "-fx-font-weight: bold;"
+                },
                 idField,
                 showByIdBtn
             )
@@ -134,10 +165,14 @@ object employeeManagementView : BorderPane() {
                 }
 
                 if (emp != null) {
+                    selectedEmployee = emp
                     fillEmployeeFields(emp)
+                    setFieldsEditable(false)
                 } else {
+                    selectedEmployee = null
                     showNotFoundAlert("Suche nach Kürzel", kuerzel)
                     clearEmployeeFields()
+                    setFieldsEditable(false)
                 }
             }
         }
@@ -145,7 +180,9 @@ object employeeManagementView : BorderPane() {
         val abbreviationBox = HBox(10.0).apply {
             alignment = Pos.CENTER
             children.addAll(
-                Label("Kürzel:"),
+                Label("Kürzel:").apply {
+                    style = " -fx-font-weight: bold;"
+                },
                 abbreviationField,
                 showByAbbreviationBtn
             )
@@ -161,8 +198,8 @@ object employeeManagementView : BorderPane() {
             alignment = Pos.CENTER
             children.addAll(
                 createDataBox("Name", nameField),
-                createDataBox("Rolle", roleField),
-                createDataBox("Abteilung", departmentField),
+                createComboBox("Rolle", roleField),
+                createComboBox("Abteilung", departmentField),
                 createDataBox("Wohnort", cityField),
                 createDataBox("Anzahl Ferienwochen", remainingVacationWeeksField)
             )
@@ -173,7 +210,7 @@ object employeeManagementView : BorderPane() {
             children.addAll(
                 createDataBox("Nachname", surnameField),
                 createDataBox("Pensum", workloadField),
-                createDataBox("Ausbildung", educationField),
+                createComboBox("Ausbildung", educationField),
                 createDataBox("Geburtstag", birthdayField),
                 createDataBox("Gebrauchte Ferienwochen", usedVacationWeeksField)
             )
@@ -188,18 +225,74 @@ object employeeManagementView : BorderPane() {
         children.addAll(
             createButton("MA ändern").apply {
                 setOnAction {
-                    //TODO Funktion Verknüpfen
+                    val emp = selectedEmployee
+                    if (emp == null) {
+                        showNotFoundAlert("Mitarbeiter ändern", "Kein Mitarbeitender ausgewählt")
+                        return@setOnAction
+                    }
+                    setFieldsEditable(true)
                 }
             },
             createButton("MA speichern").apply {
                 setOnAction {
-                    //TODO Funktion Verknüpfen
+                    val emp = selectedEmployee
+                    if (emp == null) {
+                        showNotFoundAlert("Mitarbeiter speichern", "Kein Mitarbeitender ausgewählt")
+                        return@setOnAction
+                    }
+
+                    if (!isEditMode) return@setOnAction
+
+                    try {
+                        emp.setFirstName(nameField.text)
+                        emp.setLastName(surnameField.text)
+                        val w = workloadField.text.trim().toInt()
+                        emp.setWorkloadPercent(w.toUByte())
+                        emp.setRole(roleField.value!!)
+                        emp.setDepartment(departmentField.value)
+                        emp.setEducation(educationField.value)
+                        emp.setCity(cityField.text)
+                        emp.setBirthdayFromString(birthdayField.text)
+
+
+                        setFieldsEditable(false)
+                        fillEmployeeFields(emp)
+                    } catch (e: Exception) {
+                        Alert(Alert.AlertType.ERROR).apply {
+                            title = "Speichern fehlgeschlagen"
+                            headerText = "Bitte Eingaben prüfen"
+                            contentText = e.message ?: "Unbekannter Fehler"
+                            showAndWait()
+                        }
+                    }
                 }
             },
             createButton("MA löschen").apply {
                 setOnAction {
-                    //TODO Funktion Verknüpfen
+                    val emp = selectedEmployee
+                    if (emp == null) {
+                        showNotFoundAlert("Mitarbeiter löschen", "Kein Mitarbeitender ausgewählt")
+                        return@setOnAction
+                    }
+
+                    val ok = app.employees.removeIf { it.getId() == emp.getId() }
+                    if (ok) {
+                        clearEmployeeFields()
+                        idField.clear()
+                        abbreviationField.clear()
+                        setNoSelectionState()
+                    } else {
+                        Alert(Alert.AlertType.WARNING).apply {
+                            title = "Löschen"
+                            headerText = "Mitarbeitender nicht gefunden"
+                            contentText = "ID: ${emp.getId()}"
+                            showAndWait()
+                        }
+                    }
                 }
+            },
+                    createButton("Suche \nZurücksetzen").apply {
+                setOnAction {resetSearch()}
             }
         )
     }
@@ -209,6 +302,9 @@ object employeeManagementView : BorderPane() {
         mainContent.center = employeeInfoBox
         mainContent.right = functionsBox
         center = centerStack
+
+        setFieldsEditable(false)
+        setNoSelectionState()
     }
 
     fun showPopup(popupContent: Node) {
@@ -240,11 +336,22 @@ object employeeManagementView : BorderPane() {
             textAlignment = TextAlignment.CENTER
             alignment = Pos.CENTER
             isFocusTraversable = false
+            style = " -fx-font-weight: bold;"
         }
 
     private fun createDataBox(labelText: String, field: TextField): VBox =
         VBox(6.0).apply {
-            children.addAll(Label(labelText), field)
+            children.addAll(Label(labelText).apply {
+                style = " -fx-font-weight: bold;"
+            }, field)
+        }
+
+    private fun <T> createComboBox(labelText: String, field: ComboBox<T>): VBox =
+        VBox(6.0).apply {
+            children.addAll(
+                Label(labelText).apply { style = "-fx-font-weight: bold;" },
+                field
+            )
         }
 
     private fun positiveIntNoZeroFormatter(): TextFormatter<String> {
@@ -272,13 +379,13 @@ object employeeManagementView : BorderPane() {
         nameField.text = emp.getFirstName()
         surnameField.text = emp.getLastName()
         workloadField.text = "${emp.getWorkloadPercent()}"
-        roleField.text = emp.getRole().toString()
-        departmentField.text = emp.getDepartment()?.toString().orEmpty()
-        educationField.text = emp.getEducation()?.toString().orEmpty()
+        roleField.value = emp.getRole()
+        departmentField.value = emp.getDepartment()
+        educationField.value = emp.getEducation()
         val abbr = emp.Abbreviation.ifBlank { emp.abbreviationSting() }
         abbreviationField.text = abbr
-        cityField.clear()
-        birthdayField.clear()
+        cityField.text = emp.getCity()
+        birthdayField.text = emp.getBirthdayAsString()
         remainingVacationWeeksField.clear()
         usedVacationWeeksField.clear()
     }
@@ -288,12 +395,11 @@ object employeeManagementView : BorderPane() {
         abbreviationField.clear()
         nameField.clear()
         surnameField.clear()
-        abbreviationField.clear()
-        roleField.clear()
-        departmentField.clear()
+        roleField.value = null
+        departmentField.value = null
         cityField.clear()
         workloadField.clear()
-        educationField.clear()
+        educationField.value = null
         birthdayField.clear()
         remainingVacationWeeksField.clear()
         usedVacationWeeksField.clear()
@@ -307,4 +413,31 @@ object employeeManagementView : BorderPane() {
             showAndWait()
         }
     }
-}
+
+    private fun resetSearch() {
+        selectedEmployee = null
+        setFieldsEditable(false)
+        clearEmployeeFields()
+        idField.clear()
+        abbreviationField.clear()
+    }
+
+    private fun setFieldsEditable(editable: Boolean) {
+        nameField.isDisable = !editable
+        surnameField.isDisable = !editable
+        workloadField.isDisable = !editable
+        roleField.isDisable = !editable
+        departmentField.isDisable = !editable
+        educationField.isDisable = !editable
+        cityField.isDisable = !editable
+        birthdayField.isDisable = !editable
+        remainingVacationWeeksField.isDisable = true
+        usedVacationWeeksField.isDisable = true
+        isEditMode = editable
+    }
+
+    private fun setNoSelectionState() {
+        selectedEmployee = null
+        setFieldsEditable(false)
+    }
+    }

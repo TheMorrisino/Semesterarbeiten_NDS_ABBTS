@@ -1,6 +1,13 @@
 package ressourcix.domain
 
-enum class Role { APPRENTICE, STAFF, TEAM_LEAD, MANAGER }
+enum class Role (val displayName: String) {
+    APPRENTICE("Lernende"),
+    STAFF("Mitarbeitende"),
+    TEAM_LEAD("Teamleitung"),
+    MANAGER("Management");
+
+    override fun toString(): String = displayName
+}
 
 enum class VacationStatus { REQUESTED, APPROVED, GENERATED, REJECTED, CANCELLED }
 

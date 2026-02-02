@@ -21,7 +21,7 @@ import ressourcix.domain.Employee
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
 private const val BOX_WIDTH = 800.0
-private const val BOX_HEIGHT = 400.0
+private const val BOX_HEIGHT = 420.0
 private const val TFL_HEIGHT = 30.0
 private const val TFL_WIDTH = 300.0
 
@@ -122,7 +122,9 @@ object filteredEmployee {
             """.trimIndent()
 
             children.addAll(
-                Label("Gefilterte Mitarbeiter"),
+                Label("Gefilterte Mitarbeiter").apply {
+                    style = "-fx-font-size: 18px; -fx-font-weight: bold;"
+                },
                 filterInfo,
                 table,
                 HBox().apply {
@@ -140,11 +142,14 @@ object filteredEmployee {
             textAlignment = TextAlignment.CENTER
             alignment = Pos.CENTER
             isFocusTraversable = false
+            style = " -fx-font-weight: bold;"
         }
 
     private fun createDataBox(labelText: String, field: TextField): VBox =
         VBox(6.0).apply {
-            children.addAll(Label(labelText), field)
+            children.addAll(Label(labelText).apply {
+                style = " -fx-font-weight: bold;"
+            }, field)
         }
 
     private fun createTfl(text: String,prompt: String): TextField =
