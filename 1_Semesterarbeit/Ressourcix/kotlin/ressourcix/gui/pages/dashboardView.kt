@@ -10,11 +10,11 @@ import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
-import ressourcix.domain.Employee
+import ressourcix.domain.Employee.*
 import ressourcix.domain.VacationEntry
-//import ressourcix.gui.GuiBorderPane.Companion.graphical
 import javafx.util.Duration
 import ressourcix.app.app
+import ressourcix.domain.Employee
 import ressourcix.gui.GuiBorderPane
 import ressourcix.logger.logger
 
@@ -27,9 +27,16 @@ object dashboardView : StackPane() {
     private lateinit var pieChart: PieChart
     private lateinit var chartContainer: VBox
 
+    private val employees = app.employees
+
+
+
+
+
     private val xAxis = CategoryAxis().apply {
         label = "Kalenderwochen"
         side = javafx.geometry.Side.BOTTOM
+
     }
     private val yAxis = NumberAxis().apply {
         label = "Anzahl MA"
@@ -83,10 +90,10 @@ object dashboardView : StackPane() {
         }
 
         pieChart = PieChart().apply {
-            animated = false
+            animated = true
             title = "Mitarbeiter mit und ohne Ferien"
             isLegendVisible = true
-            legendSide = Side.RIGHT
+            legendSide = Side.BOTTOM
         }
 
         // ====================================================================================================
@@ -100,7 +107,7 @@ object dashboardView : StackPane() {
             prefWidth = Double.MAX_VALUE
             prefHeight = Double.MAX_VALUE
 
-            // Jetzt können wir die Bindings setzen
+
             barChart.prefWidthProperty().bind(widthProperty())
             barChart.prefHeightProperty().bind(heightProperty())
             pieChart.prefWidthProperty().bind(widthProperty())
@@ -264,7 +271,7 @@ object dashboardView : StackPane() {
     // ====================================================================================================
     fun updatePieChart() {
         val stats = try {
-            computeVacationStats(app.employees)
+            computeVacationStats(employees)
         } catch (e: UninitializedPropertyAccessException) {
             return
         }
@@ -276,6 +283,8 @@ object dashboardView : StackPane() {
                 PieChart.Data("Mit Ferien (${stats.withVacation})", stats.withVacation.toDouble()),
                 PieChart.Data("Ohne Ferien (${stats.withoutVacation})", stats.withoutVacation.toDouble())
             )
+
+
 
 
 
@@ -296,18 +305,20 @@ object dashboardView : StackPane() {
         }
     }
 
+
+
     private fun computeWeeklyOverlap(employees: List<Employee>): List<Int> {
         // 52 Plätze, initial 0
-        val counts = MutableList(52) { 0 }
+        val counts = app.management.overlapList
 
-        employees.forEach { emp ->
-            emp.getVacationEntries()
-                .forEach { entry ->
-                    for (w in entry.range.startWeek..entry.range.endWeek) {
-                        counts[(w - 1u).toInt()]++
-                    }
-                }
-        }
+//        employees.forEach { emp ->
+//            emp.getVacationEntries()
+//                .forEach { entry ->
+//                    for (w in entry.range.startWeek..entry.range.endWeek) {
+//                        counts[(w - 1u).toInt()]++
+//                    }
+//                }
+//        }
         return counts
     }
 
@@ -315,18 +326,20 @@ object dashboardView : StackPane() {
     // Berechnet Statistiken über Mitarbeiter mit und ohne Ferien
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private fun computeVacationStats(employees: List<Employee>): VacationStats {
-        var withVacation = 0
-        var withoutVacation = 0
+        var withVacation = app.management.overlapList.sum()
+        var withoutVacation = (employees.size * 5) - withVacation
 
-        employees.forEach { emp ->
-            if (emp.getVacationEntries().isNotEmpty()) {
-                withVacation++
-            } else {
-                withoutVacation++
-            }
-        }
 
-        return VacationStats(withVacation, withoutVacation, employees.size)
+
+//        employees.forEach { emp ->
+//            if (emp.getVacationEntries().isNotEmpty()) {
+//                withVacation++
+//            } else {
+//                withoutVacation++
+//            }
+//        }
+
+        return VacationStats(withVacation, withoutVacation, employees.size * 5)
     }
 
     /**
