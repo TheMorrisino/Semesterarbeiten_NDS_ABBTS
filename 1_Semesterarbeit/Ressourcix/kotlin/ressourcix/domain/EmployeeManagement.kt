@@ -230,7 +230,7 @@ class EmployeeManagement () {
                 overlapList[i] += employees[e].vacationList[i]
                 //println(overlapList)
         }
-        println(overlapList)
+        //println(overlapList)
     }
 
 
@@ -257,57 +257,5 @@ class EmployeeManagement () {
         return count
     }
 
-//    fun checkVacationOverlaps(maxAllowed: Int = 1) : Boolean {
-//        var vacationError : Boolean = false
-//        val allVacation = employees.flatMap { it.getVacationEntries() }
-//        val overlaps = mutableListOf<Pair<VacationEntry, VacationEntry>>()
-//
-//        for (i in allVacation.indices) {
-//            for (j in i + 1 until allVacation.size) {
-//                val vacation1 = allVacation[i]
-//                val vacation2 = allVacation[j]
-//
-//                if (vacation1.overlapsWith(vacation2)) {
-//                    overlaps.add(Pair(vacation1, vacation2))
-//                }
-//            }
-//        }
-//
-//        println("=== Überschneidungs-Check ===")
-//        println("Gefundene Überschneidungen: ${overlaps.size}")
-//        println("Maximal erlaubt: $maxAllowed")
-//        println()
-//
-//        // Bei maxAllowed = 0: keine Überschneidung erlaubt (>=)
-//        // Bei maxAllowed > 0: maxAllowed Überschneidungen erlaubt (>)
-//        val limitExceeded = if (maxAllowed == 0) {
-//            overlaps.size >= 1
-//        } else {
-//            overlaps.size > maxAllowed
-//        }
-//
-//        if (limitExceeded) {
-//            val excess = if (maxAllowed == 0) overlaps.size else overlaps.size - maxAllowed
-//            println("WARNUNG: $excess zu viele Überschneidung(en)!")
-//            println()
-//            println("Überschneidungen:")
-//            vacationError = true
-//            overlaps.forEach { (v1, v2) ->
-//                val emp1 = findById(v1.employeeId)
-//                val emp2 = findById(v2.employeeId)
-//                println("${emp1?.getFullName()} (Wochen ${v1.range.startWeek}-${v1.range.endWeek}) <-> ${emp2?.getFullName()} (Wochen ${v2.range.startWeek}-${v2.range.endWeek})")
-//            }
-//        } else {
-//            println("OK: Anzahl Überschneidungen im erlaubten Bereich.")
-//            vacationError = false
-//            overlaps.forEach { (v1, v2) ->
-//                val emp1 = findById(v1.employeeId)
-//                val emp2 = findById(v2.employeeId)
-//                println("${emp1?.getFullName()} (Wochen ${v1.range.startWeek}-${v1.range.endWeek}) <-> ${emp2?.getFullName()} (Wochen ${v2.range.startWeek}-${v2.range.endWeek})")
-//            }
-//        }
-//
-//        return vacationError
-//    }
     fun getEmployeeByIndex(index: Int): Employee = employees[index]
 }
