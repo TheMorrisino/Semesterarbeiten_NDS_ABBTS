@@ -37,7 +37,6 @@ fun main() {
         while (true) {
             try {
                 Thread.sleep(1000)
-                calenderView.refreshVacations()
 
             } catch (e: InterruptedException) {
                 logger.info("UI-Update-Thread wurde beendet")

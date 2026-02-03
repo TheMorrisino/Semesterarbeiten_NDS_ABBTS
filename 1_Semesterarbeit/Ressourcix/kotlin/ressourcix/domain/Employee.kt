@@ -83,6 +83,25 @@ class Employee(private val id: UInt) {
         vacationEntries.add(entry)
     }
 
+    fun removeVacationEntry(vacationId: UInt, entry: VacationEntry){
+        vacationEntries.removeIf { it.id == vacationId }
+    }
+
+    fun getIdWithStartWeek(startWeek: UInt): UInt? {
+        for (entry in vacationEntries) {
+            if (entry.range.startWeek == startWeek) {
+                return entry.id
+            }
+        }
+        return null
+    }
+
+    fun removeByStartWeek(startWeek: UInt): Boolean {
+        return vacationEntries.removeIf {
+            it.range.startWeek == startWeek
+        }
+    }
+
 
     fun createVacationList(entry: VacationEntry) {
 

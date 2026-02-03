@@ -19,16 +19,8 @@ import ressourcix.domain.Employee
 import ressourcix.domain.VacationStatus
 import ressourcix.domain.code
 import ressourcix.gui.popUp.vacationPopUp
+import ressourcix.logger.logger
 
-/**
- * Kalender:
- * - links: fixedTable (ID + Abkürzung) frozen
- * - rechts: weekTable (KW01..KW52) scrollt horizontal
- * - NUR eine sichtbare vertikale Scrollbar (rechts)
- * - vertikales Scrollen synchron: rechts steuert links
- * - Spacer UNTEN bei fixedTable, gebunden an Höhe der horizontalen Scrollbar rechts
- * - Popup Overlay (dim + popupHost) sauber im StackPane integriert
- */
 object calenderView : StackPane() {
 
     // ---------------- Overlay (Popup) ----------------
@@ -140,10 +132,10 @@ object calenderView : StackPane() {
         fixedTable.setRowFactory { makeRow() }
         weekTable.setRowFactory { makeRow() }
 
-        // Standardjahr
+
         showYear(2026u)
 
-        // Bei Skin-Rebuild neu verknüpfen (keine children-Adds!)
+
         fixedTable.skinProperty().addListener { _, _, _ -> Platform.runLater { installOnceOrRefresh() } }
         weekTable.skinProperty().addListener { _, _, _ -> Platform.runLater { installOnceOrRefresh() } }
         Platform.runLater { installOnceOrRefresh() }
@@ -152,7 +144,6 @@ object calenderView : StackPane() {
     private fun makeRow(): TableRow<Employee> {
         val row = TableRow<Employee>()
 
-        // Style nur bei selected-change -> deutlich weniger Flackern
         row.selectedProperty().addListener { _, _, selected ->
             row.style = if (selected) {
                 """
@@ -169,15 +160,7 @@ object calenderView : StackPane() {
         return row
     }
 
-    /**
-     * Installiert/aktualisiert:
-     * - Linke vertikale Scrollbar verstecken
-     * - Linke horizontale Scrollbar verstecken
-     * - Spacer-Höhe binden (nur einmal)
-     * - Scroll-Sync (rechts -> links) nur einmal Listener
-     * - Wheel-Forward nur einmal
-     * - Selection-Sync nur einmal
-     */
+
     private fun installOnceOrRefresh() {
         val leftV = findScrollBar(fixedTable, Orientation.VERTICAL)
         val rightV = findScrollBar(weekTable, Orientation.VERTICAL)
@@ -368,13 +351,19 @@ object calenderView : StackPane() {
                 onClose = { closePopup() },
                 onSave = { kw ->
                     consoleCalendarOutput.addVacation(empId, kw.startKW, kw.endKW)
+                    logger.info("Ferieneintrag hinzugefügt Mitarbeiter $empId von ${kw.startKW} bis ${kw.endKW} ")
+                    refreshVacations()
+                    closePopup()
+                },
+                onRemove = { kw ->
+                    consoleCalendarOutput.removeVacation(empId, kw.startKW, kw.endKW)
+                    logger.info("Ferieneintrag entfernt Mitarbeiter $empId mit ${kw.startKW}")
                     refreshVacations()
                     closePopup()
                 }
             )
         )
     }
-
     fun showPopup(popupContent: Node) {
         popupHost.children.setAll(popupContent)
         dim.isVisible = true
