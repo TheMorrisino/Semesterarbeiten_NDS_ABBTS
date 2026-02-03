@@ -6,6 +6,7 @@ import ressourcix.gui.GuiBorderPane
 import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.dashboardView
 import ressourcix.logger.logger
+
 fun main() {
 
     // Logger konfigurieren
@@ -37,6 +38,7 @@ fun main() {
         while (true) {
             try {
                 Thread.sleep(1000)
+
 
             } catch (e: InterruptedException) {
                 logger.info("UI-Update-Thread wurde beendet")

@@ -189,4 +189,16 @@ object logger {
     fun getLastLogEntry(): LogEntry? {
         return logBuffer.lastOrNull()
     }
+
+    fun getLastLogMessageWithTimestamp(format: String = "HH:mm:ss"): String? {
+        val entry = logBuffer.lastOrNull()
+
+        return if (entry != null) {
+            val timeFormatter = DateTimeFormatter.ofPattern(format)
+            val time = entry.timestamp.format(timeFormatter)
+            "$time - ${entry.message}"
+        } else {
+            null
+        }
+    }
 }
