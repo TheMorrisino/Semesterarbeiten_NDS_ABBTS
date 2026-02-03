@@ -10,13 +10,13 @@ import javafx.scene.control.*
 import javafx.scene.layout.*
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
-import ressourcix.domain.Employee
+import ressourcix.domain.Employee.*
 import ressourcix.domain.VacationEntry
-//import ressourcix.gui.GuiBorderPane.Companion.graphical
 import javafx.util.Duration
 import ressourcix.app.app
+import ressourcix.domain.Employee
 import ressourcix.gui.GuiBorderPane
-
+import ressourcix.logger.logger
 
 
 object dashboardView : StackPane() {
@@ -24,9 +24,19 @@ object dashboardView : StackPane() {
 
 
     private lateinit var barChart: BarChart<String, Number>
+    private lateinit var pieChart: PieChart
+    private lateinit var chartContainer: VBox
+
+    private val employees = app.employees
+
+
+
+
+
     private val xAxis = CategoryAxis().apply {
         label = "Kalenderwochen"
         side = javafx.geometry.Side.BOTTOM
+
     }
     private val yAxis = NumberAxis().apply {
         label = "Anzahl MA"
@@ -36,8 +46,11 @@ object dashboardView : StackPane() {
 
     }
 
-    val thankYouButton = Button()
+    val toggleChartButton = Button()
+    val refreshButton = Button()
 
+    // Aktueller Chart-Modus: true = BarChart, false = PieChart
+    private var showingBarChart = true
 
     // Cache für die letzten Daten, um unnötige Updates zu vermeiden
     private var lastData: List<Int> = emptyList()
@@ -69,77 +82,143 @@ object dashboardView : StackPane() {
         }
 
         // ====================================================================================================
-        // Top Area mit BarChart
+        // Charts zuerst erstellen (ohne Bindings)
         // ====================================================================================================
-        val topArea = VBox().apply {
+        barChart = BarChart<String, Number>(xAxis, yAxis).apply {
+            animated = false
+            isLegendVisible = false
+        }
+
+        pieChart = PieChart().apply {
+            animated = true
+            title = "Mitarbeiter mit und ohne Ferien"
+            isLegendVisible = true
+            legendSide = Side.BOTTOM
+        }
+
+        // ====================================================================================================
+        // Top Area mit Charts (Container für beide Diagramme)
+        // ====================================================================================================
+        chartContainer = VBox().apply {
             spacing = 0.0
             padding = Insets(5.0)
             style = "-fx-border-color: #cccccc; -fx-border-width: 1; -fx-background-color: #f9f9f9;"
 
-            // BarChart erstellen und als Klassenvariable speichern
-            barChart = BarChart<String, Number>(xAxis, yAxis).apply {
-                animated = false
-                isLegendVisible = false
-
-            }
-
-            children.add(barChart)
             prefWidth = Double.MAX_VALUE
             prefHeight = Double.MAX_VALUE
+
+
+            barChart.prefWidthProperty().bind(widthProperty())
+            barChart.prefHeightProperty().bind(heightProperty())
+            pieChart.prefWidthProperty().bind(widthProperty())
+            pieChart.prefHeightProperty().bind(heightProperty())
+
+            // Standardmäßig BarChart anzeigen
+            children.add(barChart)
             VBox.setVgrow(barChart, Priority.ALWAYS)
         }
 
 
 
-        val empty = VBox()
-        empty.apply {
-            thankYouButton.setText("Thank You")
-            children.add(thankYouButton)
-            alignment = Pos.BOTTOM_CENTER
+        val buttonBox = HBox().apply {
+            spacing = 10.0
+            padding = Insets(5.0)
+            alignment = Pos.CENTER
 
+            toggleChartButton.text = "Zu Kuchendiagramm wechseln"
+            refreshButton.text = "Aktualisieren"
 
-            thankYouButton.setOnAction{
-                alert()
+            children.addAll(toggleChartButton, refreshButton)
+
+            toggleChartButton.setOnAction {
+                toggleChart()
             }
 
-
-
+            refreshButton.setOnAction {
+                refreshCurrentChart()
+            }
         }
 
 
 
 
-        gridPane.add(topArea, 0, 0)      // Oben
-        gridPane.add(empty, 0, 1)        // Unten
+        gridPane.add(chartContainer, 0, 0)      // Oben
+        gridPane.add(buttonBox, 0, 1)           // Unten
 
         // Grid zum StackPane hinzufügen
         children.add(gridPane)
 
 
-        // Initial Chart befüllen wird später gemacht, wenn graphical initialisiert ist
-        // updateBarChart() wird vom Update-Thread aufgerufen
+        // Initial Chart befüllen
+        updateBarChart()
     }
 
 
+    // ====================================================================================================
+    // Wechselt zwischen BarChart und PieChart
+    // ====================================================================================================
+    private fun toggleChart() {
+        showingBarChart = !showingBarChart
 
+        Platform.runLater {
+            // Entferne alle Kinder und VGrow-Einstellungen
+            chartContainer.children.forEach { child ->
+                VBox.setVgrow(child, null)
+            }
+            chartContainer.children.clear()
 
+            if (showingBarChart) {
+                // BarChart hinzufügen
+                chartContainer.children.add(barChart)
+                VBox.setVgrow(barChart, Priority.ALWAYS)
+                toggleChartButton.text = "Zu Kuchendiagramm wechseln"
+                // Cache zurücksetzen für sofortiges Update
+                val tempData = lastData
+                lastData = emptyList()
+                updateBarChart()
+                if (tempData.isEmpty()) {
+                    lastData = emptyList() // Bei leerem Cache wird Update erzwungen
+                }
+            } else {
+                // PieChart hinzufügen
+                chartContainer.children.add(pieChart)
+                VBox.setVgrow(pieChart, Priority.ALWAYS)
+                toggleChartButton.text = "Zu Balkendiagramm wechseln"
+                updatePieChart()
+            }
 
-    fun alert()  {
-        Alert(Alert.AlertType.INFORMATION).apply {
-            title = "Information"
-            headerText = "Dankeschön"
-            contentText = "Vielen Dank, dass Sie unsere Software nutzen!\nIhr Ressourcix‑Team \uD83D\uDE80"
-        }.showAndWait()
+            // Layout neu berechnen
+            chartContainer.layout()
+        }
     }
 
+    // ====================================================================================================
+    // Aktualisiert das aktuell angezeigte Diagramm
+    // ====================================================================================================
+    private fun refreshCurrentChart() {
 
+        if (showingBarChart) {
+            lastData = emptyList()
+            updateBarChart()
+            logger.info("BarChart aktualisiert")
+        } else {
+            updatePieChart()
+            logger.info("PieChart aktualisiert")
+        }
+    }
+
+    // ====================================================================================================
+    // Aktualisiert das BarChart mit Mitarbeitern, die Ferien in KW Wochen haben
+    // ====================================================================================================
     fun updateBarChart() {
 
         val overlapCounts = try {
             computeWeeklyOverlap(app.employees)
         } catch (e: UninitializedPropertyAccessException) {
             return
+
         }
+
 
 
         if (overlapCounts == lastData) {
@@ -187,18 +266,88 @@ object dashboardView : StackPane() {
         }
     }
 
+    // ====================================================================================================
+    // Aktualisiert das PieChart mit Mitarbeitern, die Ferien haben vs. die keine Ferien
+    // ====================================================================================================
+    fun updatePieChart() {
+        val stats = try {
+            computeVacationStats(employees)
+        } catch (e: UninitializedPropertyAccessException) {
+            return
+        }
+
+        Platform.runLater {
+            pieChart.data.clear()
+
+            val data = FXCollections.observableArrayList(
+                PieChart.Data("Mit Ferien (${stats.withVacation})", stats.withVacation.toDouble()),
+                PieChart.Data("Ohne Ferien (${stats.withoutVacation})", stats.withoutVacation.toDouble())
+            )
+
+
+
+
+
+            // Tooltips
+            data.forEach { slice ->
+                val percentage = if (stats.total > 0) {
+                    (slice.pieValue / stats.total * 100).toInt()
+                } else {
+                    0
+                }
+
+                val tip = Tooltip("${slice.name}\n$percentage%").apply {
+                    showDelay = Duration.millis(100.0)
+                }
+                slice.node?.let { Tooltip.install(it, tip) }
+            }
+            pieChart.data = data
+        }
+    }
+
+
+
     private fun computeWeeklyOverlap(employees: List<Employee>): List<Int> {
         // 52 Plätze, initial 0
-        val counts = MutableList(52) { 0 }
+        val counts = app.management.overlapList
 
-        employees.forEach { emp ->
-            emp.getVacationEntries()
-                .forEach { entry ->
-                    for (w in entry.range.startWeek..entry.range.endWeek) {
-                        counts[(w - 1u).toInt()]++
-                    }
-                }
-        }
+//        employees.forEach { emp ->
+//            emp.getVacationEntries()
+//                .forEach { entry ->
+//                    for (w in entry.range.startWeek..entry.range.endWeek) {
+//                        counts[(w - 1u).toInt()]++
+//                    }
+//                }
+//        }
         return counts
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Berechnet Statistiken über Mitarbeiter mit und ohne Ferien
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private fun computeVacationStats(employees: List<Employee>): VacationStats {
+        var withVacation = app.management.overlapList.sum()
+        var withoutVacation = (employees.size * 5) - withVacation
+
+
+
+//        employees.forEach { emp ->
+//            if (emp.getVacationEntries().isNotEmpty()) {
+//                withVacation++
+//            } else {
+//                withoutVacation++
+//            }
+//        }
+
+        return VacationStats(withVacation, withoutVacation, employees.size * 5)
+    }
+
+    /**
+     * Datenklasse für Ferienstatistiken
+     */
+    private data class VacationStats(
+        val withVacation: Int,
+        val withoutVacation: Int,
+        val total: Int
+    )
 }
