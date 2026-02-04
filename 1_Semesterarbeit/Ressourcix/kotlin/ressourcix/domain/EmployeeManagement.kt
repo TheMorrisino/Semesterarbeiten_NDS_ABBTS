@@ -1,5 +1,6 @@
 package ressourcix.domain
 
+import ressourcix.gui.pages.calenderView
 import ressourcix.ui.ConsoleIO
 import ressourcix.util.IdProvider
 
@@ -214,8 +215,9 @@ class EmployeeManagement () {
             println(message)
         }
         employee.addVacationEntry(entry)
-        Thread.sleep(1000)
+        Thread.sleep(10)
         updateOverlapList()
+        calenderView.refreshVacations()
     }
 
 

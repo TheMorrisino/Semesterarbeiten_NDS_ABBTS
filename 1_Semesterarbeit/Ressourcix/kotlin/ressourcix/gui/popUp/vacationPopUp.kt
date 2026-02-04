@@ -29,7 +29,7 @@ object vacationPopUp {
     var idField = createTfl("", "")
     var abbreviationField = createTfl("", "")
 
-    fun build(onClose: () -> Unit, onSave: (vacationRequestWK) -> Unit): Node {
+    fun build(onClose: () -> Unit, onRemove: (vacationRequestWK) -> Unit, onSave: (vacationRequestWK) -> Unit): Node {
         var firstVacationWeek = createTfl("", "Erste Ferien Woche eintragen...")
         var lastVacationWeek = createTfl("", "Letzte Ferien Woche eintragen...")
 
@@ -84,7 +84,28 @@ object vacationPopUp {
         }
 
         val deleteBtn = createButton("Antrag\nLöschen").apply {
-            setOnAction { onClose() } //TODO Antrag löschen implementieren
+            disableProperty().bind(
+                Bindings.createBooleanBinding(
+                    { validate() != null },
+                    firstVacationWeek.textProperty(),
+                    lastVacationWeek.textProperty()
+                )
+            )
+            setOnAction {
+            val err = validate()
+            if (err != null) {
+                updateError()
+                return@setOnAction
+            }
+            onRemove(
+                vacationRequestWK(
+                    firstVacationWeek.text.toUInt(),
+                    lastVacationWeek.text.toUInt()
+                )
+            )
+            onClose()
+        }
+
         }
 
         val closeBtn = createButton("X").apply {
