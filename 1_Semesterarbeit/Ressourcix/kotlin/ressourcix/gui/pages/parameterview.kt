@@ -6,7 +6,6 @@ import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.control.Button
-import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
 import javafx.scene.layout.BorderPane
@@ -15,6 +14,8 @@ import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.text.TextAlignment
+import javafx.scene.input.KeyEvent
+import ressourcix.gui.popups.weekPickerPopUp
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
@@ -23,20 +24,38 @@ private const val TFL_WIDTH = 300.0
 
 object parameterview: BorderPane() {
 
+    private val weeksForBlocker = BooleanArray(53)
+    private val weeksForSchool  = BooleanArray(53)
+
+    private var isEditMode: Boolean = false
+
     val minEmployeeTfl  = createTfl("","")
     val minStudentsTfl  = createTfl("","")
     val minManagerTfl  = createTfl("","")
 
-    val vacationsBlockTfl = createTfl("","")
-    val vacationsSchoolBlockTfl = createTfl("","")
+    val vacationsBlockTfl = createTfl("","Blockierte Wochen eintragen...").apply {
+        lockToPopupOnly(this)
+    }
+    val vacationsSchoolBlockTfl = createTfl("","Schulferien eintragen").apply {
+        lockToPopupOnly(this)
+    }
 
     val vacationsUntil25Tfl = createTfl("","")
     val vacationFrom25Tfl = createTfl("","")
     val vacationFrom45Tfl = createTfl("","")
 
-    private val parameterChangeBtn = createButton("Parameter \nändern")
-    private val parameterSaveBtn = createButton("Parameter \nspeichern")
-    private val parameterRestoreBtn = createButton("Parameter \nzurücksetzen")
+    private val parameterChangeBtn = createButton("Parameter \nändern").apply {
+        setOnAction { setFieldsEditable(true) }
+    }
+    private val parameterSaveBtn = createButton("Parameter \nspeichern").apply {
+        setOnAction{
+            if (!isEditMode) return@setOnAction
+            setFieldsEditable(false)
+        }
+    }
+    private val parameterRestoreBtn = createButton("Parameter \nzurücksetzen").apply {
+        setOnAction { setFieldsEditable(false) }
+    }
 
     private val dim = Region().apply {
         style = "-fx-background-color: rgba(0,0,0,0.35);"
@@ -84,7 +103,7 @@ object parameterview: BorderPane() {
         alignment = Pos.CENTER_LEFT
 
         val vacationsBlockDataB = createDataBox("Ferien Blocker",vacationsBlockTfl)
-        val vacationsSchoolBlockDataB = createDataBox("Ferien Schule", vacationsSchoolBlockTfl)
+        val vacationsSchoolBlockDataB = createDataBox("Schulferien", vacationsSchoolBlockTfl)
 
         children.addAll(vacationsBlockDataB,vacationsSchoolBlockDataB)
 
@@ -108,13 +127,17 @@ object parameterview: BorderPane() {
         spacing = 80.0
 
         children.addAll(parameterChangeBtn,parameterSaveBtn,parameterRestoreBtn)
-    }
+    } //TODO Speichern und Zurücksetzen Funktion implementieren.
+    //TODO Daten verknüpfen zum Speichern und Zurücksetzen
+    // TODO logger funktionen implementieren
+    // TODO TextField blockieren auf Nummern
 
 
     init {
         mainContent.children.addAll(minEmployeeBar,vacationsBlockerBar,maxVacationsBar,functionBox)
         center = centerStack
-
+        setFieldsEditable(false)
+        installWeekPopupHandlers()
     }
 
 
@@ -157,12 +180,52 @@ object parameterview: BorderPane() {
             }, field)
         }
 
-    private fun <T> createComboBox(labelText: String, field: ComboBox<T>): VBox =
-        VBox(6.0).apply {
-            children.addAll(
-                Label(labelText).apply { style = "-fx-font-weight: bold;" },
-                field
-            )
+    private fun installWeekPopupHandlers() {
+
+        vacationsBlockTfl.setOnMouseClicked { e ->
+            if (e.clickCount == 2) {
+                val popup = weekPickerPopUp(
+                    "Ferien Blocker",
+                    weeks = weeksForBlocker,
+                    onTextChanged = { txt -> vacationsBlockTfl.text = txt },
+                    onClose = { closePopup() }
+                )
+                showPopup(popup.build())
+                e.consume()
+            }
         }
+
+        vacationsSchoolBlockTfl.setOnMouseClicked { e ->
+            if (e.clickCount == 2) {
+                val popup = weekPickerPopUp(
+                    "Schulferien",
+                    weeks = weeksForSchool,
+                    onTextChanged = { txt -> vacationsSchoolBlockTfl.text = txt },
+                    onClose = { closePopup() }
+                )
+                showPopup(popup.build())
+                e.consume()
+            }
+        }
+    }
+
+    private fun setFieldsEditable(editable: Boolean) {
+        minEmployeeTfl.isDisable = !editable
+        minStudentsTfl.isDisable = !editable
+        minManagerTfl.isDisable = !editable
+        vacationsUntil25Tfl.isDisable = !editable
+        vacationFrom25Tfl.isDisable = !editable
+        vacationFrom45Tfl.isDisable = !editable
+        vacationsBlockTfl.isDisable = !editable
+        vacationsSchoolBlockTfl.isDisable = !editable
+        isEditMode = editable
+    }
+
+    private fun lockToPopupOnly(tfl: TextField) {
+        tfl.isEditable = false
+        tfl.isFocusTraversable = false
+        tfl.addEventFilter(KeyEvent.ANY) { it.consume() }
+    }
+
 
 }
