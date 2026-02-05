@@ -1,0 +1,109 @@
+2026-02-05 17:49:51.568 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 17:49:51.578 [main] INFO  [MainKt] ==================================================
+2026-02-05 17:49:51.579 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 17:49:51.580 [main] INFO  [MainKt] ==================================================
+2026-02-05 17:49:51.581 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 17:49:51.582 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 17:49:51.582 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 17:50:12.773 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-05 17:50:14.267 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-05 17:50:15.238 [JavaFX Application Thread] INFO  [dashboardView] PieChart aktualisiert
+2026-02-05 17:50:21.983 [JavaFX Application Thread] INFO  [calenderView] Ferieneintrag hinzugefügt Mitarbeiter 8 von 3 bis 4 
+2026-02-05 18:10:12.482 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:10:12.501 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:10:12.503 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:10:12.504 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:10:12.506 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:10:12.507 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:10:12.507 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:13:30.047 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:13:30.060 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:13:30.061 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:13:30.062 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:13:30.063 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:13:30.064 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:13:30.064 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:14:28.622 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:14:28.639 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:14:28.640 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:14:28.641 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:14:28.645 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:14:28.645 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:14:28.646 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:17:55.971 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:17:55.987 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:17:55.988 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:17:55.988 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:17:55.990 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:17:55.990 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:17:55.990 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:18:36.604 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:18:36.620 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:18:36.621 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:18:36.622 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:18:36.624 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:18:36.624 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:18:36.624 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:19:16.643 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:19:16.655 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:19:16.656 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:19:16.656 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:19:16.658 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:19:16.658 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:19:16.659 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:20:26.407 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:20:26.423 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:20:26.423 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:20:26.424 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:20:26.425 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:20:26.426 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:20:26.427 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:20:40.971 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:20:40.991 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:20:40.993 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:20:40.994 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:20:40.995 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:20:40.996 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:20:40.996 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:20:52.657 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:20:52.682 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:20:52.684 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:20:52.684 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:20:52.687 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:20:52.688 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:20:52.688 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:21:20.130 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:21:20.141 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:21:20.142 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:21:20.142 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:21:20.144 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:21:20.144 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:21:20.145 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:26:22.550 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:26:22.560 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:26:22.561 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:26:22.561 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:26:22.563 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:26:22.564 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:26:22.564 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:26:30.570 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:26:30.585 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:26:30.586 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:26:30.586 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:26:30.588 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:26:30.589 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:26:30.589 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:26:49.163 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:26:49.177 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:26:49.178 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:26:49.178 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:26:49.180 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:26:49.181 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 18:26:49.181 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:27:07.459 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 18:27:07.470 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:27:07.471 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 18:27:07.471 [main] INFO  [MainKt] ==================================================
+2026-02-05 18:27:07.473 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 18:27:07.474 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 18:27:07.475 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...

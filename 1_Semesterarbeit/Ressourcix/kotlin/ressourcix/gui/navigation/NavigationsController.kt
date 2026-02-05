@@ -1,3 +1,5 @@
+//  Autor:        Pedro Santos
+
 package ressourcix.gui.navigation
 
 import javafx.scene.Node
@@ -20,3 +22,4 @@ class NavigationsController(private val root: BorderPane) {
         Route.PARAMETER -> parameterview
     }
 }
+

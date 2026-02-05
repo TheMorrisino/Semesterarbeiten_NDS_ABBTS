@@ -1,3 +1,5 @@
+//  Autor:        Pedro Santos
+
 package ressourcix.gui.pages
 
 import javafx.geometry.Insets
@@ -29,8 +31,12 @@ object parameterview: BorderPane() {
     val vacationsSchoolBlockTfl = createTfl("","")
 
     val vacationsUntil25Tfl = createTfl("","")
-    val vacationBy25Tfl = createTfl("","")
-    val vacationBy45Tfl = createTfl("","")
+    val vacationFrom25Tfl = createTfl("","")
+    val vacationFrom45Tfl = createTfl("","")
+
+    private val parameterChangeBtn = createButton("Parameter \nändern")
+    private val parameterSaveBtn = createButton("Parameter \nspeichern")
+    private val parameterRestoreBtn = createButton("Parameter \nzurücksetzen")
 
     private val dim = Region().apply {
         style = "-fx-background-color: rgba(0,0,0,0.35);"
@@ -50,8 +56,10 @@ object parameterview: BorderPane() {
 
     }
 
-    private val mainContent = BorderPane().apply {
-        padding = Insets(10.0)
+    private val mainContent = VBox().apply {
+        padding = Insets(50.0)
+        alignment = Pos.CENTER
+        spacing = 50.0
     }
 
     private val centerStack = StackPane().apply {
@@ -60,9 +68,9 @@ object parameterview: BorderPane() {
         StackPane.setAlignment(popupHost, Pos.CENTER)
     }
 
-    private val vacationsParametersBar = HBox(50.0).apply {
+    private val minEmployeeBar = HBox(50.0).apply {
         padding = Insets(20.0)
-        alignment = Pos.CENTER
+        alignment = Pos.TOP_LEFT
 
         val minEmployee = createDataBox("Min. Anzahl Mitarbeiter",minEmployeeTfl)
         val minStudents = createDataBox("Min. Anzahl Lehrlinge",minStudentsTfl)
@@ -73,7 +81,7 @@ object parameterview: BorderPane() {
 
     private val vacationsBlockerBar = HBox(50.0).apply {
         padding = Insets(20.0)
-        alignment = Pos.CENTER
+        alignment = Pos.CENTER_LEFT
 
         val vacationsBlockDataB = createDataBox("Ferien Blocker",vacationsBlockTfl)
         val vacationsSchoolBlockDataB = createDataBox("Ferien Schule", vacationsSchoolBlockTfl)
@@ -84,19 +92,27 @@ object parameterview: BorderPane() {
 
     private val maxVacationsBar = HBox(50.0).apply {
         padding = Insets(20.0)
-        alignment = Pos.CENTER
+        alignment = Pos.BOTTOM_LEFT
 
-        val minEmployee = createDataBox("Min. Anzahl Mitarbeiter",minEmployeeTfl)
-        val minStudents = createDataBox("Min. Anzahl Lehrlinge",minStudentsTfl)
-        val minManage = createDataBox("Min. Anzahl Leiter", minManagerTfl)
+        val maxVacationUntil25DataB = createDataBox("Anzahl Ferien bis 25 Jahre alt",vacationsUntil25Tfl)
+        val maxVacationFrom25DataB = createDataBox("Anzahl Ferien ab 25 Jahre alt",vacationFrom25Tfl)
+        val maxVacationFrom45DataB = createDataBox("Anzahl Ferien ab 45 Jahre alt", vacationFrom45Tfl)
 
-        children.addAll(minEmployee,minStudents,minManage)
+        children.addAll(maxVacationUntil25DataB,maxVacationFrom25DataB,maxVacationFrom45DataB)
 
     }
 
+    private val functionBox = HBox(50.0).apply {
+        padding = Insets(20.0)
+        alignment = Pos.BOTTOM_CENTER
+        spacing = 80.0
+
+        children.addAll(parameterChangeBtn,parameterSaveBtn,parameterRestoreBtn)
+    }
+
+
     init {
-        mainContent.top = vacationsParametersBar
-        mainContent.center = vacationsBlockerBar
+        mainContent.children.addAll(minEmployeeBar,vacationsBlockerBar,maxVacationsBar,functionBox)
         center = centerStack
 
     }
