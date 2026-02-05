@@ -79,22 +79,47 @@ class Employee(private val id: UInt) {
     }
 
     fun addVacationEntry(entry: VacationEntry) {
-        createVacationList(entry)
         vacationEntries.add(entry)
+        createVacationList()
+    }
+
+    fun removeVacationEntry(vacationId: UInt, entry: VacationEntry){
+        vacationEntries.removeIf { it.id == vacationId }
+    }
+
+    fun getIdWithStartWeek(startWeek: UInt): UInt? {
+        for (entry in vacationEntries) {
+            if (entry.range.startWeek == startWeek) {
+                return entry.id
+            }
+        }
+        return null
+    }
+
+    fun removeByStartWeek(startWeek: UInt): Boolean {
+        val entry = vacationEntries.find {
+            it.range.startWeek == startWeek
+        } ?: return false
+        vacationEntries.remove(entry)
+        createVacationList()
+        return true
     }
 
 
-    fun createVacationList(entry: VacationEntry) {
 
-        var startweek = entry.range.startWeek
-        var endweek = entry.range.endWeek
+
+
+    fun createVacationList() {
+        vacationList = MutableList(52) { 0 }
+        for (vacation in vacationEntries){
         //println(vacationList)
         for (e in 1..52) {
-            if (e >= startweek.toInt() && (e <= endweek.toInt())) {
-                vacationList[e-1] = 1
-                //println(vacationList)
+            if (e >= vacation.range.startWeek.toInt() && (e <= vacation.range.endWeek.toInt())) {
+                vacationList[e - 1] = 1
+                println(vacationList)
 
             }
+        }
 
         }
 

@@ -52,6 +52,9 @@ object consoleCalendarOutput : CalendarOutput {
         return entries.first().getStatus(week)
 
     }
+    fun removeVacation(empId: UInt, startWeek: UInt, endWeek: UInt){
+        app.management.employees[empId.toInt()-1].removeByStartWeek(startWeek)
+    }
 
     fun addVacation(empId: UInt, startWeek: UInt, endWeek: UInt) {
         val entry = VacationEntry(

@@ -160,3 +160,15 @@
 2026-02-02 18:33:17.629 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
 2026-02-02 18:33:55.156 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
 2026-02-02 18:34:23.331 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-02 18:38:14.676 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-02 18:38:14.684 [main] INFO  [MainKt] ==================================================
+2026-02-02 18:38:14.684 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-02 18:38:14.685 [main] INFO  [MainKt] ==================================================
+2026-02-02 18:38:14.687 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-02 18:38:14.687 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-02 18:38:14.687 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-02 18:38:31.259 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-02 18:38:40.144 [JavaFX Application Thread] INFO  [dashboardView] PieChart aktualisiert
+2026-02-02 18:38:55.472 [JavaFX Application Thread] INFO  [dashboardView] PieChart aktualisiert
+2026-02-02 18:38:58.931 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert
+2026-02-02 18:39:18.583 [JavaFX Application Thread] INFO  [dashboardView] BarChart aktualisiert

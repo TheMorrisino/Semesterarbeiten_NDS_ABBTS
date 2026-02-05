@@ -38,7 +38,6 @@ fun main() {
         while (true) {
             try {
                 Thread.sleep(1000)
-                calenderView.refreshVacations()
 
 
             } catch (e: InterruptedException) {
