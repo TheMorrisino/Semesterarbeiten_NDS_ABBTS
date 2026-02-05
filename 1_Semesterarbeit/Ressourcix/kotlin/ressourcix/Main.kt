@@ -80,7 +80,8 @@ fun main() {
         name = "Status-Update-Thread"
     }.start()
 
-    logger.info("Alle Threads gestartet, starte JavaFX...")
+    logger.debug("Alle Threads gestartet, starte JavaFX...")
+    logger.info("Starte Ressourcix...")
 
     // JavaFX Application starten (blockiert bis Fenster geschlossen wird)
     try {

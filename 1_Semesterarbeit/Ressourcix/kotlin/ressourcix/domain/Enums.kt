@@ -1,5 +1,6 @@
 package ressourcix.domain
 
+
 enum class Role (val displayName: String) {
     APPRENTICE("Lernende"),
     STAFF("Mitarbeitende"),
@@ -35,3 +36,10 @@ val VacationStatus.code: String
         VacationStatus.REJECTED  -> "REJ"
         VacationStatus.CANCELLED -> "CAN"
     }
+
+enum class OverlapStatus {
+    OK,       // Grün: Keine Überschneidung
+    WARNING,  // Gelb: Überschneidung vorhanden, aber unter der Limite
+    CRITICAL  // Rot: Maximales Limit erreicht
+
+}

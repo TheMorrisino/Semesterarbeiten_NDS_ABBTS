@@ -106,9 +106,6 @@ class Employee(private val id: UInt) {
     }
 
 
-
-
-
     fun createVacationList() {
         vacationList = MutableList(52) { 0 }
         for (vacation in vacationEntries){
