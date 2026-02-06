@@ -22,9 +22,11 @@ private const val BOX_HEIGHT = 340.0
 private const val BOX_WIDTH = 600.0
 
 
-data class vacationRequestWK(val startKW: UInt, val endKW: UInt)
+
 
 object vacationPopUp {
+
+    data class vacationRequestWK(val startKW: UInt, val endKW: UInt)
 
     var idField = createTfl("", "")
     var nameField = createTfl("", "")
@@ -216,4 +218,5 @@ object vacationPopUp {
         }
     }
 }
+
 

@@ -23,7 +23,7 @@ import ressourcix.domain.Department
 import ressourcix.domain.Education
 import ressourcix.domain.Role
 import ressourcix.gui.popUp.filterPopUp
-import ressourcix.gui.popUp.filteredEmployee
+import ressourcix.gui.popUp.filteredEmployeePopUp
 import ressourcix.logger.logger
 
 private const val BTN_HEIGHT = 50.0
@@ -119,7 +119,7 @@ object employeeManagementView : BorderPane() {
                             logger.info("Mitarbeiter nach $department, $education. Gefunden: ${filtered.size} Mitarbeiter")
                             closePopup()
                             showPopup(
-                                filteredEmployee.build(
+                                filteredEmployeePopUp.build(
                                     department = department,
                                     education = education,
                                     employees = filtered,
