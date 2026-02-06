@@ -270,3 +270,20 @@
 2026-02-05 19:16:05.127 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
 2026-02-05 19:16:10.305 [JavaFX Application Thread] INFO  [employeeManagementView] Suche nach ID: 2 Mitarbeiter: (Sara Schmidt) gefunden.
 2026-02-05 19:16:21.590 [JavaFX Application Thread] INFO  [employeeManagementView] Mitarbeitender unter ID:2 erfolgreich gespeichert.
+2026-02-05 19:21:21.776 [main] INFO  [MainKt] Log-Level gesetzt auf: INFO
+2026-02-05 19:21:21.786 [main] INFO  [MainKt] ==================================================
+2026-02-05 19:21:21.787 [main] INFO  [MainKt] Ressourcix wird gestartet...
+2026-02-05 19:21:21.788 [main] INFO  [MainKt] ==================================================
+2026-02-05 19:21:21.789 [App-Logic-Thread] INFO  [MainKt] App-Logic-Thread gestartet
+2026-02-05 19:21:21.789 [UI-Update-Thread] INFO  [MainKt] UI-Update-Thread gestartet
+2026-02-05 19:21:21.790 [main] INFO  [MainKt] Alle Threads gestartet, starte JavaFX...
+2026-02-05 19:21:33.128 [JavaFX Application Thread] INFO  [calenderView] Ferieneintrag hinzugefügt Mitarbeiter 14 von 2 bis 3 
+2026-02-05 19:21:43.903 [JavaFX Application Thread] INFO  [calenderView] Ferieneintrag entfernt Mitarbeiter 14 mit 2
+2026-02-05 19:21:54.685 [JavaFX Application Thread] INFO  [calenderView] Ferieneintrag hinzugefügt Mitarbeiter 15 von 2 bis 5 
+2026-02-05 19:22:03.389 [JavaFX Application Thread] INFO  [calenderView] Ferieneintrag entfernt Mitarbeiter 15 mit 2
+2026-02-05 19:22:09.294 [JavaFX Application Thread] INFO  [calenderView] Ferieneintrag hinzugefügt Mitarbeiter 16 von 2 bis 5 
+2026-02-05 19:22:12.515 [JavaFX Application Thread] INFO  [calenderView] Ferieneintrag entfernt Mitarbeiter 16 mit 2
+2026-02-05 19:22:18.631 [JavaFX Application Thread] INFO  [calenderView] Ferieneintrag hinzugefügt Mitarbeiter 15 von 2 bis 5 
+2026-02-05 19:22:26.108 [JavaFX Application Thread] INFO  [calenderView] Ferieneintrag hinzugefügt Mitarbeiter 15 von 10 bis 12 
+2026-02-05 19:22:35.285 [JavaFX Application Thread] INFO  [calenderView] Ferieneintrag entfernt Mitarbeiter 15 mit 2
+2026-02-05 19:22:41.345 [JavaFX Application Thread] INFO  [calenderView] Ferieneintrag entfernt Mitarbeiter 15 mit 10

@@ -232,6 +232,10 @@ object employeeManagementView : BorderPane() {
         alignment = Pos.CENTER_RIGHT
 
         children.addAll(
+            createButton("Suche \nZurücksetzen").apply {
+                setOnAction {resetSearch()}
+            },
+            createButton("MA einfügen").apply {  },
             createButton("MA ändern").apply {
                 setOnAction {
                     val emp = selectedEmployee
@@ -302,10 +306,8 @@ object employeeManagementView : BorderPane() {
                         }
                     }
                 }
-            },
-            createButton("Suche \nZurücksetzen").apply {
-                setOnAction {resetSearch()}
             }
+
         )
     }
 
