@@ -1,6 +1,9 @@
 package ressourcix.app
 
+import essential.*
+import ressourcix.domain.Employee
 import ressourcix.domain.EmployeeManagement
+import ressourcix.essential.xmlWriter
 import ressourcix.ui.ConsoleIO
 import ressourcix.ui.menu.mainMenu
 import ressourcix.util.IdProvider
@@ -8,7 +11,8 @@ import ressourcix.util.IdProvider
 object app  {
 
     val io = ConsoleIO()
-    val management = EmployeeManagement()
+    var management = EmployeeManagement()
+
     var employees = management.employees
 
 
@@ -17,8 +21,11 @@ object app  {
 
 
     fun run() {
+
         // Seed-Daten
         management.seed10Employees()
+
+
 
         mainMenu.init(
             io = io,
@@ -28,5 +35,19 @@ object app  {
         )
 
         mainMenu.loop()
+
     }
+
+    // ====================================================================================
+    // Getter Value für XML Datei
+    // ====================================================================================
+
+
+    val allEmployee: List<Employee>
+        get() = management.employees
+
+
+
+
+
 }

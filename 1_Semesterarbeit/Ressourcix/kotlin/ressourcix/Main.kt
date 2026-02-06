@@ -2,6 +2,7 @@ package ressourcix
 
 import javafx.application.Application
 import ressourcix.app.app
+import ressourcix.essential.xmlWriter
 import ressourcix.gui.GuiBorderPane
 import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.dashboardView
@@ -20,6 +21,8 @@ fun main() {
         try {
             logger.info("App-Logic-Thread gestartet")
             app.run()
+
+
         } catch (e: Exception) {
             logger.fatal("Kritischer Fehler in App-Logic", e)
         }
@@ -29,28 +32,28 @@ fun main() {
     }.start()
 
     // UI-Update-Thread (nur für calenderView)
-    Thread {
-        logger.info("UI-Update-Thread gestartet")
-
-        // Kurz warten, bis die GUI initialisiert ist
-        Thread.sleep(2000)
-
-        while (true) {
-            try {
-                Thread.sleep(1000)
-
-
-            } catch (e: InterruptedException) {
-                logger.info("UI-Update-Thread wurde beendet")
-                break
-            } catch (e: Exception) {
-                logger.error("Fehler beim UI-Update", e)
-            }
-        }
-    }.apply {
-        isDaemon = true
-        name = "UI-Update-Thread"
-    }.start()
+//    Thread {
+//        logger.info("UI-Update-Thread gestartet")
+//
+//        // Kurz warten, bis die GUI initialisiert ist
+//        Thread.sleep(2000)
+//
+//        while (true) {
+//            try {
+//                Thread.sleep(1000)
+//
+//
+//            } catch (e: InterruptedException) {
+//                logger.info("UI-Update-Thread wurde beendet")
+//                break
+//            } catch (e: Exception) {
+//                logger.error("Fehler beim UI-Update", e)
+//            }
+//        }
+//    }.apply {
+//        isDaemon = true
+//        name = "UI-Update-Thread"
+//    }.start()
 
 
     Thread {
@@ -81,11 +84,15 @@ fun main() {
     }.start()
 
     logger.debug("Alle Threads gestartet, starte JavaFX...")
-    logger.info("Starte Ressourcix...")
+
 
     // JavaFX Application starten (blockiert bis Fenster geschlossen wird)
+    xmlWriter.write()
     try {
+
         Application.launch(GuiBorderPane::class.java)
+        logger.info("Starte Ressourcix...")
+
     } catch (e: Exception) {
         logger.fatal("Fehler beim Starten der GUI", e)
     }
