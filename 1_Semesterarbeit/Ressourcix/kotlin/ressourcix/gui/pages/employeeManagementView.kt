@@ -80,7 +80,7 @@ object employeeManagementView : BorderPane() {
         isFocusTraversable = false
     }
     var birthdayField = createTfl("","tt.mm.jjjj").apply {
-        textFormatter = birthdayTextFormatter()
+        installBirthdayField(this)
         //TODO TextFormatter blockieren
     }
 
@@ -504,19 +504,28 @@ object employeeManagementView : BorderPane() {
     }
     }
 
-private fun birthdayTextFormatter(): TextFormatter<String> {
-    return TextFormatter { change ->
-
+private fun installBirthdayField(field: TextField) {
+    field.textFormatter = TextFormatter<String> { change ->
         if (!change.isContentChange) return@TextFormatter change
 
-        val raw = change.controlNewText
-        if (raw.isEmpty()) return@TextFormatter change
+        val newText = change.controlNewText
+        if (newText.isEmpty()) return@TextFormatter change
 
-        if (!raw.all { it.isDigit() || it == '.' }) return@TextFormatter null
+        if (!newText.all { it.isDigit() || it == '.' }) return@TextFormatter null
+        if (newText.count { it.isDigit() } > 8) return@TextFormatter null
 
-        val digits = raw.filter { it.isDigit() }
-        if (digits.length > 8) return@TextFormatter null
+        change
+    }
 
+    var updating = false
+
+    field.textProperty().addListener { _, _, value ->
+        if (updating) return@addListener
+
+        val caret = field.caretPosition
+        val digitsBeforeCaret = value.take(caret).count { it.isDigit() }
+
+        val digits = value.filter { it.isDigit() }.take(8)
         val formatted = buildString {
             digits.forEachIndexed { i, c ->
                 append(c)
@@ -524,22 +533,18 @@ private fun birthdayTextFormatter(): TextFormatter<String> {
             }
         }
 
-        if (formatted.length > 10) return@TextFormatter null
+        if (value == formatted) return@addListener
 
-        val oldLength = change.controlText.length
-        val newLength = formatted.length
+        updating = true
+        field.text = formatted
 
-        change.text = formatted
-        change.setRange(0, oldLength)
+        var newCaret = digitsBeforeCaret
+        if (digitsBeforeCaret >= 2) newCaret += 1
+        if (digitsBeforeCaret >= 4) newCaret += 1
 
-        val newCaretPos = when {
-            newLength == 3 || newLength == 6 -> newLength
-            newLength > oldLength -> change.caretPosition + 1
-            else -> change.caretPosition
-        }
-
-        change.selectRange(newCaretPos, newCaretPos)
-        change
+        field.positionCaret(newCaret.coerceIn(0, formatted.length))
+        updating = false
     }
 }
+
 
