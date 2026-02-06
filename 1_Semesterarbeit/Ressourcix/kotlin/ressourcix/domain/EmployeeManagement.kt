@@ -4,12 +4,6 @@ import ressourcix.gui.pages.calenderView
 import ressourcix.ui.ConsoleIO
 import ressourcix.util.IdProvider
 
-/**
- * Kleine "Verwaltung" (in-memory).
- * - kennt Mitarbeiter
- * - findet nach ID
- * - überprüft Überschneidungen bei Ferien
- */
 class EmployeeManagement () {
      val employees: MutableList<Employee> = mutableListOf()
 
@@ -142,8 +136,6 @@ class EmployeeManagement () {
 
     fun allVacationInKwFiltern() {
         val allVacation = employees.flatMap { it.getVacationEntries() }
-
-
 
     }
 

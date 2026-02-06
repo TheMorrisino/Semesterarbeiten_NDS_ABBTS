@@ -63,8 +63,8 @@ object calenderView : StackPane() {
         isReorderable = false
     }
 
-    private val abbrevColumn = TableColumn<Employee, String>("Abkürzung").apply {
-        setCellValueFactory { SimpleStringProperty(it.value.abbreviationSting()) }
+    private val nameColumn = TableColumn<Employee, String>("Abkürzung").apply {
+        setCellValueFactory { SimpleStringProperty(it.value.getFullName()) }
         prefWidth = 120.0
         isSortable = false
         isReorderable = false
@@ -89,7 +89,7 @@ object calenderView : StackPane() {
 
     init {
         // --- Tabellen Setup ---
-        fixedTable.columns.setAll(idColumn, abbrevColumn)
+        fixedTable.columns.setAll(idColumn, nameColumn)
         fixedTable.columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
         fixedTable.isFocusTraversable = false
 
@@ -106,7 +106,7 @@ object calenderView : StackPane() {
         weekTable.items = fixedTable.items
 
         // linke Tabelle: Breite fix
-        val fixedWidth = idColumn.prefWidth + abbrevColumn.prefWidth + 24.0
+        val fixedWidth = idColumn.prefWidth + nameColumn.prefWidth + 24.0
         fixedTable.minWidth = fixedWidth
         fixedTable.prefWidth = fixedWidth
         fixedTable.maxWidth = fixedWidth
@@ -264,7 +264,11 @@ object calenderView : StackPane() {
                     seen[wi] = true
 
                     val status: VacationStatus? = entry.getStatus(week)
-                    codes[wi] = status?.code ?: "."
+                    codes[wi] = if (status != null) {
+                        "ID${entry.id}.${status.code}"
+                    } else {
+                        "."
+                    }
                 }
             }
             weekCodeCache[employee.getId()] = codes
@@ -287,7 +291,7 @@ object calenderView : StackPane() {
             val title = "KW" + week.toString().padStart(2, '0')
 
             val weekCol = TableColumn<Employee, String>(title).apply {
-                prefWidth = 45.0
+                prefWidth = 55.0
                 isSortable = false
                 isReorderable = false
 
@@ -344,7 +348,7 @@ object calenderView : StackPane() {
     private fun onEmployeeDoubleClick(employee: Employee) {
         val empId = employee.getId()
         vacationPopUp.idField.text = empId.toString()
-        vacationPopUp.abbreviationField.text = employee.abbreviationSting()
+        vacationPopUp.nameField.text = employee.getFullName()
 
         showPopup(
             vacationPopUp.build(
@@ -391,7 +395,7 @@ object calenderView : StackPane() {
     private fun rgb(r: Int, g: Int, b: Int) = String.format("#%02X%02X%02X", r, g, b)
 
     private fun colorForOverlap(count: Int): String {
-        val green = intArrayOf(200, 255, 200)
+        val green = intArrayOf(210, 245, 210)
         val yellow = intArrayOf(255, 250, 200)
         val red = intArrayOf(255, 200, 200)
 
