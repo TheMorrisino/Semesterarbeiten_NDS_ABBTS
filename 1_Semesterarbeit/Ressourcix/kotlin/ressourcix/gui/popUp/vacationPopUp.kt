@@ -27,7 +27,7 @@ data class vacationRequestWK(val startKW: UInt, val endKW: UInt)
 object vacationPopUp {
 
     var idField = createTfl("", "")
-    var abbreviationField = createTfl("", "")
+    var nameField = createTfl("", "")
 
     fun build(onClose: () -> Unit, onRemove: (vacationRequestWK) -> Unit, onSave: (vacationRequestWK) -> Unit): Node {
         var firstVacationWeek = createTfl("", "Erste Ferien Woche eintragen...")
@@ -159,7 +159,7 @@ object vacationPopUp {
                         createDataBox("Mitarbeiter ID:", idField).apply {
                             isDisable = true
                         },
-                        createDataBox("Mitarbeiter Kürzel:", abbreviationField).apply {
+                        createDataBox("Namen des Mitarbeiters:", nameField).apply {
                             isDisable = true
                         }
                     )
