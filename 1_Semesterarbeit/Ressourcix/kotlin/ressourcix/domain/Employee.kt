@@ -18,6 +18,7 @@ class Employee(private val id: UInt) {
     private var education: Education? = null
     private var birthday: LocalDate? = null
     private var city: String = ""
+    private var vacationLimit : UInt = 5u // Anzahl Ferien nur über get und set
 
     private val birthdayFormatter: DateTimeFormatter =
         DateTimeFormatter.ofPattern("dd.MM.uuuu")
@@ -130,6 +131,12 @@ class Employee(private val id: UInt) {
     fun getBirthdayAsString(): String = birthday?.format(birthdayFormatter).orEmpty()
 
     fun getAbbreviation(): String = abbreviation
+
+    fun setVacationLimit(limit: UInt){
+      vacationLimit = limit
+    }
+
+    fun getVacationLimit() = vacationLimit
 }
 
 fun Employee.label(): String =
