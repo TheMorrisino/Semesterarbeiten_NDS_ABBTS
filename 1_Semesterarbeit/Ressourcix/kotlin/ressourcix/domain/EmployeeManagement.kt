@@ -2,6 +2,7 @@ package ressourcix.domain
 
 import ressourcix.app.app.vacationIds
 import ressourcix.gui.pages.calenderView
+import ressourcix.logger.logger
 import ressourcix.ui.ConsoleIO
 import ressourcix.util.IdProvider
 
@@ -206,16 +207,17 @@ class EmployeeManagement () {
 //            }
             val message = when (status) {
                 OverlapStatus.OK ->
-                    "Keine Überschneidung. Ferieneintrag für ${employee.label()} (${employee.getFullName()}) wurde hinzugefügt."
+                    logger.info("Keine Überschneidung. Ferieneintrag für ${employee.label()} (${employee.getFullName()}) wurde hinzugefügt.")
+
 
                 OverlapStatus.WARNING ->
-                    "WARNING: Ferieneintrag für ${employee.label()} (${employee.getFullName()}) überlappt mit $namesList. " +
-                            "Aktuelle Überschneidungen: $totalOverlapsAfter von max. $maxAllowed erlaubt."
+                    logger.warn("WARNING: Ferieneintrag für ${employee.label()} (${employee.getFullName()}) überlappt mit $namesList. " +
+                            "Aktuelle Überschneidungen: $totalOverlapsAfter von max. $maxAllowed erlaubt.")
 
                 OverlapStatus.CRITICAL ->
-                    "CRITICAL: Kein Ferieneintrag für ${employee.label()} (${employee.getFullName()}) möglich. " +
+                    logger.error("CRITICAL: Kein Ferieneintrag für ${employee.label()} (${employee.getFullName()}) möglich. " +
                             "Überlappung mit $namesList würde das Limit überschreiten " +
-                            "(Aktuell: $currentOverlaps, Neu: +$newOverlapCount, Total: $totalOverlapsAfter, Max: $maxAllowed)."
+                            "(Aktuell: $currentOverlaps, Neu: +$newOverlapCount, Total: $totalOverlapsAfter, Max: $maxAllowed).")
             }
             println(message)
         }

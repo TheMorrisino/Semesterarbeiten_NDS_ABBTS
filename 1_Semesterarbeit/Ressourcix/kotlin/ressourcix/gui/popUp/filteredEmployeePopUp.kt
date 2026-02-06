@@ -25,7 +25,7 @@ private const val BOX_HEIGHT = 420.0
 private const val TFL_HEIGHT = 30.0
 private const val TFL_WIDTH = 300.0
 
-object filteredEmployee {
+object filteredEmployeePopUp {
 
     fun build(
         department: Department,
