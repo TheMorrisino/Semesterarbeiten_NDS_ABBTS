@@ -9,8 +9,6 @@ import ressourcix.util.IdProvider
 class EmployeeManagement () {
     val employees: MutableList<Employee> = mutableListOf()
     private val overlapList : MutableList<Int> = MutableList(52) { 0 }
-
-    var maxOverlapsPerKw :Int = 5
     val year = 2026u
     //ToDo Auskommentieren
     fun mitarbeiterVerwaltung(io: ConsoleIO , management: EmployeeManagement , employeeIds: IdProvider) {
@@ -149,7 +147,7 @@ class EmployeeManagement () {
         employees[empId.toInt()-1].removeByStartWeek(startWeek)
     }
 
-    fun addVacationSafe(employee: Employee, startWeek: UInt, endWeek: UInt, maxAllowed: Int = maxOverlapsPerKw) {
+    fun addVacationSafe(employee: Employee, startWeek: UInt, endWeek: UInt, maxAllowed: Int = 1) {
         // To Do Ferienliste erstelle aller Mitableitern mit Index 1 = KW1 = alle Mitarbeiterferien aufrufen in KW 1 etc.
         val empId = employee.getId()
         val entry = VacationEntry(
@@ -202,6 +200,11 @@ class EmployeeManagement () {
                 else -> "${names.take(3).joinToString(", ")} und ${names.size - 3} weitere(r)"
             }
 
+//            val message = if (names.isEmpty()) {
+//                "Überschneidung: Kein Ferieneintrag für ${employee.label()} (${employee.getFullName()}) möglich, da das Überschneidungslimit erreicht ist."
+//            } else {
+//                "Überschneidung: Kein Ferieneintrag für ${employee.label()} (${employee.getFullName()}) möglich, da die Ferien mit $namesList überlappen (Max. $maxAllowed erlaubt, danach wären es $totalOverlapsAfter)."
+//            }
             val message = when (status) {
                 OverlapStatus.OK ->
                     logger.info("Keine Überschneidung. Ferieneintrag für ${employee.label()} (${employee.getFullName()}) wurde hinzugefügt.")
@@ -212,7 +215,7 @@ class EmployeeManagement () {
                             "Aktuelle Überschneidungen: $totalOverlapsAfter von max. $maxAllowed erlaubt.")
 
                 OverlapStatus.CRITICAL ->
-                    logger.error("CRITICAL: Parametrierung der Ferieneintrage für ${employee.label()} (${employee.getFullName()}) überschritten. " +
+                    logger.error("CRITICAL: Kein Ferieneintrag für ${employee.label()} (${employee.getFullName()}) möglich. " +
                             "Überlappung mit $namesList würde das Limit überschreiten " +
                             "(Aktuell: $currentOverlaps, Neu: +$newOverlapCount, Total: $totalOverlapsAfter, Max: $maxAllowed).")
             }

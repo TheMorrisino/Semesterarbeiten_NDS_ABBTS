@@ -16,7 +16,6 @@ out/
 .sts4-cache
 logs/
 bin/
-TODO
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 

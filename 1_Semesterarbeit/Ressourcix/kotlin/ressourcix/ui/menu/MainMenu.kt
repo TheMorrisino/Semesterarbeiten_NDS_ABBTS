@@ -3,6 +3,9 @@ package ressourcix.ui.menu
 
 import ressourcix.domain.EmployeeManagement
 import ressourcix.domain.VacationStatus
+import ressourcix.domain.WeekRange
+import ressourcix.domain.VacationEntry
+import ressourcix.domain.label
 import ressourcix.ui.ConsoleIO
 import ressourcix.util.IdProvider
 

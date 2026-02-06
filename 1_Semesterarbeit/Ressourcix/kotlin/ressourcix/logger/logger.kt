@@ -112,7 +112,7 @@ object logger {
         val className = try {
             Thread.currentThread().stackTrace
                 .firstOrNull {
-                    !it.className.contains("essential") &&
+                    !it.className.contains("logger") &&
                             !it.className.contains("java.lang.Thread")
                 }?.className?.split(".")?.last()
         } catch (e: Exception) {
@@ -175,9 +175,10 @@ object logger {
             System.err.println("Fehler beim Schreiben der Log-Datei: ${e.message}")
         }
     }
-    // ====================================================================================
-    // Log-Abruf für UI
-    // ====================================================================================
+//
+//    // ====================================================================================
+//    // Log-Abruf für UI
+//    // ====================================================================================
     fun getLastLogMessage(): String? {
         return logBuffer.lastOrNull()?.message
     }
@@ -188,10 +189,6 @@ object logger {
     fun getLastLogEntry(): LogEntry? {
         return logBuffer.lastOrNull()
     }
-
-    // ====================================================================================
-    // Gibt den letzten Log-Eintrag aller Level zurück für das objet bottomBar
-    // ====================================================================================
 
     fun getLastLogMessageWithTimestamp(format: String = "HH:mm:ss"): String? {
         val entry = logBuffer.lastOrNull()
