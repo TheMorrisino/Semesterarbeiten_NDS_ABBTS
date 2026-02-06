@@ -7,9 +7,6 @@ import ressourcix.domain.VacationStatus
 import ressourcix.domain.WeekRange
 import ressourcix.domain.code
 import ressourcix.domain.label
-import ressourcix.ui.ConsoleIO
-import ressourcix.gui.GuiBorderPane
-import ressourcix.main
 
 /**
  * Druckt eine Zeile pro Mitarbeiter und Spalten KW 1..52.

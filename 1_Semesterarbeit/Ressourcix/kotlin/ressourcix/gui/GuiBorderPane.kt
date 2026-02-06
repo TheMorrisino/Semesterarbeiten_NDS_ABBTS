@@ -32,6 +32,8 @@ class GuiBorderPane : Application() {
 
         stage.apply {
             scene = Scene(root,1300.0,800.0)
+            minHeight = 700.0
+            minWidth = 700.0
             title = "Ressourcix"
 
             if (stream == null) {
