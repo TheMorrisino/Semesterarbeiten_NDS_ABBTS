@@ -14,7 +14,7 @@ import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import ressourcix.app.app
-import ressourcix.calendar.consoleCalendarOutput
+//import ressourcix.calendar.consoleCalendarOutput
 import ressourcix.domain.Employee
 import ressourcix.domain.VacationStatus
 import ressourcix.domain.code
@@ -313,7 +313,7 @@ object calenderView : StackPane() {
 
                             text = code ?: "."
 
-                            val overlaps = app.management.overlapList.getOrElse(overlapIndex) { 0 }
+                            val overlaps = app.management.getOverlapList().getOrElse(overlapIndex) { 0 }
                             val bg = colorForOverlap(overlaps)
                             style = "-fx-background-color: $bg;"
                         }
@@ -354,14 +354,14 @@ object calenderView : StackPane() {
             vacationPopUp.build(
                 onClose = { closePopup() },
                 onSave = { kw ->
-                    consoleCalendarOutput.addVacation(empId, kw.startKW, kw.endKW)
+                    app.management.addVacationSafe(employee, kw.startKW, kw.endKW)
                     logger.info("Ferieneintrag hinzugefügt Mitarbeiter $empId von ${kw.startKW} bis ${kw.endKW} ")
                     app.management.updateOverlapList()
                     refreshVacations()
                     closePopup()
                 },
                 onRemove = { kw ->
-                    consoleCalendarOutput.removeVacation(empId, kw.startKW, kw.endKW)
+                    app.management.removeVacation(empId, kw.startKW, kw.endKW)
                     logger.info("Ferieneintrag entfernt Mitarbeiter $empId mit ${kw.startKW}")
                     app.management.updateOverlapList()
                     refreshVacations()

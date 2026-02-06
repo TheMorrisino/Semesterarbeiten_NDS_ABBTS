@@ -167,12 +167,12 @@ object employeeManagementView : BorderPane() {
                 val kuerzel = abbreviationField.text.trim().uppercase()
 
                 val emp = app.employees.firstOrNull {
-                    val abbr = it.Abbreviation.ifBlank { it.abbreviationSting() }
+                    val abbr = it.getAbbreviation().ifBlank { it.abbreviationSting() }
                     abbr == kuerzel
                 }
 
                 if (emp != null) {
-                    logger.info("Suche nach Kürzel: ${emp.Abbreviation} Mitarbeiter: (${emp.getFirstName()} ${emp.getLastName()}) gefunden.")
+                    logger.info("Suche nach Kürzel: ${emp.getAbbreviation()} Mitarbeiter: (${emp.getFirstName()} ${emp.getLastName()}) gefunden.")
                     selectedEmployee = emp
                     fillEmployeeFields(emp)
                     setFieldsEditable(false)
@@ -394,7 +394,7 @@ object employeeManagementView : BorderPane() {
         roleField.value = emp.getRole()
         departmentField.value = emp.getDepartment()
         educationField.value = emp.getEducation()
-        val abbr = emp.Abbreviation.ifBlank { emp.abbreviationSting() }
+        val abbr = emp.getAbbreviation().ifBlank { emp.abbreviationSting() }
         abbreviationField.text = abbr
         cityField.text = emp.getCity()
         birthdayField.text = emp.getBirthdayAsString()
