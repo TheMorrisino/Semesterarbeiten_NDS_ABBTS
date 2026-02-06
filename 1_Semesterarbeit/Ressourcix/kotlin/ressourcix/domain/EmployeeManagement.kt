@@ -221,7 +221,7 @@ class EmployeeManagement () {
         for (i in 0 .. 51)
             for (e in 0 .. employees.size - 1){
                 //overlapList[i] = 0
-                overlapList[i] += employees[e].vacationList[i]
+                overlapList[i] += employees[e].getVacationByIndex(i)
                 //println(overlapList)
         }
         //println(overlapList)

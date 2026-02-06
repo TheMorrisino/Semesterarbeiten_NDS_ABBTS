@@ -11,9 +11,9 @@ class Employee(private val id: UInt) {
     private var lastName: String = ""
     private var workloadPercent: UByte = 100u
     private var role: Role = Role.STAFF
-    var Abbreviation: String = ""
+    private var abbreviation: String = ""
     private val vacationEntries: MutableList<VacationEntry> = mutableListOf()
-    var vacationList: MutableList<Int> = MutableList(52) { 0 }
+    private var vacationList: MutableList<Int> = MutableList(52) { 0 }
     private var department: Department? = null
     private var education: Education? = null
     private var birthday: LocalDate? = null
@@ -74,8 +74,8 @@ class Employee(private val id: UInt) {
 
     fun abbreviationSting(): String {
         if (firstName.isBlank() || lastName.isBlank()) return ""
-        Abbreviation = (firstName.take(2) + lastName.take(2)).uppercase()
-        return Abbreviation
+        abbreviation = (firstName.take(2) + lastName.take(2)).uppercase()
+        return abbreviation
     }
 
     fun addVacationEntry(entry: VacationEntry) {
@@ -106,7 +106,9 @@ class Employee(private val id: UInt) {
     }
 
 
-
+    fun getVacationByIndex(index: Int) :  Int {
+         return vacationList[index]
+    }
 
 
     fun createVacationList() {
@@ -126,7 +128,11 @@ class Employee(private val id: UInt) {
 
     }
     fun getBirthdayAsString(): String = birthday?.format(birthdayFormatter).orEmpty()
+
+    fun getAbbreviation(): String = abbreviation
 }
 
 fun Employee.label(): String =
     abbreviationSting().ifBlank { getFullName().ifBlank { getId().toString() } }
+
+
