@@ -1,7 +1,9 @@
 package ressourcix.domain
 
+import ressourcix.app.app
 import ressourcix.app.app.vacationIds
 import ressourcix.gui.pages.calenderView
+import ressourcix.gui.pages.calenderView.updateEmployees
 import ressourcix.logger.logger
 import ressourcix.ui.ConsoleIO
 import ressourcix.util.IdProvider
@@ -68,30 +70,26 @@ class EmployeeManagement () {
     }
 
 
-
     fun listAll(): List<Employee> = employees.toList()
 
     fun add(employee: Employee) {
         employees.add(employee)
+        updateEmployees()
     }
 
     fun removeById(id: UInt): Boolean {
         val idx = employees.indexOfFirst { it.getId() == id }
         if (idx == -1) return false
         employees.removeAt(idx)
+        updateEmployees()
         return true
     }
 
     fun findById(id: UInt): Employee? = employees.firstOrNull { it.getId() == id }
 
 
-
-    /**
-     * Demo-Seed: 10 Mitarbeiter IDs 1..10.
-     */
     fun seed10Employees() {
         employees.clear()
-        val ids = IdProvider(start = 1u)
         val names = listOf(
             "Max" to "Müller",
             "Sara" to "Schmidt",
@@ -128,7 +126,7 @@ class EmployeeManagement () {
             "Tom" to "Hug"
         )
         for ((first, last) in names) {
-            val e = Employee(ids.generateId()).apply {
+            val e = Employee(app.employeeIds.generateId()).apply {
                 setFirstName(first)
                 setLastName(last)
                 setRole(Role.STAFF)

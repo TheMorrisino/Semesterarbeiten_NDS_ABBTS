@@ -12,7 +12,7 @@ object app  {
     var employees = management.employees
 
 
-    val employeeIds = IdProvider(start = 11u)
+    val employeeIds = IdProvider(start = 1u)
     val vacationIds = IdProvider(start = 1u)
 
 
