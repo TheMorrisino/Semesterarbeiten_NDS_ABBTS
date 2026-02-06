@@ -24,11 +24,15 @@ import ressourcix.domain.Education
 import ressourcix.domain.Role
 import ressourcix.gui.popUp.filterPopUp
 import ressourcix.gui.popUp.filteredEmployee
+import ressourcix.logger.logger
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
 private const val TFL_HEIGHT = 30.0
 private const val TFL_WIDTH = 300.0
+
+//TODO Code organisieren. Evt. Funktionen usw. auslagern.
+//TODO Neue Mitarbeiter einfügen fehlt!!!! TextField sind disabled...
 
 object employeeManagementView : BorderPane() {
 
@@ -112,6 +116,7 @@ object employeeManagementView : BorderPane() {
                             val filtered = app.employees.filter { emp ->
                                 emp.getDepartment() == department && emp.getEducation() == education
                             }
+                            logger.info("Mitarbeiter nach $department, $education. Gefunden: ${filtered.size} Mitarbeiter")
                             closePopup()
                             showPopup(
                                 filteredEmployee.build(
@@ -133,10 +138,12 @@ object employeeManagementView : BorderPane() {
                 val idUInt = idField.text.toUInt()
                 val emp = app.employees.firstOrNull { it.getId() == idUInt }
                 if (emp != null) {
+                    logger.info("Suche nach ID: ${emp.getId()} Mitarbeiter: (${emp.getFirstName()} ${emp.getLastName()}) gefunden.")
                     selectedEmployee = emp
                     fillEmployeeFields(emp)
                     setFieldsEditable(false)
                 } else {
+
                     selectedEmployee = null
                     showNotFoundAlert("Suche nach ID", idField.text)
                     clearEmployeeFields()
@@ -165,10 +172,12 @@ object employeeManagementView : BorderPane() {
                 }
 
                 if (emp != null) {
+                    logger.info("Suche nach Kürzel: ${emp.Abbreviation} Mitarbeiter: (${emp.getFirstName()} ${emp.getLastName()}) gefunden.")
                     selectedEmployee = emp
                     fillEmployeeFields(emp)
                     setFieldsEditable(false)
                 } else {
+                    logger.warn("Kein Mitarbeiter unter Kürzel: ${abbreviationField.text} gefunden.")
                     selectedEmployee = null
                     showNotFoundAlert("Suche nach Kürzel", kuerzel)
                     clearEmployeeFields()
@@ -253,11 +262,12 @@ object employeeManagementView : BorderPane() {
                         emp.setEducation(educationField.value)
                         emp.setCity(cityField.text)
                         emp.setBirthdayFromString(birthdayField.text)
-
+                        logger.info("Mitarbeitender unter ID:${emp.getId()} erfolgreich gespeichert.")
 
                         setFieldsEditable(false)
                         fillEmployeeFields(emp)
                     } catch (e: Exception) {
+                        logger.error("Speichern fehlgeschlagen für ID:${emp.getId()}: ${e.message}", e)
                         Alert(Alert.AlertType.ERROR).apply {
                             title = "Speichern fehlgeschlagen"
                             headerText = "Bitte Eingaben prüfen"
@@ -281,7 +291,9 @@ object employeeManagementView : BorderPane() {
                         idField.clear()
                         abbreviationField.clear()
                         setNoSelectionState()
+                        logger.info("Mitarbeitender unter ID:${emp.getId()} erfolgreich gelöscht.")
                     } else {
+                        logger.warn("Löschen fehlgeschlagen für ID:${emp.getId()})")
                         Alert(Alert.AlertType.WARNING).apply {
                             title = "Löschen"
                             headerText = "Mitarbeitender nicht gefunden"
@@ -291,7 +303,7 @@ object employeeManagementView : BorderPane() {
                     }
                 }
             },
-                    createButton("Suche \nZurücksetzen").apply {
+            createButton("Suche \nZurücksetzen").apply {
                 setOnAction {resetSearch()}
             }
         )
