@@ -1,7 +1,6 @@
 package ressourcix.ui.menu
 
-import ressourcix.calendar.CalendarOutput
-import ressourcix.calendar.consoleCalendarOutput
+
 import ressourcix.domain.EmployeeManagement
 import ressourcix.domain.VacationStatus
 import ressourcix.domain.WeekRange
@@ -41,7 +40,7 @@ object mainMenu {
             try {
                 when (io.readChoice()) {
                     1 -> { management.mitarbeiterVerwaltung(io,management,employeeIds)}
-                    2 -> consoleCalendarOutput.printYearPlan(year, management.listAll())
+                    //2 -> consoleCalendarOutput.printYearPlan(year, management.listAll())
                     3 -> rateSingleWeek()
 //                    4 -> management.addVacationSafe()
                     0 -> return
