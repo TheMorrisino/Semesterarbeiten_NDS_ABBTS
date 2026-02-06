@@ -273,6 +273,7 @@ object dashboardView : StackPane() {
         val stats = try {
             computeVacationStats(employees)
         } catch (e: UninitializedPropertyAccessException) {
+            logger.error("$e")
             return
         }
 

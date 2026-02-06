@@ -14,8 +14,6 @@ import kotlin.system.exitProcess
 class GuiBorderPane : Application() {
     override fun start(stage: Stage) {
 
-
-
         val pathIcon = "/Ressourcix_Icon_OhneB2.png"
         val stream = javaClass.getResourceAsStream(pathIcon)
 
