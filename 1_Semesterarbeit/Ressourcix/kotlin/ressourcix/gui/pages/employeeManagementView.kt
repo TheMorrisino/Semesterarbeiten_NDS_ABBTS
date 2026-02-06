@@ -21,12 +21,11 @@ import javafx.scene.text.TextAlignment
 import ressourcix.app.app
 import ressourcix.domain.Department
 import ressourcix.domain.Education
-import ressourcix.domain.EmployeeManagement
+import ressourcix.domain.Employee
 import ressourcix.domain.Role
 import ressourcix.gui.popUp.filterPopUp
 import ressourcix.gui.popUp.filteredEmployeePopUp
 import ressourcix.logger.logger
-import ressourcix.util.IdProvider
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
@@ -246,7 +245,6 @@ object employeeManagementView : BorderPane() {
                     idField.isDisable = true
                     abbreviationField.isDisable = true
                     newEmployee = true
-
                 }
 
             },
@@ -263,7 +261,21 @@ object employeeManagementView : BorderPane() {
             createButton("MA speichern").apply {
                 setOnAction {
                     if (newEmployee){
-                        app.vacationIds.generateId()
+                        val emp = Employee(app.employeeIds.generateId())
+                        emp.setFirstName(nameField.text)
+                        emp.setLastName(surnameField.text)
+                        val w = workloadField.text.trim().toInt()
+                        emp.setWorkloadPercent(w.toUByte())
+                        emp.setRole(roleField.value!!)
+                        emp.setDepartment(departmentField.value)
+                        emp.setEducation(educationField.value)
+                        emp.setCity(cityField.text)
+                        emp.setBirthdayFromString(birthdayField.text)
+                        if (emp == null) {
+                            showNotFoundAlert("Mitarbeiter speichern", "Kein Mitarbeitender ausgewählt")
+                            return@setOnAction
+                        }
+                        app.management.add(emp)
                     }
                     else{
 
@@ -311,7 +323,6 @@ object employeeManagementView : BorderPane() {
                     }
 
                     val ok = app.management.removeById(emp.getId())
-
                     if (ok) {
                         clearEmployeeFields()
                         idField.clear()
