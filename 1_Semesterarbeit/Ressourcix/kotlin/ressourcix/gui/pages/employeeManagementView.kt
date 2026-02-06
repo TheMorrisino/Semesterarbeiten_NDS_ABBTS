@@ -26,6 +26,7 @@ import ressourcix.domain.Role
 import ressourcix.gui.popUp.filterPopUp
 import ressourcix.gui.popUp.filteredEmployeePopUp
 import ressourcix.logger.logger
+import java.time.format.DateTimeFormatter
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
@@ -33,20 +34,21 @@ private const val TFL_HEIGHT = 30.0
 private const val TFL_WIDTH = 300.0
 
 //TODO Code organisieren. Evt. Funktionen usw. auslagern.
-//TODO Neue Mitarbeiter einfügen fehlt!!!! TextField sind disabled...
 
 object employeeManagementView : BorderPane() {
 
-    private var selectedEmployee: ressourcix.domain.Employee? = null
+    private var selectedEmployee: Employee? = null
     private var isEditMode: Boolean = false
 
     var idField = createTfl("", "ID eingeben...").apply {
-        textFormatter = positiveIntNoZeroFormatter()
+        textFormatter = positiveIntNoZeroFormatter(4,1000)
     }
     var abbreviationField = createTfl("", "Kürzel eingeben").apply {
-        textFormatter = lettersOnlyMax4Formatter()
+        textFormatter = lettersMaxFormatter(4,true)
     }
-    var nameField = createTfl("","")
+    var nameField = createTfl("","").apply {
+        textFormatter =lettersMaxFormatter(30,false)
+    }
     val roleField = ComboBox<Role>().apply {
         items = FXCollections.observableArrayList(Role.values().toList())
         promptText = "Rolle auswählen..."
@@ -60,10 +62,16 @@ object employeeManagementView : BorderPane() {
         prefWidth = TFL_WIDTH
         isFocusTraversable = false
     }
-    var cityField = createTfl("","")
+    var cityField = createTfl("","").apply {
+        textFormatter = lettersMaxFormatter(30,false)
+    }
 
-    var surnameField = createTfl("","")
-    var workloadField = createTfl("","")
+    var surnameField = createTfl("","").apply {
+        textFormatter = lettersMaxFormatter(30,false)
+    }
+    var workloadField = createTfl("","").apply {
+        textFormatter = positiveIntNoZeroFormatter(3,100)
+    }
     val educationField = ComboBox<Education>().apply {
         items = FXCollections.observableArrayList(Education.values().toList())
         promptText = "Ausbildung auswählen..."
@@ -71,7 +79,10 @@ object employeeManagementView : BorderPane() {
         prefWidth = TFL_WIDTH
         isFocusTraversable = false
     }
-    var birthdayField = createTfl("","")
+    var birthdayField = createTfl("","tt.mm.jjjj").apply {
+        textFormatter = birthdayTextFormatter()
+        //TODO TextFormatter blockieren
+    }
 
     var remainingVacationWeeksField = createTfl("","")
     var usedVacationWeeksField = createTfl("","")
@@ -261,21 +272,14 @@ object employeeManagementView : BorderPane() {
             createButton("MA speichern").apply {
                 setOnAction {
                     if (newEmployee){
-                        val emp = Employee(app.employeeIds.generateId())
-                        emp.setFirstName(nameField.text)
-                        emp.setLastName(surnameField.text)
-                        val w = workloadField.text.trim().toInt()
-                        emp.setWorkloadPercent(w.toUByte())
-                        emp.setRole(roleField.value!!)
-                        emp.setDepartment(departmentField.value)
-                        emp.setEducation(educationField.value)
-                        emp.setCity(cityField.text)
-                        emp.setBirthdayFromString(birthdayField.text)
+                        val emp = generateEmployee(Employee(app.employeeIds.generateId()))
                         if (emp == null) {
                             showNotFoundAlert("Mitarbeiter speichern", "Kein Mitarbeitender ausgewählt")
                             return@setOnAction
                         }
                         app.management.add(emp)
+                        fillEmployeeFields(emp)
+                        setFieldsEditable(false)
                     }
                     else{
 
@@ -289,15 +293,7 @@ object employeeManagementView : BorderPane() {
                     if (!isEditMode) return@setOnAction
 
                     try {
-                        emp.setFirstName(nameField.text)
-                        emp.setLastName(surnameField.text)
-                        val w = workloadField.text.trim().toInt()
-                        emp.setWorkloadPercent(w.toUByte())
-                        emp.setRole(roleField.value!!)
-                        emp.setDepartment(departmentField.value)
-                        emp.setEducation(educationField.value)
-                        emp.setCity(cityField.text)
-                        emp.setBirthdayFromString(birthdayField.text)
+                        generateEmployee(emp)
                         logger.info("Mitarbeitender unter ID:${emp.getId()} erfolgreich gespeichert.")
 
                         setFieldsEditable(false)
@@ -401,27 +397,31 @@ object employeeManagementView : BorderPane() {
             )
         }
 
-    private fun positiveIntNoZeroFormatter(): TextFormatter<String> {
+    private fun positiveIntNoZeroFormatter(maxDigits: Int,maxValue: Int): TextFormatter<String> {
         return TextFormatter { change ->
             val newText = change.controlNewText
             val ok = newText.isEmpty() || (newText.matches(Regex("[1-9][0-9]*"))
-                    && newText.length <=4)
+                    && newText.length <= maxDigits
+                    && newText.toInt() <= maxValue)
             if (ok) change else null
         }
     }
 
-    private fun lettersOnlyMax4Formatter(): TextFormatter<String> {
+    private fun lettersMaxFormatter(maxLetters: Int, bigLetters: Boolean): TextFormatter<String> {
+        val allowedChars = if (bigLetters) "A-ZÄÖÜ \\-" else "A-Za-zÄÖÜäöü  \\-"
+        val pattern = Regex("^[$allowedChars]{0,$maxLetters}$")
+
         return TextFormatter { change ->
-            val newText = change.controlNewText.uppercase()
-            val ok = newText.isEmpty() || newText.matches(Regex("[A-ZÄÖÜ]{1,4}"))
-            if (ok) {
+            if (!change.isContentChange) return@TextFormatter change
+            if (bigLetters && change.text.isNotEmpty()) {
                 change.text = change.text.uppercase()
-                change
-            } else null
+            }
+            val newText = change.controlNewText
+            if (pattern.matches(newText)) change else null
         }
     }
 
-    private fun fillEmployeeFields(emp: ressourcix.domain.Employee) {
+    private fun fillEmployeeFields(emp:Employee) {
         idField.text = emp.getId().toString()
         nameField.text = emp.getFirstName()
         surnameField.text = emp.getLastName()
@@ -435,6 +435,19 @@ object employeeManagementView : BorderPane() {
         birthdayField.text = emp.getBirthdayAsString()
         remainingVacationWeeksField.clear()
         usedVacationWeeksField.clear()
+    }
+
+    private fun generateEmployee(emp: Employee): Employee{
+        emp.setFirstName(nameField.text)
+        emp.setLastName(surnameField.text)
+        val w = workloadField.text.trim().toInt()
+        emp.setWorkloadPercent(w.toUByte())
+        emp.setRole(roleField.value!!)
+        emp.setDepartment(departmentField.value)
+        emp.setEducation(educationField.value)
+        emp.setCity(cityField.text)
+        emp.setBirthdayFromString(birthdayField.text)
+        return emp
     }
 
     private fun clearEmployeeFields() {
@@ -470,6 +483,8 @@ object employeeManagementView : BorderPane() {
     }
 
     private fun setFieldsEditable(editable: Boolean) {
+        idField.isDisable = editable
+        abbreviationField.isDisable = editable
         nameField.isDisable = !editable
         surnameField.isDisable = !editable
         workloadField.isDisable = !editable
@@ -488,3 +503,43 @@ object employeeManagementView : BorderPane() {
         setFieldsEditable(false)
     }
     }
+
+private fun birthdayTextFormatter(): TextFormatter<String> {
+    return TextFormatter { change ->
+
+        if (!change.isContentChange) return@TextFormatter change
+
+        val raw = change.controlNewText
+        if (raw.isEmpty()) return@TextFormatter change
+
+        if (!raw.all { it.isDigit() || it == '.' }) return@TextFormatter null
+
+        val digits = raw.filter { it.isDigit() }
+        if (digits.length > 8) return@TextFormatter null
+
+        val formatted = buildString {
+            digits.forEachIndexed { i, c ->
+                append(c)
+                if (i == 1 || i == 3) append('.')
+            }
+        }
+
+        if (formatted.length > 10) return@TextFormatter null
+
+        val oldLength = change.controlText.length
+        val newLength = formatted.length
+
+        change.text = formatted
+        change.setRange(0, oldLength)
+
+        val newCaretPos = when {
+            newLength == 3 || newLength == 6 -> newLength
+            newLength > oldLength -> change.caretPosition + 1
+            else -> change.caretPosition
+        }
+
+        change.selectRange(newCaretPos, newCaretPos)
+        change
+    }
+}
+
