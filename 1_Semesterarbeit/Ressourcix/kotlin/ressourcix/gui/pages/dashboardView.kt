@@ -309,7 +309,7 @@ object dashboardView : StackPane() {
 
     private fun computeWeeklyOverlap(employees: List<Employee>): List<Int> {
         // 52 Plätze, initial 0
-        val counts = app.management.overlapList
+        val counts = app.management.getOverlapList()
 
 //        employees.forEach { emp ->
 //            emp.getVacationEntries()
@@ -326,7 +326,7 @@ object dashboardView : StackPane() {
     // Berechnet Statistiken über Mitarbeiter mit und ohne Ferien
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private fun computeVacationStats(employees: List<Employee>): VacationStats {
-        var withVacation = app.management.overlapList.sum()
+        var withVacation = app.management.getOverlapList().sum()
         var withoutVacation = (employees.size * 5) - withVacation
 
 

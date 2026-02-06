@@ -1,18 +1,16 @@
 package ressourcix.domain
 
+import ressourcix.app.app.vacationIds
 import ressourcix.gui.pages.calenderView
+import ressourcix.logger.logger
 import ressourcix.ui.ConsoleIO
 import ressourcix.util.IdProvider
 
-/**
- * Kleine "Verwaltung" (in-memory).
- * - kennt Mitarbeiter
- * - findet nach ID
- * - überprüft Überschneidungen bei Ferien
- */
 class EmployeeManagement () {
-     val employees: MutableList<Employee> = mutableListOf()
-
+    val employees: MutableList<Employee> = mutableListOf()
+    private val overlapList : MutableList<Int> = MutableList(52) { 0 }
+    val year = 2026u
+    //ToDo Auskommentieren
     fun mitarbeiterVerwaltung(io: ConsoleIO , management: EmployeeManagement , employeeIds: IdProvider) {
         io.println()
         io.println("=== Ressourcix Mitarbeiter Verwaltung ===")
@@ -143,14 +141,22 @@ class EmployeeManagement () {
     fun allVacationInKwFiltern() {
         val allVacation = employees.flatMap { it.getVacationEntries() }
 
-
-
     }
 
-    fun addVacationSafe(employee: Employee, entry: VacationEntry, maxAllowed: Int = 1) {
-        // To Do Ferienliste erstelle aller Mitableitern mit Index 1 = KW1 = alle Mitarbeiterferien aufrufen in KW 1 etc.
-        //
+    fun removeVacation(empId: UInt, startWeek: UInt, endWeek: UInt){
+        employees[empId.toInt()-1].removeByStartWeek(startWeek)
+    }
 
+    fun addVacationSafe(employee: Employee, startWeek: UInt, endWeek: UInt, maxAllowed: Int = 1) {
+        // To Do Ferienliste erstelle aller Mitableitern mit Index 1 = KW1 = alle Mitarbeiterferien aufrufen in KW 1 etc.
+        val empId = employee.getId()
+        val entry = VacationEntry(
+            id = vacationIds.generateId(),
+            employeeId = empId,
+            year = year,
+            range = WeekRange(startWeek, endWeek),
+            initialStatus = VacationStatus.REQUESTED
+        )
 
         val currentOverlaps = countAllOverlaps()
 
@@ -201,16 +207,17 @@ class EmployeeManagement () {
 //            }
             val message = when (status) {
                 OverlapStatus.OK ->
-                    "Keine Überschneidung. Ferieneintrag für ${employee.label()} (${employee.getFullName()}) wurde hinzugefügt."
+                    logger.info("Keine Überschneidung. Ferieneintrag für ${employee.label()} (${employee.getFullName()}) wurde hinzugefügt.")
+
 
                 OverlapStatus.WARNING ->
-                    "WARNING: Ferieneintrag für ${employee.label()} (${employee.getFullName()}) überlappt mit $namesList. " +
-                            "Aktuelle Überschneidungen: $totalOverlapsAfter von max. $maxAllowed erlaubt."
+                    logger.warn("WARNING: Ferieneintrag für ${employee.label()} (${employee.getFullName()}) überlappt mit $namesList. " +
+                            "Aktuelle Überschneidungen: $totalOverlapsAfter von max. $maxAllowed erlaubt.")
 
                 OverlapStatus.CRITICAL ->
-                    "CRITICAL: Kein Ferieneintrag für ${employee.label()} (${employee.getFullName()}) möglich. " +
+                    logger.error("CRITICAL: Kein Ferieneintrag für ${employee.label()} (${employee.getFullName()}) möglich. " +
                             "Überlappung mit $namesList würde das Limit überschreiten " +
-                            "(Aktuell: $currentOverlaps, Neu: +$newOverlapCount, Total: $totalOverlapsAfter, Max: $maxAllowed)."
+                            "(Aktuell: $currentOverlaps, Neu: +$newOverlapCount, Total: $totalOverlapsAfter, Max: $maxAllowed).")
             }
             println(message)
         }
@@ -223,13 +230,13 @@ class EmployeeManagement () {
 
 
     //Die FerienListe mit 52 Einträgen aus Employee wird bei jedem Employee durchgegangen
-    val overlapList : MutableList<Int> = MutableList(52) { 0 }
+
     fun updateOverlapList (){
         overlapList.replaceAll { 0 }
         for (i in 0 .. 51)
             for (e in 0 .. employees.size - 1){
                 //overlapList[i] = 0
-                overlapList[i] += employees[e].vacationList[i]
+                overlapList[i] += employees[e].getVacationByIndex(i)
                 //println(overlapList)
         }
         //println(overlapList)
@@ -244,7 +251,7 @@ class EmployeeManagement () {
         return this.range.overlaps(other.range)
     }
 
-    private fun countAllOverlaps(): Int {
+    fun countAllOverlaps(): Int {
         val allVacation = employees.flatMap { it.getVacationEntries() }
         var count = 0
 
@@ -260,4 +267,9 @@ class EmployeeManagement () {
     }
 
     fun getEmployeeByIndex(index: Int): Employee = employees[index]
+
+    fun getOverlapList() : MutableList<Int> = overlapList
+
+
 }
+

@@ -22,12 +22,14 @@ private const val BOX_HEIGHT = 340.0
 private const val BOX_WIDTH = 600.0
 
 
-data class vacationRequestWK(val startKW: UInt, val endKW: UInt)
+
 
 object vacationPopUp {
 
+    data class vacationRequestWK(val startKW: UInt, val endKW: UInt)
+
     var idField = createTfl("", "")
-    var abbreviationField = createTfl("", "")
+    var nameField = createTfl("", "")
 
     fun build(onClose: () -> Unit, onRemove: (vacationRequestWK) -> Unit, onSave: (vacationRequestWK) -> Unit): Node {
         var firstVacationWeek = createTfl("", "Erste Ferien Woche eintragen...")
@@ -159,7 +161,7 @@ object vacationPopUp {
                         createDataBox("Mitarbeiter ID:", idField).apply {
                             isDisable = true
                         },
-                        createDataBox("Mitarbeiter Kürzel:", abbreviationField).apply {
+                        createDataBox("Namen des Mitarbeiters:", nameField).apply {
                             isDisable = true
                         }
                     )
@@ -216,4 +218,5 @@ object vacationPopUp {
         }
     }
 }
+
 
