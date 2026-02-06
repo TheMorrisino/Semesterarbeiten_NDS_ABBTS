@@ -21,10 +21,12 @@ import javafx.scene.text.TextAlignment
 import ressourcix.app.app
 import ressourcix.domain.Department
 import ressourcix.domain.Education
+import ressourcix.domain.EmployeeManagement
 import ressourcix.domain.Role
 import ressourcix.gui.popUp.filterPopUp
 import ressourcix.gui.popUp.filteredEmployeePopUp
 import ressourcix.logger.logger
+import ressourcix.util.IdProvider
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
@@ -74,6 +76,8 @@ object employeeManagementView : BorderPane() {
 
     var remainingVacationWeeksField = createTfl("","")
     var usedVacationWeeksField = createTfl("","")
+
+    var newEmployee = false
 
     private val dim = Region().apply {
         style = "-fx-background-color: rgba(0,0,0,0.35);"
@@ -235,7 +239,17 @@ object employeeManagementView : BorderPane() {
             createButton("Suche \nZurücksetzen").apply {
                 setOnAction {resetSearch()}
             },
-            createButton("MA einfügen").apply {  },
+            createButton("MA einfügen").apply {
+                setOnAction {
+                    setFieldsEditable(true)
+                    clearEmployeeFields()
+                    idField.isDisable = true
+                    abbreviationField.isDisable = true
+                    newEmployee = true
+
+                }
+
+            },
             createButton("MA ändern").apply {
                 setOnAction {
                     val emp = selectedEmployee
@@ -248,6 +262,12 @@ object employeeManagementView : BorderPane() {
             },
             createButton("MA speichern").apply {
                 setOnAction {
+                    if (newEmployee){
+                        app.vacationIds.generateId()
+                    }
+                    else{
+
+
                     val emp = selectedEmployee
                     if (emp == null) {
                         showNotFoundAlert("Mitarbeiter speichern", "Kein Mitarbeitender ausgewählt")
@@ -279,6 +299,7 @@ object employeeManagementView : BorderPane() {
                             showAndWait()
                         }
                     }
+                    }
                 }
             },
             createButton("MA löschen").apply {
@@ -289,7 +310,8 @@ object employeeManagementView : BorderPane() {
                         return@setOnAction
                     }
 
-                    val ok = app.employees.removeIf { it.getId() == emp.getId() }
+                    val ok = app.management.removeById(emp.getId())
+
                     if (ok) {
                         clearEmployeeFields()
                         idField.clear()
