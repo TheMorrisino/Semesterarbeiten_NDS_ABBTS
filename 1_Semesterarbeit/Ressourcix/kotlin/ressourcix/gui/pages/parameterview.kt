@@ -26,7 +26,8 @@ private const val TFL_WIDTH = 300.0
 
 //TODO Speichern und Zurücksetzen Funktion implementieren.
 //TODO Daten verknüpfen zum Speichern und Zurücksetzen
-// TODO logger.Warning/Error funktionen implementieren
+//TODO logger.Warning/Error funktionen implementieren
+//TODO Clean Code bearbeitung mit employeemanagementView.kt
 
 object parameterview: BorderPane() {
 
