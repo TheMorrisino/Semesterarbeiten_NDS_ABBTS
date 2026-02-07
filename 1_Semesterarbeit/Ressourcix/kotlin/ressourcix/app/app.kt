@@ -3,7 +3,8 @@ package ressourcix.app
 import essential.*
 import ressourcix.domain.Employee
 import ressourcix.domain.EmployeeManagement
-import ressourcix.essential.xmlWriter
+import ressourcix.essential.jsonReader
+import ressourcix.essential.jsonWriter
 import ressourcix.ui.ConsoleIO
 import ressourcix.ui.menu.mainMenu
 import ressourcix.util.IdProvider
@@ -15,18 +16,20 @@ object app  {
 
     var employees = management.employees
 
-
     private val employeeIds = IdProvider(start = 11u)
     val vacationIds = IdProvider(start = 1u)
 
 
     fun run() {
+        // ZUERST versuchen zu laden
+        val loadedEmployees = jsonReader.read()
+        if (loadedEmployees.isNotEmpty()) {
+            management.employees.clear()
+            management.employees.addAll(loadedEmployees)
+            println("✓ Daten aus JSON geladen")
+        }
 
-        // Seed-Daten
-        management.seed10Employees()
-
-
-
+        // Menu initialisieren
         mainMenu.init(
             io = io,
             management = management,
@@ -34,20 +37,9 @@ object app  {
             vacationIds = vacationIds
         )
 
+        // Menu-Loop starten
         mainMenu.loop()
 
+
     }
-
-    // ====================================================================================
-    // Getter Value für XML Datei
-    // ====================================================================================
-
-
-    val allEmployee: List<Employee>
-        get() = management.employees
-
-
-
-
-
 }

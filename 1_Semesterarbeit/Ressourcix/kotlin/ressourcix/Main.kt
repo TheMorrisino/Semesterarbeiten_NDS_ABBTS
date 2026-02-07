@@ -2,7 +2,6 @@ package ressourcix
 
 import javafx.application.Application
 import ressourcix.app.app
-import ressourcix.essential.xmlWriter
 import ressourcix.gui.GuiBorderPane
 import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.dashboardView
@@ -87,11 +86,11 @@ fun main() {
 
 
     // JavaFX Application starten (blockiert bis Fenster geschlossen wird)
-    xmlWriter.write()
     try {
-
-        Application.launch(GuiBorderPane::class.java)
         logger.info("Starte Ressourcix...")
+        Application.launch(GuiBorderPane::class.java)
+
+
 
     } catch (e: Exception) {
         logger.fatal("Fehler beim Starten der GUI", e)

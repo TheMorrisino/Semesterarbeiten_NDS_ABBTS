@@ -91,54 +91,54 @@ class EmployeeManagement () {
     /**
      * Demo-Seed: 10 Mitarbeiter IDs 1..10.
      */
-    fun seed10Employees() {
-        employees.clear()
-        val ids = IdProvider(start = 1u)
-        val names = listOf(
-            "Max" to "Müller",
-            "Sara" to "Schmidt",
-            "Lena" to "Weber",
-            "Noah" to "Meier",
-            "Mia" to "Keller",
-            "Leo" to "Fischer",
-            "Emma" to "Brunner",
-            "Paul" to "Baumann",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Tom" to "Hug"
-        )
-        for ((first, last) in names) {
-            val e = Employee(ids.generateId()).apply {
-                setFirstName(first)
-                setLastName(last)
-                setRole(Role.STAFF)
-                setWorkloadPercent(100u)
-            }
-            employees.add(e)
-        }
-    }
+//    fun seed10Employees() {
+//        employees.clear()
+//        val ids = IdProvider(start = 1u)
+//        val names = listOf(
+//            "Max" to "Müller",
+//            "Sara" to "Schmidt",
+//            "Lena" to "Weber",
+//            "Noah" to "Meier",
+//            "Mia" to "Keller",
+//            "Leo" to "Fischer",
+//            "Emma" to "Brunner",
+//            "Paul" to "Baumann",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Tom" to "Hug"
+//        )
+//        for ((first, last) in names) {
+//            val e = Employee(ids.generateId()).apply {
+//                setFirstName(first)
+//                setLastName(last)
+//                setRole(Role.STAFF)
+//                setWorkloadPercent(100u)
+//            }
+//            employees.add(e)
+//        }
+//    }
 
     fun allVacationInKwFiltern() {
         val allVacation = employees.flatMap { it.getVacationEntries() }

@@ -7,7 +7,9 @@ import javafx.scene.control.*
 import javafx.scene.image.Image
 import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
+import ressourcix.essential.jsonWriter
 import ressourcix.gui.navigation.*
+import ressourcix.logger.logger
 import java.util.*
 import kotlin.system.exitProcess
 
@@ -66,6 +68,15 @@ class GuiBorderPane : Application() {
         val result: Optional<ButtonType> = alert.showAndWait()
 
         if (result.isPresent && result.get() == ButtonType.OK) {
+            try {
+                jsonWriter.write()
+                logger.info("Daten erfolgreich gespeichert")
+            } catch (e: Exception) {
+                logger.fatal("Fehler beim Speichern", e)
+                e.printStackTrace()
+            }
+
+            logger.info("Auf Wiedersehen!")
             exitProcess(0)
         }
     }
