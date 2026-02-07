@@ -57,7 +57,7 @@ class weekPickerPopUp(private val label: String,
             setOnAction { onClose() }
         }
 
-        val functionBox = HBox(10.0, clearBtn, closeBtn).apply {
+        val functionBox = HBox(10.0, closeBtn, clearBtn ).apply {
             alignment = Pos.BOTTOM_CENTER
             padding = Insets(0.0, 15.0, 15.0, 15.0)
         }

@@ -10,6 +10,7 @@ import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
+import javafx.scene.control.ListCell
 import javafx.scene.control.TextField
 import javafx.scene.control.TextFormatter
 import javafx.scene.layout.BorderPane
@@ -54,6 +55,7 @@ object employeeManagementView : BorderPane() {
         promptText = "Rolle auswählen..."
         prefHeight = TFL_HEIGHT
         prefWidth = TFL_WIDTH
+        promptWhenNull()
     }
     val departmentField = ComboBox<Department>().apply {
         items = FXCollections.observableArrayList(Department.values().toList())
@@ -61,6 +63,7 @@ object employeeManagementView : BorderPane() {
         prefHeight = TFL_HEIGHT
         prefWidth = TFL_WIDTH
         isFocusTraversable = false
+        promptWhenNull()
     }
     var cityField = createTfl("","").apply {
         textFormatter = lettersMaxFormatter(30,false)
@@ -78,6 +81,7 @@ object employeeManagementView : BorderPane() {
         prefHeight = TFL_HEIGHT
         prefWidth = TFL_WIDTH
         isFocusTraversable = false
+        promptWhenNull()
     }
     var birthdayField = createTfl("","tt.mm.jjjj").apply {
         installBirthdayField(this)
@@ -429,8 +433,7 @@ object employeeManagementView : BorderPane() {
         roleField.value = emp.getRole()
         departmentField.value = emp.getDepartment()
         educationField.value = emp.getEducation()
-        val abbr = emp.getAbbreviation().ifBlank { emp.abbreviationSting() }
-        abbreviationField.text = abbr
+        abbreviationField.text = emp.getAbbreviation().ifBlank { emp.abbreviationSting() }
         cityField.text = emp.getCity()
         birthdayField.text = emp.getBirthdayAsString()
         remainingVacationWeeksField.clear()
@@ -457,9 +460,9 @@ object employeeManagementView : BorderPane() {
         surnameField.clear()
         roleField.value = null
         departmentField.value = null
+        educationField.value = null
         cityField.clear()
         workloadField.clear()
-        educationField.value = null
         birthdayField.clear()
         remainingVacationWeeksField.clear()
         usedVacationWeeksField.clear()
@@ -476,8 +479,8 @@ object employeeManagementView : BorderPane() {
 
     private fun resetSearch() {
         selectedEmployee = null
-        setFieldsEditable(false)
         clearEmployeeFields()
+        setFieldsEditable(false)
         idField.clear()
         abbreviationField.clear()
     }
@@ -507,6 +510,21 @@ object employeeManagementView : BorderPane() {
 private fun installBirthdayField(field: TextField) {
     field.textFormatter = TextFormatter<String> { change ->
         if (!change.isContentChange) return@TextFormatter change
+
+        val old = change.controlText
+
+        if (change.text.isEmpty() && change.rangeStart < change.rangeEnd) {
+            val deleted = old.substring(change.rangeStart, change.rangeEnd)
+            if (deleted == ".") {
+                val s = change.rangeStart
+                val e = change.rangeEnd
+                if (s > 0) {
+                    change.setRange(s - 1, e)
+                } else if (e < old.length) {
+                    change.setRange(s, e + 1)
+                }
+            }
+        }
 
         val newText = change.controlNewText
         if (newText.isEmpty()) return@TextFormatter change
@@ -546,5 +564,16 @@ private fun installBirthdayField(field: TextField) {
         updating = false
     }
 }
+
+private fun <T> ComboBox<T>.promptWhenNull() {
+    val p = promptText
+    buttonCell = object : ListCell<T>() {
+        override fun updateItem(item: T?, empty: Boolean) {
+            super.updateItem(item, empty)
+            text = if (empty || item == null) p else item.toString()
+        }
+    }
+}
+
 
 
