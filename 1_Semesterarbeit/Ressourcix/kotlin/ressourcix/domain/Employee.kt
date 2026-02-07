@@ -10,7 +10,7 @@ class Employee(private val id: UInt) {
     private var firstName: String = ""
     private var lastName: String = ""
     private var workloadPercent: UByte = 100u
-    private var role: Role = Role.STAFF
+    private var role: Role = Role.APPRENTICE
     private var abbreviation: String = ""
     private val vacationEntries: MutableList<VacationEntry> = mutableListOf()
     private var vacationList: MutableList<Int> = MutableList(52) { 0 }
@@ -116,16 +116,14 @@ class Employee(private val id: UInt) {
         vacationList = MutableList(52) { 0 }
         for (vacation in vacationEntries){
         //println(vacationList)
-        for (e in 1..52) {
-            if (e >= vacation.range.startWeek.toInt() && (e <= vacation.range.endWeek.toInt())) {
-                vacationList[e - 1] = 1
-                println(vacationList)
+            for (e in 1..52) {
+                if (e >= vacation.range.startWeek.toInt() && (e <= vacation.range.endWeek.toInt())) {
+                    vacationList[e - 1] = 1
+                    println(vacationList)
 
+                }
             }
         }
-
-        }
-
 
     }
     fun getBirthdayAsString(): String = birthday?.format(birthdayFormatter).orEmpty()
