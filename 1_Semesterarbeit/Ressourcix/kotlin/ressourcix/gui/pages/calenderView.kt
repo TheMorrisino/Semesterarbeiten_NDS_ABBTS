@@ -341,6 +341,7 @@ object calenderView : StackPane() {
         fixedTable.items.setAll(employees)
         weekTable.items = fixedTable.items
         showYear(currentYear)
+        refreshVacations()
     }
 
     // ----------------- Popup Handling -----------------
