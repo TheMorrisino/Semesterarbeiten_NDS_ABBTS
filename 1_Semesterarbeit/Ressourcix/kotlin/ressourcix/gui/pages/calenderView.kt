@@ -250,7 +250,7 @@ object calenderView : StackPane() {
         weekCodeCache.clear()
 
         for (employee in employees) {
-            val codes = Array(weeks.toInt() + 1) { "" }
+            val codes = Array(weeks.toInt() + 1) { "💼" }
             // Wenn der Mitarbeiter ein Lehrling ist (APPRENTICE)
             if (employee.getRole() == Role.APPRENTICE) {
                 // Durchlaufe alle Wochen mit Index und prüfe, ob es eine Ferienwoche ist
@@ -259,14 +259,14 @@ object calenderView : StackPane() {
                         codes[weekIndex] = "✈"
                     }
                 }
-                //setze die Ferienblocker
-            for (block in config.vacationSchoolBlock) {
-                var counter = 0
-                if (block) {
-                    codes[counter] = "🚫"
-                    counter+1
-                }
-            }
+               //setze die Ferienblocker
+           for (block in config.vacationSchoolBlock) {
+               var counter = 0
+               if (block) {
+                   codes[counter] = "🚫"
+                   counter+1
+               }
+           }
         }
 
 
@@ -336,7 +336,12 @@ object calenderView : StackPane() {
 
                             val overlaps = app.management.getOverlapList().getOrElse(overlapIndex) { 0 }
                             val bg = colorForOverlap(overlaps)
-                            style = "-fx-background-color: $bg;"
+                            style = """
+                                -fx-background-color: $bg;
+                                -fx-border-color: black;
+                                -fx-border-width: 0 0 1px 1px;
+                                -fx-border-style: solid;
+                            """.trimIndent()
                         }
                     }
                 }
