@@ -148,7 +148,13 @@ object dashboardView : StackPane() {
         // Grid zum StackPane hinzufügen
         children.add(gridPane)
 
-
+        Platform.runLater {
+            Thread.sleep(100) //
+            Platform.runLater {
+                refreshCurrentChart()
+                logger.info("Dashboard initial geladen")
+            }
+        }
     }
 
 
