@@ -27,7 +27,6 @@ import ressourcix.domain.Role
 import ressourcix.gui.popUp.filterPopUp
 import ressourcix.gui.popUp.filteredEmployeePopUp
 import ressourcix.logger.logger
-import java.time.format.DateTimeFormatter
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
