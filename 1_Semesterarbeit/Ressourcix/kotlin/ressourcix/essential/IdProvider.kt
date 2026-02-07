@@ -1,10 +1,9 @@
-package ressourcix.util
-
-class IdProvider(
-    var start: UInt,
+package ressourcix.essential
 
 
-) {
+class IdProvider(var start: UInt,) {
+
+
 
     private var nextId: UInt = start
     private var id : UInt = 0u
@@ -25,17 +24,16 @@ class IdProvider(
             issuedIds.add(id)
             nextId -= 1u
         }
-
-
-
-//        println("\nDebug")
-//        println("Issued IDs: $issuedIds")
-//        println("Next ID to issue: $nextId")
-//        println("Returned ID: $id")
-
         return id
     }
 
+    /** Liefert eine Kopie der bereits vergebenen IDs. */
+    fun getIssuedIds(): Set<UInt> = issuedIds.toSet()
 
-    fun Issued(id: UInt): Boolean = id in issuedIds
+    /** Gibt den aktuellen Zähler zurück – wird vom Writer benötigt. */
+    fun getNextId(): UInt = nextId
+
+    /** Prüft, ob eine ID bereits vergeben ist. */
+    fun isIssued(id: UInt): Boolean = id in issuedIds
+
 }

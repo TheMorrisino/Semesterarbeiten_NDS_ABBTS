@@ -1,12 +1,11 @@
 package ressourcix.domain
 
-import ressourcix.app.app
+
 import ressourcix.app.app.vacationIds
 import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.calenderView.updateEmployees
 import ressourcix.logger.logger
-import ressourcix.ui.ConsoleIO
-import ressourcix.util.IdProvider
+import ressourcix.essential.IdProvider
 
 class EmployeeManagement () {
     val employees: MutableList<Employee> = mutableListOf()
@@ -14,63 +13,6 @@ class EmployeeManagement () {
 
     var maxOverlapsPerKw :Int = 5
     val year = 2026u
-    //ToDo Auskommentieren
-    fun mitarbeiterVerwaltung(io: ConsoleIO , management: EmployeeManagement , employeeIds: IdProvider) {
-        io.println()
-        io.println("=== Ressourcix Mitarbeiter Verwaltung ===")
-        io.println("1) Mitarbeiter anzeigen")
-        io.println("2) Mitarbeiter hinzufügen")
-        io.println("3) Mitarbeiter löschen")
-        io.println("0) Beenden")
-        io.print("Auswahl: ")
-
-         while(true) {
-             when (io.readChoice()) {
-                 1 -> listEmployees(io,management)
-                 2 -> addEmployee(io,management,employeeIds)
-                 3 -> deleteEmployee(io,management)
-                 0 -> return
-                 else -> io.println("Unbekannte Auswahl.")
-             }
-         }
-    }
-
-    private fun listEmployees(io: ConsoleIO,management: EmployeeManagement) {
-        println()
-        println("--- Mitarbeiter ---")
-        management.listAll().forEach {
-            io.println("ID=${it.getId()} | ${it.abbreviationSting().ifBlank { "??" }} | ${it.getFullName()}")
-        }
-    }
-    private fun addEmployee(io: ConsoleIO , management: EmployeeManagement , employeeIds: IdProvider) {
-        io.println()
-        val first = io.readNonBlank("Vorname: ") ?: run {
-            io.println("Vorname darf nicht leer sein."); return
-        }
-        val last = io.readNonBlank("Nachname: ") ?: run {
-            io.println("Nachname darf nicht leer sein."); return
-        }
-
-        val employee = Employee(employeeIds.generateId()).apply {
-            setFirstName(first)
-            setLastName(last)
-            setWorkloadPercent(100u)
-            setRole(Role.STAFF)
-        }
-
-        management.add(employee)
-        io.println("Mitarbeiter hinzugefügt: ID=${employee.getId()} (${employee.abbreviationSting()})")
-    }
-
-    private fun deleteEmployee(io: ConsoleIO, management: EmployeeManagement) {
-        io.println()
-        val id = io.readUInt("Mitarbeiter-ID zum Löschen: ", min = 1u) ?: run {
-            io.println("Abgebrochen."); return
-        }
-        val ok = management.removeById(id)
-        io.println(if (ok) "Gelöscht." else "Nicht gefunden.")
-    }
-
 
     fun listAll(): List<Employee> = employees.toList()
 
