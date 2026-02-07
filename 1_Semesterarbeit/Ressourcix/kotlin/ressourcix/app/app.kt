@@ -12,14 +12,20 @@ object app  {
     var employees = management.employees
     val employeeIds = IdProvider(start = 1u)
     val vacationIds = IdProvider(start = 1u)
+    var jasonFileAktiv: Boolean= true
 
     fun run() {
-        val loadedEmployees = jsonReader.read()
-        if (loadedEmployees.isNotEmpty()) {
-            management.employees.clear()
-            management.employees.addAll(loadedEmployees)
-            management.updateOverlapList()
-            logger.info("Daten aus JSON geladen")
+        // JASON FILE LADEN
+        if (jasonFileAktiv) {
+            val loadedEmployees = jsonReader.read()
+            if (loadedEmployees.isNotEmpty()) {
+                management.employees.clear()
+                management.employees.addAll(loadedEmployees)
+                management.updateOverlapList()
+                logger.info("Daten aus JSON geladen")
+            } else
+                logger.debug("JASON File konnte nicht geladen werden")
         }
+        logger.debug("JASON File ausgeschaltet")
     }
 }
