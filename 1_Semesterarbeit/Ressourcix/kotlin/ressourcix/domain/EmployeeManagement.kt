@@ -1,7 +1,9 @@
 package ressourcix.domain
 
+import ressourcix.app.app
 import ressourcix.app.app.vacationIds
 import ressourcix.gui.pages.calenderView
+import ressourcix.gui.pages.calenderView.updateEmployees
 import ressourcix.logger.logger
 import ressourcix.ui.ConsoleIO
 import ressourcix.util.IdProvider
@@ -9,6 +11,8 @@ import ressourcix.util.IdProvider
 class EmployeeManagement () {
     val employees: MutableList<Employee> = mutableListOf()
     private val overlapList : MutableList<Int> = MutableList(52) { 0 }
+
+    var maxOverlapsPerKw :Int = 5
     val year = 2026u
     //ToDo Auskommentieren
     fun mitarbeiterVerwaltung(io: ConsoleIO , management: EmployeeManagement , employeeIds: IdProvider) {
@@ -68,17 +72,18 @@ class EmployeeManagement () {
     }
 
 
-
     fun listAll(): List<Employee> = employees.toList()
 
     fun add(employee: Employee) {
         employees.add(employee)
+        updateEmployees()
     }
 
     fun removeById(id: UInt): Boolean {
         val idx = employees.indexOfFirst { it.getId() == id }
         if (idx == -1) return false
         employees.removeAt(idx)
+        updateEmployees()
         return true
     }
 
@@ -89,54 +94,54 @@ class EmployeeManagement () {
     /**
      * Demo-Seed: 10 Mitarbeiter IDs 1..10.
      */
-    fun seed10Employees() {
-        employees.clear()
-        val ids = IdProvider(start = 1u)
-        val names = listOf(
-            "Max" to "Müller",
-            "Sara" to "Schmidt",
-            "Lena" to "Weber",
-            "Noah" to "Meier",
-            "Mia" to "Keller",
-            "Leo" to "Fischer",
-            "Emma" to "Brunner",
-            "Paul" to "Baumann",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Nina" to "Steiner",
-            "Tom" to "Hug"
-        )
-        for ((first, last) in names) {
-            val e = Employee(ids.generateId()).apply {
-                setFirstName(first)
-                setLastName(last)
-                setRole(Role.STAFF)
-                setWorkloadPercent(100u)
-            }
-            employees.add(e)
-        }
-    }
+//    fun seed10Employees() {
+//        employees.clear()
+//        val ids = IdProvider(start = 1u)
+//        val names = listOf(
+//            "Max" to "Müller",
+//            "Sara" to "Schmidt",
+//            "Lena" to "Weber",
+//            "Noah" to "Meier",
+//            "Mia" to "Keller",
+//            "Leo" to "Fischer",
+//            "Emma" to "Brunner",
+//            "Paul" to "Baumann",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Nina" to "Steiner",
+//            "Tom" to "Hug"
+//        )
+//        for ((first, last) in names) {
+//            val e = Employee(ids.generateId()).apply {
+//                setFirstName(first)
+//                setLastName(last)
+//                setRole(Role.STAFF)
+//                setWorkloadPercent(100u)
+//            }
+//            employees.add(e)
+//        }
+//    }
 
     fun allVacationInKwFiltern() {
         val allVacation = employees.flatMap { it.getVacationEntries() }
@@ -147,7 +152,7 @@ class EmployeeManagement () {
         employees[empId.toInt()-1].removeByStartWeek(startWeek)
     }
 
-    fun addVacationSafe(employee: Employee, startWeek: UInt, endWeek: UInt, maxAllowed: Int = 1) {
+    fun addVacationSafe(employee: Employee, startWeek: UInt, endWeek: UInt, maxAllowed: Int = maxOverlapsPerKw) {
         // To Do Ferienliste erstelle aller Mitableitern mit Index 1 = KW1 = alle Mitarbeiterferien aufrufen in KW 1 etc.
         val empId = employee.getId()
         val entry = VacationEntry(
@@ -215,7 +220,7 @@ class EmployeeManagement () {
                             "Aktuelle Überschneidungen: $totalOverlapsAfter von max. $maxAllowed erlaubt.")
 
                 OverlapStatus.CRITICAL ->
-                    logger.error("CRITICAL: Kein Ferieneintrag für ${employee.label()} (${employee.getFullName()}) möglich. " +
+                    logger.error("CRITICAL: Parametrierung der Ferieneintrage für ${employee.label()} (${employee.getFullName()}) überschritten. " +
                             "Überlappung mit $namesList würde das Limit überschreiten " +
                             "(Aktuell: $currentOverlaps, Neu: +$newOverlapCount, Total: $totalOverlapsAfter, Max: $maxAllowed).")
             }
@@ -268,7 +273,10 @@ class EmployeeManagement () {
 
     fun getEmployeeByIndex(index: Int): Employee = employees[index]
 
-    fun getOverlapList() : MutableList<Int> = overlapList
+    fun getOverlapList(): List<Int> {
+        updateOverlapList()
+        return overlapList
+    }
 
 
 }
