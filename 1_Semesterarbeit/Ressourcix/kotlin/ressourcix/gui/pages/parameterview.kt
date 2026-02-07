@@ -8,6 +8,7 @@ import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
+import javafx.scene.control.TextFormatter
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Region
@@ -29,9 +30,15 @@ object parameterview: BorderPane() {
 
     private var isEditMode: Boolean = false
 
-    val minEmployeeTfl  = createTfl("","")
-    val minStudentsTfl  = createTfl("","")
-    val minManagerTfl  = createTfl("","")
+    val minEmployeeTfl  = createTfl("","").apply {
+        textFormatter = positiveIntNoZeroFormatter(2,50)
+    }
+    val minApprenticeTfl  = createTfl("","").apply {
+        textFormatter = positiveIntNoZeroFormatter(2,50)
+    }
+    val minManagerTfl  = createTfl("","").apply {
+        textFormatter = positiveIntNoZeroFormatter(2,50)
+    }
 
     val vacationsBlockTfl = createTfl("","Blockierte Wochen eintragen...").apply {
         lockToPopupOnly(this)
@@ -92,7 +99,7 @@ object parameterview: BorderPane() {
         alignment = Pos.TOP_LEFT
 
         val minEmployee = createDataBox("Min. Anzahl Mitarbeiter",minEmployeeTfl)
-        val minStudents = createDataBox("Min. Anzahl Lehrlinge",minStudentsTfl)
+        val minStudents = createDataBox("Min. Anzahl Lehrlinge",minApprenticeTfl)
         val minManage = createDataBox("Min. Anzahl Leiter", minManagerTfl)
 
         children.addAll(minEmployee,minStudents,minManage)
@@ -180,6 +187,30 @@ object parameterview: BorderPane() {
             }, field)
         }
 
+    private fun positiveIntNoZeroFormatter(maxDigits: Int,maxValue: Int): TextFormatter<String> {
+        return TextFormatter { change ->
+            val newText = change.controlNewText
+            val ok = newText.isEmpty() || (newText.matches(Regex("[1-9][0-9]*"))
+                    && newText.length <= maxDigits
+                    && newText.toInt() <= maxValue)
+            if (ok) change else null
+        }
+    }
+
+    private fun lettersMaxFormatter(maxLetters: Int, bigLetters: Boolean): TextFormatter<String> {
+        val allowedChars = if (bigLetters) "A-ZÄÖÜ \\-" else "A-Za-zÄÖÜäöü  \\-"
+        val pattern = Regex("^[$allowedChars]{0,$maxLetters}$")
+
+        return TextFormatter { change ->
+            if (!change.isContentChange) return@TextFormatter change
+            if (bigLetters && change.text.isNotEmpty()) {
+                change.text = change.text.uppercase()
+            }
+            val newText = change.controlNewText
+            if (pattern.matches(newText)) change else null
+        }
+    }
+
     private fun installWeekPopupHandlers() {
 
         vacationsBlockTfl.setOnMouseClicked { e ->
@@ -211,7 +242,7 @@ object parameterview: BorderPane() {
 
     private fun setFieldsEditable(editable: Boolean) {
         minEmployeeTfl.isDisable = !editable
-        minStudentsTfl.isDisable = !editable
+        minApprenticeTfl.isDisable = !editable
         minManagerTfl.isDisable = !editable
         vacationsUntil25Tfl.isDisable = !editable
         vacationFrom25Tfl.isDisable = !editable
