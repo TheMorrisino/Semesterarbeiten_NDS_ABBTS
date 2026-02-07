@@ -17,11 +17,16 @@ import javafx.scene.layout.VBox
 import javafx.scene.text.TextAlignment
 import javafx.scene.input.KeyEvent
 import ressourcix.gui.popups.weekPickerPopUp
+import ressourcix.logger.logger
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
 private const val TFL_HEIGHT = 30.0
 private const val TFL_WIDTH = 300.0
+
+//TODO Speichern und Zurücksetzen Funktion implementieren.
+//TODO Daten verknüpfen zum Speichern und Zurücksetzen
+// TODO logger.Warning/Error funktionen implementieren
 
 object parameterview: BorderPane() {
 
@@ -47,21 +52,30 @@ object parameterview: BorderPane() {
         lockToPopupOnly(this)
     }
 
-    val vacationsUntil25Tfl = createTfl("","")
-    val vacationFrom25Tfl = createTfl("","")
-    val vacationFrom45Tfl = createTfl("","")
+    val vacationsUntil25Tfl = createTfl("","").apply {
+        textFormatter = positiveIntNoZeroFormatter(2,52)
+    }
+    val vacationFrom25Tfl = createTfl("","").apply {
+        textFormatter = positiveIntNoZeroFormatter(2,52)
+    }
+    val vacationFrom45Tfl = createTfl("","").apply {
+        textFormatter = positiveIntNoZeroFormatter(2,52)
+    }
 
     private val parameterChangeBtn = createButton("Parameter \nändern").apply {
-        setOnAction { setFieldsEditable(true) }
+        setOnAction { setFieldsEditable(true)
+            logger.info("Parameter wurden entsperrt.")}
     }
     private val parameterSaveBtn = createButton("Parameter \nspeichern").apply {
         setOnAction{
             if (!isEditMode) return@setOnAction
             setFieldsEditable(false)
+            logger.info("Parameter wurden erfolgreich gespeichert.")
         }
     }
     private val parameterRestoreBtn = createButton("Parameter \nzurücksetzen").apply {
-        setOnAction { setFieldsEditable(false) }
+        setOnAction { setFieldsEditable(false)
+            logger.info("Parameter wurden erfolgreich zurückgesetzt.")}
     }
 
     private val dim = Region().apply {
@@ -134,11 +148,7 @@ object parameterview: BorderPane() {
         spacing = 80.0
 
         children.addAll(parameterChangeBtn,parameterSaveBtn,parameterRestoreBtn)
-    } //TODO Speichern und Zurücksetzen Funktion implementieren.
-    //TODO Daten verknüpfen zum Speichern und Zurücksetzen
-    // TODO logger funktionen implementieren
-    // TODO TextField blockieren auf Nummern
-
+    }
 
     init {
         mainContent.children.addAll(minEmployeeBar,vacationsBlockerBar,maxVacationsBar,functionBox)
@@ -194,20 +204,6 @@ object parameterview: BorderPane() {
                     && newText.length <= maxDigits
                     && newText.toInt() <= maxValue)
             if (ok) change else null
-        }
-    }
-
-    private fun lettersMaxFormatter(maxLetters: Int, bigLetters: Boolean): TextFormatter<String> {
-        val allowedChars = if (bigLetters) "A-ZÄÖÜ \\-" else "A-Za-zÄÖÜäöü  \\-"
-        val pattern = Regex("^[$allowedChars]{0,$maxLetters}$")
-
-        return TextFormatter { change ->
-            if (!change.isContentChange) return@TextFormatter change
-            if (bigLetters && change.text.isNotEmpty()) {
-                change.text = change.text.uppercase()
-            }
-            val newText = change.controlNewText
-            if (pattern.matches(newText)) change else null
         }
     }
 

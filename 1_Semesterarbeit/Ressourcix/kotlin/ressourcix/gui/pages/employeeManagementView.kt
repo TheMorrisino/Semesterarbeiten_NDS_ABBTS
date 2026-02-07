@@ -35,6 +35,7 @@ private const val TFL_HEIGHT = 30.0
 private const val TFL_WIDTH = 300.0
 
 //TODO Code organisieren. Evt. Funktionen usw. auslagern.
+//TODO Executions abfangen, anzeigen und loggen
 
 object employeeManagementView : BorderPane() {
 
@@ -257,8 +258,6 @@ object employeeManagementView : BorderPane() {
                 setOnAction {
                     setFieldsEditable(true)
                     clearEmployeeFields()
-                    idField.isDisable = true
-                    abbreviationField.isDisable = true
                     newEmployee = true
                 }
 
