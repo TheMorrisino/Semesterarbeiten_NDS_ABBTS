@@ -2,6 +2,7 @@ package ressourcix.gui
 
 //import Graphical
 import javafx.application.Application
+import javafx.application.Platform
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.image.Image
@@ -9,6 +10,7 @@ import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
 import ressourcix.essential.jsonWriter
 import ressourcix.gui.navigation.*
+import ressourcix.gui.pages.dashboardView
 import ressourcix.logger.logger
 import java.util.*
 import kotlin.system.exitProcess
@@ -19,11 +21,9 @@ class GuiBorderPane : Application() {
         val pathIcon = "/Ressourcix_Icon_OhneB2.png"
         val stream = javaClass.getResourceAsStream(pathIcon)
 
-
         val root = BorderPane().apply {
             top = topNavigationBar.getView()
             bottom = bottomBar.getView()
-
         }
 
         val router = NavigationsController(root)
@@ -48,6 +48,8 @@ class GuiBorderPane : Application() {
                 event.consume()
                 exit() }
             show()
+
+
         }
     }
 

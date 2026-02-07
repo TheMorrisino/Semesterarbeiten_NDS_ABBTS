@@ -1,2 +1,56 @@
 [
+  {
+    "id": 1,
+    "firstName": "Morris",
+    "lastName": "King",
+    "workloadPercent": 100,
+    "role": "TEAM_LEAD",
+    "department": "ADMIN",
+    "education": "EFZ",
+    "birthday": "",
+    "city": "",
+    "vacationLimit": 5,
+    "vacationEntries": [
+    ]
+  },
+  {
+    "id": 2,
+    "firstName": "Tiago",
+    "lastName": "de Hat",
+    "workloadPercent": 1,
+    "role": "TEAM_LEAD",
+    "department": "ADMIN",
+    "education": "EFZ",
+    "birthday": "",
+    "city": "",
+    "vacationLimit": 5,
+    "vacationEntries": [
+    ]
+  },
+  {
+    "id": 3,
+    "firstName": "Pedro",
+    "lastName": "TeslaMan",
+    "workloadPercent": 56,
+    "role": "STAFF",
+    "department": "PLANUNG",
+    "education": "DIPLOM_PFLEGE_HF",
+    "birthday": "",
+    "city": "",
+    "vacationLimit": 5,
+    "vacationEntries": [
+      {
+        "id": 3,
+        "employeeId": 3,
+        "year": 2026,
+        "startWeek": 2,
+        "endWeek": 4,
+        "weekStatus": {
+          "2": "REQUESTED",
+          "3": "REQUESTED",
+          "4": "REQUESTED"
+        }
+      }
+    ]
+  }
 ]

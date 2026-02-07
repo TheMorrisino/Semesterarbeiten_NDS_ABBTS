@@ -1,10 +1,13 @@
 package ressourcix.app
 
 import essential.*
+import javafx.application.Platform
 import ressourcix.domain.Employee
 import ressourcix.domain.EmployeeManagement
 import ressourcix.essential.jsonReader
 import ressourcix.essential.jsonWriter
+import ressourcix.gui.pages.dashboardView
+import ressourcix.logger.logger
 import ressourcix.ui.ConsoleIO
 import ressourcix.ui.menu.mainMenu
 import ressourcix.util.IdProvider
@@ -26,7 +29,8 @@ object app  {
         if (loadedEmployees.isNotEmpty()) {
             management.employees.clear()
             management.employees.addAll(loadedEmployees)
-            println("✓ Daten aus JSON geladen")
+            management.updateOverlapList()
+            logger.info("Daten aus JSON geladen")
         }
 
         // Menu initialisieren

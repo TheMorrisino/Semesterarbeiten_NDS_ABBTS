@@ -15,6 +15,7 @@ import ressourcix.domain.VacationEntry
 import javafx.util.Duration
 import ressourcix.app.app
 import ressourcix.domain.Employee
+import ressourcix.domain.EmployeeManagement
 import ressourcix.gui.GuiBorderPane
 import ressourcix.logger.logger
 
@@ -92,8 +93,8 @@ object dashboardView : StackPane() {
         pieChart = PieChart().apply {
             animated = true
             title = "Mitarbeiter mit und ohne Ferien"
-            isLegendVisible = true
-            legendSide = Side.BOTTOM
+            isLegendVisible = false
+            legendSide = Side.TOP
         }
 
         // ====================================================================================================
@@ -117,7 +118,6 @@ object dashboardView : StackPane() {
             children.add(barChart)
             VBox.setVgrow(barChart, Priority.ALWAYS)
         }
-
 
 
         val buttonBox = HBox().apply {
@@ -149,8 +149,6 @@ object dashboardView : StackPane() {
         children.add(gridPane)
 
 
-        // Initial Chart befüllen
-        updateBarChart()
     }
 
 
@@ -211,15 +209,12 @@ object dashboardView : StackPane() {
     // Aktualisiert das BarChart mit Mitarbeitern, die Ferien in KW Wochen haben
     // ====================================================================================================
     fun updateBarChart() {
-
         val overlapCounts = try {
             computeWeeklyOverlap(app.employees)
+
         } catch (e: UninitializedPropertyAccessException) {
             return
-
         }
-
-
 
         if (overlapCounts == lastData) {
             return
@@ -228,9 +223,7 @@ object dashboardView : StackPane() {
         lastData = overlapCounts
 
         Platform.runLater {
-
             barChart.data.clear()
-
             // Neue Series erstellen
             val series = XYChart.Series<String, Number>().apply {
 
@@ -271,7 +264,7 @@ object dashboardView : StackPane() {
     // ====================================================================================================
     fun updatePieChart() {
         val stats = try {
-            computeVacationStats(employees)
+            computeVacationStats(app.employees)
         } catch (e: UninitializedPropertyAccessException) {
             logger.error("$e")
             return
@@ -285,23 +278,6 @@ object dashboardView : StackPane() {
                 PieChart.Data("Ohne Ferien (${stats.withoutVacation})", stats.withoutVacation.toDouble())
             )
 
-
-
-
-
-            // Tooltips
-            data.forEach { slice ->
-                val percentage = if (stats.total > 0) {
-                    (slice.pieValue / stats.total * 100).toInt()
-                } else {
-                    0
-                }
-
-                val tip = Tooltip("${slice.name}\n$percentage%").apply {
-                    showDelay = Duration.millis(100.0)
-                }
-                slice.node?.let { Tooltip.install(it, tip) }
-            }
             pieChart.data = data
         }
     }
@@ -309,17 +285,8 @@ object dashboardView : StackPane() {
 
 
     private fun computeWeeklyOverlap(employees: List<Employee>): List<Int> {
-        // 52 Plätze, initial 0
         val counts = app.management.getOverlapList()
 
-//        employees.forEach { emp ->
-//            emp.getVacationEntries()
-//                .forEach { entry ->
-//                    for (w in entry.range.startWeek..entry.range.endWeek) {
-//                        counts[(w - 1u).toInt()]++
-//                    }
-//                }
-//        }
         return counts
     }
 
@@ -327,25 +294,34 @@ object dashboardView : StackPane() {
     // Berechnet Statistiken über Mitarbeiter mit und ohne Ferien
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private fun computeVacationStats(employees: List<Employee>): VacationStats {
-        var withVacation = app.management.getOverlapList().sum()
-        var withoutVacation = (employees.size * 5) - withVacation
+        var totalUsedWeeks = 0
+        var totalAvailableWeeks = 0
+
+        employees.forEach { emp ->
+            val limit = emp.getVacationLimit().toInt()
+            val plannedWeeks = mutableSetOf<UInt>()
+
+            emp.getVacationEntries().forEach { entry ->
+                for (week in entry.range.startWeek..entry.range.endWeek) {
+                    plannedWeeks.add(week)
+                }
+            }
+
+            val usedByThisEmployee = plannedWeeks.size
+            totalUsedWeeks += usedByThisEmployee
 
 
+            val availableByThisEmployee = maxOf(0, limit - usedByThisEmployee)
+            totalAvailableWeeks += availableByThisEmployee
+        }
 
-//        employees.forEach { emp ->
-//            if (emp.getVacationEntries().isNotEmpty()) {
-//                withVacation++
-//            } else {
-//                withoutVacation++
-//            }
-//        }
-
-        return VacationStats(withVacation, withoutVacation, employees.size * 5)
+        return VacationStats(
+            withVacation = totalUsedWeeks,
+            withoutVacation = totalAvailableWeeks,
+            total = totalUsedWeeks + totalAvailableWeeks
+        )
     }
 
-    /**
-     * Datenklasse für Ferienstatistiken
-     */
     private data class VacationStats(
         val withVacation: Int,
         val withoutVacation: Int,

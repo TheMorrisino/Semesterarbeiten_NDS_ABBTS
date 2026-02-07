@@ -273,7 +273,10 @@ class EmployeeManagement () {
 
     fun getEmployeeByIndex(index: Int): Employee = employees[index]
 
-    fun getOverlapList() : MutableList<Int> = overlapList
+    fun getOverlapList(): List<Int> {
+        updateOverlapList()
+        return overlapList
+    }
 
 
 }
