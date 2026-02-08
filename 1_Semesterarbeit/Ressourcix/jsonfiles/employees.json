@@ -67,7 +67,7 @@
   ],
   "idProviders": {
     "employeeIds": {
-      "nextId": 3,
+      "nextId": 4,
       "issuedIds": [0, 1, 2, 3]
     },
     "vacationIds": {

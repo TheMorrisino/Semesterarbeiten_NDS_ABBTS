@@ -54,13 +54,19 @@ class GuiBorderPane : Application() {
         }
     }
 
-
+    val btnSave   = ButtonType.YES
+    val btNotSave = ButtonType.NO
+    val btnCancel = ButtonType.CANCEL
 
     fun exit() {
         val alert = Alert(Alert.AlertType.CONFIRMATION).apply {
             title = "Ressourcix beenden"
-            headerText = "Möchten Sie Ressourcix wirklich beenden?"
+            headerText = "Möchten Sie vor dem Schliessen speichern?"
             contentText = "Nicht gespeicherte Daten gehen verloren."
+
+            buttonTypes.setAll(btnSave,btNotSave,btnCancel)
+
+
 
         }
         val pathIcon = "/Ressourcix_Icon_OhneB2.png"
@@ -68,24 +74,45 @@ class GuiBorderPane : Application() {
         stage.icons.add(Image(pathIcon))
 
 
+
+
         val result: Optional<ButtonType> = alert.showAndWait()
 
-        if (result.isPresent && result.get() == ButtonType.OK) {
-            try {
-                if (jasonFileAktiv) {
-                jsonWriter.write()
-                logger.info("Daten erfolgreich gespeichert")
-                } else {
-                    logger.debug("JASON File ausgeschaltet")
+        when (result.orElse(btnCancel)) {
+            btnSave -> {
+                try {
+                    if (jasonFileAktiv) {
+                        jsonWriter.write()
+                        logger.info("Daten erfolgreich gespeichert")
+                        logger.info("=" .repeat(50))
+                        logger.info("Ressourcix beendet")
+                        logger.info("=" .repeat(50))
+                        exitProcess(0)
+
+                    } else {
+                        logger.debug("Fehler beim Speichern in der Try Schleife oder jasonFileAktiv = false")
+
+                    }
+                } catch (e: Exception) {
+                    logger.fatal("Fehler beim Speichern", e)
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                logger.fatal("Fehler beim Speichern", e)
-                e.printStackTrace()
             }
 
-            logger.info("Auf Wiedersehen!")
-            exitProcess(0)
+            btNotSave -> {
+                logger.warn("Daten wurden beim Beenden NICHT gespeichert")
+                logger.info("=" .repeat(50))
+                logger.info("Ressourcix beendet")
+                logger.info("=" .repeat(50))
+                exitProcess(0)
+
+            }
+            btnCancel -> {
+                logger.info("Ressourcix Beenden abgebrochen.")
+            }
         }
+
+
     }
 
 }
