@@ -16,8 +16,10 @@ import javafx.scene.layout.StackPane
 import ressourcix.app.app
 //import ressourcix.calendar.consoleCalendarOutput
 import ressourcix.domain.Employee
+import ressourcix.domain.Role
 import ressourcix.domain.VacationStatus
 import ressourcix.domain.code
+import ressourcix.domain.config
 import ressourcix.gui.popUp.vacationPopUp
 import ressourcix.logger.logger
 
@@ -248,7 +250,26 @@ object calenderView : StackPane() {
         weekCodeCache.clear()
 
         for (employee in employees) {
-            val codes = Array(weeks.toInt() + 1) { "." } // index 0 unbenutzt
+            val codes = Array(weeks.toInt() + 1) { "💼" }
+            // Wenn der Mitarbeiter ein Lehrling ist (APPRENTICE)
+            if (employee.getRole() == Role.APPRENTICE) {
+                // Durchlaufe alle Wochen mit Index und prüfe, ob es eine Ferienwoche ist
+                config.vacationSchoolBlock.forEachIndexed { weekIndex, isVacationWeek ->
+                    if (isVacationWeek && weekIndex < codes.size) {
+                        codes[weekIndex] = "✈"
+                    }
+                }
+               //setze die Ferienblocker
+           for (block in config.vacationSchoolBlock) {
+               var counter = 0
+               if (block) {
+                   codes[counter] = "🚫"
+                   counter+1
+               }
+           }
+        }
+
+
             val entries = employee.getVacationEntries().filter { it.year == year }
             val seen = BooleanArray(weeks.toInt() + 1)
 
@@ -315,7 +336,12 @@ object calenderView : StackPane() {
 
                             val overlaps = app.management.getOverlapList().getOrElse(overlapIndex) { 0 }
                             val bg = colorForOverlap(overlaps)
-                            style = "-fx-background-color: $bg;"
+                            style = """
+                                -fx-background-color: $bg;
+                                -fx-border-color: black;
+                                -fx-border-width: 0 0 1px 1px;
+                                -fx-border-style: solid;
+                            """.trimIndent()
                         }
                     }
                 }
@@ -341,7 +367,7 @@ object calenderView : StackPane() {
         fixedTable.items.setAll(employees)
         weekTable.items = fixedTable.items
         showYear(currentYear)
-        refreshVacations()
+        Platform.runLater{refreshVacations()}
     }
 
     // ----------------- Popup Handling -----------------

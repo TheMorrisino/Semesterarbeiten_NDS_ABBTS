@@ -2,28 +2,29 @@ package ressourcix.gui
 
 //import Graphical
 import javafx.application.Application
+import javafx.application.Platform
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.image.Image
 import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
+import ressourcix.app.app.jasonFileAktiv
+import ressourcix.essential.jsonWriter
 import ressourcix.gui.navigation.*
+import ressourcix.gui.pages.dashboardView
+import ressourcix.logger.logger
 import java.util.*
 import kotlin.system.exitProcess
 
 class GuiBorderPane : Application() {
     override fun start(stage: Stage) {
 
-
-
         val pathIcon = "/Ressourcix_Icon_OhneB2.png"
         val stream = javaClass.getResourceAsStream(pathIcon)
-
 
         val root = BorderPane().apply {
             top = topNavigationBar.getView()
             bottom = bottomBar.getView()
-
         }
 
         val router = NavigationsController(root)
@@ -48,6 +49,8 @@ class GuiBorderPane : Application() {
                 event.consume()
                 exit() }
             show()
+
+
         }
     }
 
@@ -68,6 +71,19 @@ class GuiBorderPane : Application() {
         val result: Optional<ButtonType> = alert.showAndWait()
 
         if (result.isPresent && result.get() == ButtonType.OK) {
+            try {
+                if (jasonFileAktiv) {
+                jsonWriter.write()
+                logger.info("Daten erfolgreich gespeichert")
+                } else {
+                    logger.debug("JASON File ausgeschaltet")
+                }
+            } catch (e: Exception) {
+                logger.fatal("Fehler beim Speichern", e)
+                e.printStackTrace()
+            }
+
+            logger.info("Auf Wiedersehen!")
             exitProcess(0)
         }
     }
