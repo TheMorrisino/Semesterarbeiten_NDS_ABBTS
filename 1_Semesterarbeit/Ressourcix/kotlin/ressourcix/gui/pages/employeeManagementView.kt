@@ -250,14 +250,15 @@ object employeeManagementView : BorderPane() {
         alignment = Pos.CENTER_RIGHT
 
         children.addAll(
-            createButton("Suche \nZurücksetzen").apply {
+            createButton("Zurücksetzen").apply {
                 setOnAction {resetSearch()}
             },
             createButton("MA einfügen").apply {
                 setOnAction {
-                    setFieldsEditable(true)
-                    clearEmployeeFields()
+                    selectedEmployee = null
                     newEmployee = true
+                    clearEmployeeFields()
+                    setFieldsEditable(true)
                 }
 
             },
@@ -272,46 +273,50 @@ object employeeManagementView : BorderPane() {
                 }
             },
             createButton("MA speichern").apply {
-                setOnAction {
-                    if (newEmployee){
-                        val emp = generateEmployee(Employee(app.employeeIds.generateId()))
-                        if (emp == null) {
-                            showNotFoundAlert("Mitarbeiter speichern", "Kein Mitarbeitender ausgewählt")
-                            return@setOnAction
+                disableProperty().bind(
+                    nameField.textProperty().isEmpty
+                        .or(surnameField.textProperty().isEmpty)
+                        .or(workloadField.textProperty().isEmpty)
+                        .or(roleField.valueProperty().isNull)
+                )
+                    setOnAction {
+                        try {
+                            if (newEmployee) {
+                                val emp = Employee(app.employeeIds.generateId())
+                                generateEmployee(emp)
+                                emp.abbreviationSting()
+                                app.management.add(emp)
+                                selectedEmployee = emp
+                                newEmployee = false
+                                setFieldsEditable(false)
+                                fillEmployeeFields(emp)
+                                logger.info("Neuer Mitarbeitender unter ID:${emp.getId()} erfolgreich gespeichert.")
+                                return@setOnAction
+                            }
+                            val emp = selectedEmployee
+                            if (emp == null) {
+                                showNotFoundAlert("Mitarbeiter speichern", "Kein Mitarbeitender ausgewählt")
+                                return@setOnAction
+                            }
+
+                            if (!isEditMode) return@setOnAction
+
+                            generateEmployee(emp)
+                            emp.abbreviationSting()
+                            setFieldsEditable(false)
+                            fillEmployeeFields(emp)
+                            logger.info("Mitarbeitender unter ID:${emp.getId()} erfolgreich gespeichert.")
+
+                        } catch (e: Exception) {
+                            logger.error("Speichern fehlgeschlagen: ${e.message}", e)
+                            Alert(Alert.AlertType.ERROR).apply {
+                                title = "Speichern fehlgeschlagen"
+                                headerText = "Bitte Eingaben prüfen"
+                                contentText = e.message ?: "Unbekannter Fehler"
+                                showAndWait()
+                            }
                         }
-                        app.management.add(emp)
-                        fillEmployeeFields(emp)
-                        setFieldsEditable(false)
-                        newEmployee = false
                     }
-                    else{
-
-
-                    val emp = selectedEmployee
-                    if (emp == null) {
-                        showNotFoundAlert("Mitarbeiter speichern", "Kein Mitarbeitender ausgewählt")
-                        return@setOnAction
-                    }
-
-                    if (!isEditMode) return@setOnAction
-
-                    try {
-                        generateEmployee(emp)
-                        logger.info("Mitarbeitender unter ID:${emp.getId()} erfolgreich gespeichert.")
-
-                        setFieldsEditable(false)
-                        fillEmployeeFields(emp)
-                    } catch (e: Exception) {
-                        logger.error("Speichern fehlgeschlagen für ID:${emp.getId()}: ${e.message}", e)
-                        Alert(Alert.AlertType.ERROR).apply {
-                            title = "Speichern fehlgeschlagen"
-                            headerText = "Bitte Eingaben prüfen"
-                            contentText = e.message ?: "Unbekannter Fehler"
-                            showAndWait()
-                        }
-                    }
-                    }
-                }
             },
             createButton("MA löschen").apply {
                 setOnAction {
@@ -348,7 +353,6 @@ object employeeManagementView : BorderPane() {
         mainContent.center = employeeInfoBox
         mainContent.right = functionsBox
         center = centerStack
-
         setFieldsEditable(false)
         setNoSelectionState()
     }
@@ -478,6 +482,7 @@ object employeeManagementView : BorderPane() {
 
     private fun resetSearch() {
         selectedEmployee = null
+        newEmployee = false
         clearEmployeeFields()
         setFieldsEditable(false)
         idField.clear()

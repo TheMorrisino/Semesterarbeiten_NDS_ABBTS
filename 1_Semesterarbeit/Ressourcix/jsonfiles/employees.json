@@ -12,17 +12,6 @@
       "city": "",
       "vacationLimit": 5,
       "vacationEntries": [
-        {
-          "id": 1,
-          "employeeId": 1,
-          "year": 2026,
-          "startWeek": 1,
-          "endWeek": 2,
-          "weekStatus": {
-            "1": "REQUESTED",
-            "2": "REQUESTED"
-          }
-        }
       ]
     },
     {
@@ -37,23 +26,12 @@
       "city": "",
       "vacationLimit": 5,
       "vacationEntries": [
-        {
-          "id": 2,
-          "employeeId": 2,
-          "year": 2026,
-          "startWeek": 2,
-          "endWeek": 3,
-          "weekStatus": {
-            "2": "REQUESTED",
-            "3": "REQUESTED"
-          }
-        }
       ]
     },
     {
       "id": 3,
       "firstName": "Pedro",
-      "lastName": "the TeslaMan",
+      "lastName": "inLove",
       "workloadPercent": 33,
       "role": "TEAM_LEAD",
       "department": "ADMIN",
@@ -71,8 +49,8 @@
       "issuedIds": [0, 1, 2, 3]
     },
     "vacationIds": {
-      "nextId": 2,
-      "issuedIds": [0, 1, 2]
+      "nextId": 1,
+      "issuedIds": [0]
     }
   }
 }
