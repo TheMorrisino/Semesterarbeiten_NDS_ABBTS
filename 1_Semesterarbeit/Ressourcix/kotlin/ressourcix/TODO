@@ -1,0 +1,10 @@
+JasonWriter : //TODO ID Provider mitnehmen da nach dem laden neue id mitgenomen werden | Morris
+JasonReader : //TODO ID Provider mitnehmen da nach dem laden neue id mitgenomen werden | Morris
+
+BUGs:
+// TODO Beim Mitarbeiter hinzufügen wird schon eine neue ID generiert. | Pedro
+// TODO Bug bei einer 2 eingabe der Ferien wenn es zu Überlappungen kommt  =   keine Ferien eingabe mehr möglich. | Tiago
+
+
+
+

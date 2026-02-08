@@ -1,32 +1,31 @@
 package ressourcix.app
 
+
 import ressourcix.domain.EmployeeManagement
-import ressourcix.ui.ConsoleIO
-import ressourcix.ui.menu.mainMenu
-import ressourcix.util.IdProvider
+import ressourcix.essential.jsonReader
+import ressourcix.logger.logger
+import ressourcix.essential.IdProvider
 
 object app  {
 
-    val io = ConsoleIO()
-    val management = EmployeeManagement()
+    var management = EmployeeManagement()
     var employees = management.employees
-
-
     val employeeIds = IdProvider(start = 1u)
     val vacationIds = IdProvider(start = 1u)
-
+    var jasonFileAktiv: Boolean= true
 
     fun run() {
-        // Seed-Daten
-        management.seed10Employees()
-
-        mainMenu.init(
-            io = io,
-            management = management,
-            employeeIds = employeeIds,
-            vacationIds = vacationIds
-        )
-
-        mainMenu.loop()
+        // JASON FILE LADEN
+        if (jasonFileAktiv) {
+            val loadedEmployees = jsonReader.read()
+            if (loadedEmployees.isNotEmpty()) {
+                management.employees.clear()
+                management.employees.addAll(loadedEmployees)
+                management.updateOverlapList()
+                logger.info("Daten aus JSON geladen")
+            } else
+                logger.debug("JASON File konnte nicht geladen werden")
+        }
+        logger.debug("JASON File ausgeschaltet")
     }
 }
