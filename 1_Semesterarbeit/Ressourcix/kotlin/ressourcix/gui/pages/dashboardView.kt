@@ -8,27 +8,24 @@ import javafx.geometry.Side
 import javafx.scene.chart.*
 import javafx.scene.control.*
 import javafx.scene.layout.*
-import javafx.scene.text.Font
-import javafx.scene.text.FontWeight
-import ressourcix.domain.Employee.*
-import ressourcix.domain.VacationEntry
+import javafx.scene.text.TextAlignment
 import javafx.util.Duration
 import ressourcix.app.app
 import ressourcix.domain.Employee
-import ressourcix.domain.EmployeeManagement
-import ressourcix.gui.GuiBorderPane
 import ressourcix.logger.logger
 
 
 object dashboardView : StackPane() {
 
+    private const val BTN_HEIGHT = 80.0
+    private const val BTN_WIDTH = 200.0
+    private const val TFL_HEIGHT = 30.0
+    private const val TFL_WIDTH = 300.0
 
+    private var barChart: BarChart<String, Number>
+    private  var pieChart: PieChart
+    private  var chartContainer: VBox
 
-    private lateinit var barChart: BarChart<String, Number>
-    private lateinit var pieChart: PieChart
-    private lateinit var chartContainer: VBox
-
-    private val employees = app.employees
 
 
 
@@ -37,18 +34,16 @@ object dashboardView : StackPane() {
     private val xAxis = CategoryAxis().apply {
         label = "Kalenderwochen"
         side = javafx.geometry.Side.BOTTOM
-
     }
     private val yAxis = NumberAxis().apply {
         label = "Anzahl MA"
         side = javafx.geometry.Side.LEFT
         minorTickCount = 0
         isAutoRanging = true
-
     }
 
-    val toggleChartButton = Button()
-    val refreshButton = Button()
+    var toggleChartButton = Button()
+    var refreshButton = Button()
 
     // Aktueller Chart-Modus: true = BarChart, false = PieChart
     private var showingBarChart = true
@@ -125,8 +120,9 @@ object dashboardView : StackPane() {
             padding = Insets(5.0)
             alignment = Pos.CENTER
 
-            toggleChartButton.text = "Zu Kuchendiagramm wechseln"
-            refreshButton.text = "Aktualisieren"
+            toggleChartButton  = createButton("Zu Kuchendiagramm wechseln")
+
+            refreshButton = createButton("Aktualisieren")
 
             children.addAll(toggleChartButton, refreshButton)
 
@@ -279,6 +275,16 @@ object dashboardView : StackPane() {
             pieChart.data = data
         }
     }
+
+    private fun createButton(text: String): Button =
+        Button(text).apply {
+            prefHeight = BTN_HEIGHT
+            prefWidth = BTN_WIDTH
+            textAlignment = TextAlignment.CENTER
+            alignment = Pos.CENTER
+            isFocusTraversable = false
+            style = " -fx-font-weight: bold;"
+        }
 
 
 
