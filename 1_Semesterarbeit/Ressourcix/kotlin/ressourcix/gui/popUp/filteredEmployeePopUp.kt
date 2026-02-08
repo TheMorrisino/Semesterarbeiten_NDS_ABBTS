@@ -72,13 +72,13 @@ object filteredEmployeePopUp {
             prefWidth = 50.0
         }
 
-        val departmentCol = TableColumn<Employee, String>("Abteilung").apply {
-            setCellValueFactory { SimpleStringProperty(it.value.getDepartment()?.toString() ?: "") }
+        val birthdayCol = TableColumn<Employee, String>("Geburtsdatum").apply {
+            setCellValueFactory { SimpleStringProperty(it.value.getBirthdayAsString()) }
             prefWidth = 70.0
         }
 
-        val birthdayCol = TableColumn<Employee, String>("Geburtsdatum").apply {
-            setCellValueFactory { SimpleStringProperty(it.value.toString()) }
+        val departmentCol = TableColumn<Employee, String>("Abteilung").apply {
+            setCellValueFactory { SimpleStringProperty(it.value.getDepartment()?.toString() ?: "") }
             prefWidth = 70.0
         }
 
@@ -90,7 +90,7 @@ object filteredEmployeePopUp {
         table.columns.setAll(
             idCol, abbrevCol, surnameCol,
             nameCol, rolleCol, pensumCol,
-            departmentCol,birthdayCol,educationCol)
+            birthdayCol,departmentCol,educationCol)
         table.items.setAll(employees)
 
         val filterInfo = HBox(20.0).apply {
