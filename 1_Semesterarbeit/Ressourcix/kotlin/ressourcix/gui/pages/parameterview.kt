@@ -71,6 +71,7 @@ object parameterview: BorderPane() {
             if (!isEditMode) return@setOnAction
             saveFromUiToConfig()
             setFieldsEditable(false)
+            calenderView.refreshVacations()
             logger.info("Parameter wurden erfolgreich gespeichert.")
         }
     }
