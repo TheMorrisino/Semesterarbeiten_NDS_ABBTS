@@ -3,6 +3,7 @@ package ressourcix.essential
 import java.io.File
 import ressourcix.domain.*
 import ressourcix.logger.logger
+import ressourcix.app.app
 
 object jsonReader {
 
@@ -18,78 +19,73 @@ object jsonReader {
 
         try {
             val json = targetFile.readText()
+
+            // ---------- Gesamtes Dokument parsen ----------
+            val rootMap = parseJsonObject(json)
+
+            val employeesJson = rootMap["employees"] ?: "[]"
+            val employeeObjects = extractJsonObjects(employeesJson)
+
             val employees = mutableListOf<Employee>()
-
-            // Parse JSON manuell
-            val jsonObjects = extractJsonObjects(json)
-
-            jsonObjects.forEach { jsonObj ->
+            employeeObjects.forEach { jsonObj ->
                 val fields = parseJsonObject(jsonObj)
 
-                // Employee erstellen
+
                 val id = fields["id"]?.toUIntOrNull() ?: return@forEach
                 val employee = Employee(id)
 
-                // Basisdaten setzen
+
                 fields["firstName"]?.let { if (it.isNotBlank()) employee.setFirstName(it) }
                 fields["lastName"]?.let { if (it.isNotBlank()) employee.setLastName(it) }
                 fields["workloadPercent"]?.toUByteOrNull()?.let { employee.setWorkloadPercent(it) }
                 fields["city"]?.let { employee.setCity(it) }
                 fields["vacationLimit"]?.toUIntOrNull()?.let { employee.setVacationLimit(it) }
-                fields["birthday"]?.let { if (it.isNotBlank()) {
-                    try {
-                        employee.setBirthdayFromString(it)
-                    } catch (e: Exception) {
-                        logger.warn("Ungültiges Geburtsdatum: $it")
+                fields["birthday"]?.let {
+                    if (it.isNotBlank()) {
+                        try { employee.setBirthdayFromString(it) }
+                        catch (e: Exception) { logger.warn("Ungültiges Geburtsdatum: $it") }
                     }
-                }}
+                }
 
-                // Enum-Werte
+
                 fields["role"]?.let { roleName ->
                     if (roleName.isNotBlank()) {
-                        try {
-                            employee.setRole(Role.valueOf(roleName))
-                        } catch (e: Exception) {
-                            logger.warn("Ungültige Rolle: $roleName")
-                        }
+                        try { employee.setRole(Role.valueOf(roleName)) }
+                        catch (e: Exception) { logger.warn("Ungültige Rolle: $roleName") }
                     }
                 }
                 fields["department"]?.let { deptName ->
                     if (deptName.isNotBlank()) {
-                        try {
-                            employee.setDepartment(Department.valueOf(deptName))
-                        } catch (e: Exception) {
-                            logger.warn("Ungültiges Department: $deptName")
-                        }
+                        try { employee.setDepartment(Department.valueOf(deptName)) }
+                        catch (e: Exception) { logger.warn("Ungültiges Department: $deptName") }
                     }
                 }
                 fields["education"]?.let { eduName ->
                     if (eduName.isNotBlank()) {
-                        try {
-                            employee.setEducation(Education.valueOf(eduName))
-                        } catch (e: Exception) {
-                            logger.warn("Ungültige Bildung: $eduName")
-                        }
+                        try { employee.setEducation(Education.valueOf(eduName)) }
+                        catch (e: Exception) { logger.warn("Ungültige Bildung: $eduName") }
                     }
                 }
 
-                // Vacation Entries parsen
+
                 fields["vacationEntries"]?.let { vacationJson ->
                     val vacationObjects = extractJsonObjects(vacationJson)
                     vacationObjects.forEach { vacObj ->
                         val vacFields = parseJsonObject(vacObj)
                         val vacId = vacFields["id"]?.toUIntOrNull() ?: return@forEach
-                        val employeeId = vacFields["employeeId"]?.toUIntOrNull() ?: return@forEach
+                        val empId = vacFields["employeeId"]?.toUIntOrNull() ?: return@forEach
                         val year = vacFields["year"]?.toUIntOrNull() ?: return@forEach
                         val startWeek = vacFields["startWeek"]?.toUIntOrNull() ?: return@forEach
                         val endWeek = vacFields["endWeek"]?.toUIntOrNull() ?: return@forEach
 
                         val range = WeekRange(startWeek, endWeek)
-                        val entry = VacationEntry(vacId, employeeId, year, range)
+                        val entry = VacationEntry(vacId, empId, year, range)
 
-                        // Status für jede Woche setzen
+
                         vacFields["weekStatus"]?.let { statusJson ->
-                            val statusMap = parseJsonObject(statusJson.removePrefix("{").removeSuffix("}"))
+                            // Entferne die geschweiften Klammern, damit parseJsonObject funktioniert
+                            val cleaned = statusJson.removePrefix("{").removeSuffix("}")
+                            val statusMap = parseJsonObject(cleaned)
                             statusMap.forEach { (weekStr, statusStr) ->
                                 val week = weekStr.toUIntOrNull() ?: return@forEach
                                 try {
@@ -107,21 +103,46 @@ object jsonReader {
 
                 employees.add(employee)
             }
-            // WICHTIG: Nach dem Laden alle VacationLists neu berechnen (Sicherheit)
-            employees.forEach { emp ->
-                emp.createVacationList()
+
+
+            rootMap["idProviders"]?.let { providersJson ->
+
+                val providersMap = parseJsonObject(providersJson)
+
+                providersMap.forEach { (key, value) ->
+
+                    val stateMap = parseJsonObject(value)
+
+                    val nextId = stateMap["nextId"]?.toUIntOrNull() ?: 1u
+                    val rawIds = stateMap["issuedIds"]
+                        ?.removePrefix("[")?.removeSuffix("]")
+                        ?.split(",")
+                        ?.mapNotNull { it.trim().toUIntOrNull() }
+                        ?: emptyList()
+
+                    val idState = IdState(nextId, rawIds)
+
+                    when (key) {
+                        "employeeIds" -> app.employeeIds.restore(idState)
+                        "vacationIds" -> app.vacationIds.restore(idState)
+                        else -> logger.warn("Unbekannter IdProvider-Key: $key")
+                    }
+                }
             }
 
-            logger.info("${employees.size} Mitarbeiter geladen")
-            println("${employees.size} Mitarbeiter importiert")
-            return employees
+            //Vacation neu berechnen, um Aktuelle daten zu haben
+            employees.forEach { it.createVacationList() }
 
+            logger.info("${employees.size} Mitarbeitende geladen")
+            println("${employees.size} Mitarbeitende importiert")
+            return employees
         } catch (e: Exception) {
             logger.fatal("Fehler beim Lesen von JSON: ${e.message}")
             e.printStackTrace()
             return emptyList()
         }
     }
+
 
     private fun extractJsonObjects(json: String): List<String> {
         val objects = mutableListOf<String>()
@@ -169,12 +190,8 @@ object jsonReader {
                     currentValue.append(char)
                     escaped = false
                 }
-                char == '\\' -> {
-                    escaped = true
-                }
-                char == '"' && !escaped -> {
-                    inString = !inString
-                }
+                char == '\\' -> escaped = true
+                char == '"' && !escaped -> inString = !inString
                 char == '[' && !inString -> {
                     inArray = true
                     arrayDepth++

@@ -8,6 +8,7 @@ import javafx.scene.control.*
 import javafx.scene.image.Image
 import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
+import ressourcix.app.app.jasonFileAktiv
 import ressourcix.essential.jsonWriter
 import ressourcix.gui.navigation.*
 import ressourcix.gui.pages.dashboardView
@@ -71,8 +72,12 @@ class GuiBorderPane : Application() {
 
         if (result.isPresent && result.get() == ButtonType.OK) {
             try {
+                if (jasonFileAktiv) {
                 jsonWriter.write()
                 logger.info("Daten erfolgreich gespeichert")
+                } else {
+                    logger.debug("JASON File ausgeschaltet")
+                }
             } catch (e: Exception) {
                 logger.fatal("Fehler beim Speichern", e)
                 e.printStackTrace()

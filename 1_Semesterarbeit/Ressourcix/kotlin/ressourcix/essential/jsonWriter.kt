@@ -24,71 +24,94 @@ object jsonWriter {
         val targetFile = jsonDir.resolve("employees.json")
 
         try {
+            // Alle Mitarbeitenden holen
             val employees = app.management.employees.toList()
 
-            // Manuell JSON erstellen
+            // JSON Manuell bilden
             val json = buildString {
-                appendLine("[")
+                appendLine("{")
+                // ---------- Mitarbeitende ----------
+                appendLine("  \"employees\": [")
                 employees.forEachIndexed { index, emp ->
-                    appendLine("  {")
-                    appendLine("    \"id\": ${emp.getId()},")
-                    appendLine("    \"firstName\": \"${escapeJson(emp.getFirstName())}\",")
-                    appendLine("    \"lastName\": \"${escapeJson(emp.getLastName())}\",")
-                    appendLine("    \"workloadPercent\": ${emp.getWorkloadPercent()},")
-                    appendLine("    \"role\": \"${emp.getRole().name}\",")
-                    appendLine("    \"department\": \"${emp.getDepartment()?.name ?: ""}\",")
-                    appendLine("    \"education\": \"${emp.getEducation()?.name ?: ""}\",")
-                    appendLine("    \"birthday\": \"${escapeJson(emp.getBirthdayAsString())}\",")
-                    appendLine("    \"city\": \"${escapeJson(emp.getCity())}\",")
-                    appendLine("    \"vacationLimit\": ${emp.getVacationLimit()},")
+                    appendLine("    {")
+                    appendLine("      \"id\": ${emp.getId()},")
+                    appendLine("      \"firstName\": \"${escapeJson(emp.getFirstName())}\",")
+                    appendLine("      \"lastName\": \"${escapeJson(emp.getLastName())}\",")
+                    appendLine("      \"workloadPercent\": ${emp.getWorkloadPercent()},")
+                    appendLine("      \"role\": \"${emp.getRole().name}\",")
+                    appendLine("      \"department\": \"${emp.getDepartment()?.name ?: ""}\",")
+                    appendLine("      \"education\": \"${emp.getEducation()?.name ?: ""}\",")
+                    appendLine("      \"birthday\": \"${escapeJson(emp.getBirthdayAsString())}\",")
+                    appendLine("      \"city\": \"${escapeJson(emp.getCity())}\",")
+                    appendLine("      \"vacationLimit\": ${emp.getVacationLimit()},")
 
-                    // Vacation Entries
-                    appendLine("    \"vacationEntries\": [")
+                    appendLine("      \"vacationEntries\": [")
                     val entries = emp.getVacationEntries()
-                    entries.forEachIndexed { vIndex, vacation ->
-                        appendLine("      {")
-                        appendLine("        \"id\": ${vacation.id},")
-                        appendLine("        \"employeeId\": ${vacation.employeeId},")
-                        appendLine("        \"year\": ${vacation.year},")
-                        appendLine("        \"startWeek\": ${vacation.range.startWeek},")
-                        appendLine("        \"endWeek\": ${vacation.range.endWeek},")
+                    entries.forEachIndexed { vIdx, vac ->
+                        appendLine("        {")
+                        appendLine("          \"id\": ${vac.id},")
+                        appendLine("          \"employeeId\": ${vac.employeeId},")
+                        appendLine("          \"year\": ${vac.year},")
+                        appendLine("          \"startWeek\": ${vac.range.startWeek},")
+                        appendLine("          \"endWeek\": ${vac.range.endWeek},")
 
-                        // Status für jede Woche
-                        appendLine("        \"weekStatus\": {")
-                        val weeks = (vacation.range.startWeek..vacation.range.endWeek).toList()
-                        weeks.forEachIndexed { wIndex, week ->
-                            val status = vacation.getStatus(week)?.name ?: "GENERATED"
-                            append("          \"$week\": \"$status\"")
-                            if (wIndex < weeks.size - 1) appendLine(",")
-                            else appendLine()
+                        appendLine("          \"weekStatus\": {")
+                        val weeks = (vac.range.startWeek..vac.range.endWeek).toList()
+                        weeks.forEachIndexed { wIdx, week ->
+                            val status = vac.getStatus(week)?.name ?: "GENERATED"
+                            append("            \"$week\": \"$status\"")
+                            if (wIdx < weeks.size - 1) appendLine(",") else appendLine()
                         }
-                        appendLine("        }")
-
-                        append("      }")
-                        if (vIndex < entries.size - 1) appendLine(",")
-                        else appendLine()
+                        appendLine("          }")
+                        append("        }")
+                        if (vIdx < entries.size - 1) appendLine(",") else appendLine()
                     }
-                    appendLine("    ]")
-
-                    append("  }")
-                    if (index < employees.size - 1) appendLine(",")
-                    else appendLine()
+                    appendLine("      ]")
+                    append("    }")
+                    if (index < employees.size - 1) appendLine(",") else appendLine()
                 }
-                append("]")
+                appendLine("  ],")   // Ende employees‑Array
+
+
+                appendLine("  \"idProviders\": {")
+
+
+                val empState = IdState(
+                    nextId = app.employeeIds.getNextId(),
+                    issuedIds = app.employeeIds.getIssuedIds().toList()
+                )
+                appendLine("    \"employeeIds\": {")
+                appendLine("      \"nextId\": ${empState.nextId},")
+                appendLine("      \"issuedIds\": ${empState.issuedIds}")
+                appendLine("    },")
+
+
+                val vacState = IdState(
+                    nextId = app.vacationIds.getNextId(),
+                    issuedIds = app.vacationIds.getIssuedIds().toList()
+                )
+                appendLine("    \"vacationIds\": {")
+                appendLine("      \"nextId\": ${vacState.nextId},")
+                appendLine("      \"issuedIds\": ${vacState.issuedIds}")
+                appendLine("    }")
+
+                appendLine("  }")
+                appendLine("}")
             }
 
             targetFile.writeText(json)
             logger.info("JSON erfolgreich geschrieben nach: ${targetFile.absolutePath}")
-            println("${employees.size} Mitarbeiter exportiert")
-
+            println("${employees.size} Mitarbeitende exportiert")
         } catch (e: Exception) {
             logger.fatal("Fehler beim Schreiben von JSON: ${e.message}")
             e.printStackTrace()
         }
     }
 
+
     private fun escapeJson(text: String): String {
-        return text.replace("\\", "\\\\")
+        return text
+            .replace("\\", "\\\\")
             .replace("\"", "\\\"")
             .replace("\n", "\\n")
             .replace("\r", "\\r")
