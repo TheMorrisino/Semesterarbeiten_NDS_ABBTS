@@ -155,7 +155,7 @@ object jsonReader {
             val json = configFile.readText()
             val fields = parseJsonObject(json)
 
-            // Einfache Werte laden
+
             fields["minEmployeeNumber"]?.toIntOrNull()?.let { config.minEmployeeNumber = it }
             fields["minApprenticeNumber"]?.toIntOrNull()?.let { config.minApprenticeNumber = it }
             fields["minManagerNumber"]?.toIntOrNull()?.let { config.minManagerNumber = it }
@@ -163,7 +163,7 @@ object jsonReader {
             fields["vacationOver25Years"]?.toIntOrNull()?.let { config.vacationOver25Years = it }
             fields["vacationOver50Years"]?.toIntOrNull()?.let { config.vacationOver50Years = it }
 
-            // BooleanArrays laden
+
             fields["vacationBlock"]?.let { arrayStr ->
                 val booleans = parseBooleanArray(arrayStr)
                 if (booleans.size == config.vacationBlock.size) {
@@ -179,7 +179,7 @@ object jsonReader {
             }
 
             logger.info("Konfiguration geladen")
-            println("✓ Konfiguration geladen")
+            println("Konfiguration geladen")
 
         } catch (e: Exception) {
             logger.fatal("Fehler beim Lesen der Config: ${e.message}")

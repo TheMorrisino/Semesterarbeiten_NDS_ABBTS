@@ -213,6 +213,12 @@ class EmployeeManagement () {
         return count
     }
 
+    fun getEmployeesInWeek(week: Int): List<Employee> {
+        return employees.filter { emp ->
+            emp.getVacationByIndex(week) == 1
+        }
+    }
+
     fun getEmployeeByIndex(index: Int): Employee = employees[index]
 
     fun getOverlapList(): List<Int> {

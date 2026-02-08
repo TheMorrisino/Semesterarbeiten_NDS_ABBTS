@@ -2,7 +2,7 @@
   "employees": [
     {
       "id": 1,
-      "firstName": "Taigo",
+      "firstName": "Tiago",
       "lastName": "King in the Jungle",
       "workloadPercent": 31,
       "role": "STAFF",
@@ -12,6 +12,17 @@
       "city": "",
       "vacationLimit": 5,
       "vacationEntries": [
+        {
+          "id": 3,
+          "employeeId": 1,
+          "year": 2026,
+          "startWeek": 10,
+          "endWeek": 11,
+          "weekStatus": {
+            "10": "REQUESTED",
+            "11": "REQUESTED"
+          }
+        }
       ]
     },
     {
@@ -26,6 +37,19 @@
       "city": "",
       "vacationLimit": 5,
       "vacationEntries": [
+        {
+          "id": 2,
+          "employeeId": 2,
+          "year": 2026,
+          "startWeek": 11,
+          "endWeek": 14,
+          "weekStatus": {
+            "11": "REQUESTED",
+            "12": "REQUESTED",
+            "13": "REQUESTED",
+            "14": "REQUESTED"
+          }
+        }
       ]
     },
     {
@@ -41,16 +65,67 @@
       "vacationLimit": 5,
       "vacationEntries": [
       ]
+    },
+    {
+      "id": 4,
+      "firstName": "Sarah",
+      "lastName": "Princess",
+      "workloadPercent": 90,
+      "role": "STAFF",
+      "department": "AUSSENDIENST",
+      "education": "",
+      "birthday": "",
+      "city": "",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 4,
+          "employeeId": 4,
+          "year": 2026,
+          "startWeek": 11,
+          "endWeek": 14,
+          "weekStatus": {
+            "11": "REQUESTED",
+            "12": "REQUESTED",
+            "13": "REQUESTED",
+            "14": "REQUESTED"
+          }
+        },
+        {
+          "id": 5,
+          "employeeId": 4,
+          "year": 2026,
+          "startWeek": 18,
+          "endWeek": 21,
+          "weekStatus": {
+            "18": "REQUESTED",
+            "19": "REQUESTED",
+            "20": "REQUESTED",
+            "21": "REQUESTED"
+          }
+        },
+        {
+          "id": 6,
+          "employeeId": 4,
+          "year": 2026,
+          "startWeek": 44,
+          "endWeek": 45,
+          "weekStatus": {
+            "44": "REQUESTED",
+            "45": "REQUESTED"
+          }
+        }
+      ]
     }
   ],
   "idProviders": {
     "employeeIds": {
       "nextId": 4,
-      "issuedIds": [0, 1, 2, 3]
+      "issuedIds": [0, 1, 2, 3, 4]
     },
     "vacationIds": {
-      "nextId": 1,
-      "issuedIds": [0]
+      "nextId": 6,
+      "issuedIds": [0, 1, 2, 3, 4, 5, 6]
     }
   }
 }

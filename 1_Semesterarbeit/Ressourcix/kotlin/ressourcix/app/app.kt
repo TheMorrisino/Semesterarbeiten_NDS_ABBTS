@@ -18,6 +18,7 @@ object app  {
 
         // Config laden
         jsonReader.readConfig()
+        logger.debug("Daten aus Config.jason geladen")
 
         // JASON employees FILE LADEN
         if (jasonFileAktiv) {
@@ -26,7 +27,7 @@ object app  {
                 management.employees.clear()
                 management.employees.addAll(loadedEmployees)
                 management.updateOverlapList()
-                logger.info("Daten aus JSON geladen")
+                logger.debug("Daten aus employees.jason geladen")
             } else
                 logger.debug("JASON File konnte nicht geladen werden")
         }

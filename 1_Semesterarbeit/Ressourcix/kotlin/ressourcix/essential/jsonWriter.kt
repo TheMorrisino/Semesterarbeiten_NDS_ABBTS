@@ -135,8 +135,8 @@ object jsonWriter {
 
             logger.info("JSON erfolgreich geschrieben nach: ${targetFile.absolutePath}")
             logger.info("Config gespeichert nach: ${configFile.absolutePath}")
-            println("✓ ${employees.size} Mitarbeiter exportiert")
-            println("✓ Konfiguration gespeichert")
+            println("${employees.size} Mitarbeiter exportiert")
+            println("Konfiguration gespeichert")
 
         } catch (e: Exception) {
             logger.fatal("Fehler beim Schreiben von JSON: ${e.message}")

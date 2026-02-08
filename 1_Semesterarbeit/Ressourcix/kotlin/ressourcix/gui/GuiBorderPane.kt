@@ -90,7 +90,7 @@ class GuiBorderPane : Application() {
                         exitProcess(0)
 
                     } else {
-                        logger.debug("Fehler beim Speichern in der Try Schleife oder jasonFileAktiv = false")
+                        logger.debug("JSON-Export ist deaktiviert.")
 
                     }
                 } catch (e: Exception) {
