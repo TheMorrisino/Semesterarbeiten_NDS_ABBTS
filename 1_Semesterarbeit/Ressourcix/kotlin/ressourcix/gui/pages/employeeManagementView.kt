@@ -282,6 +282,7 @@ object employeeManagementView : BorderPane() {
                         app.management.add(emp)
                         fillEmployeeFields(emp)
                         setFieldsEditable(false)
+                        newEmployee = false
                     }
                     else{
 
