@@ -163,21 +163,17 @@ object dashboardView : StackPane() {
     // ====================================================================================================
     private fun toggleChart() {
         showingBarChart = !showingBarChart
-
         Platform.runLater {
-            // Entferne alle Kinder und VGrow-Einstellungen
             chartContainer.children.forEach { child ->
                 VBox.setVgrow(child, null)
             }
             chartContainer.children.clear()
 
-            if (showingBarChart) {
-                // BarChart hinzufügen
+            if (showingBarChart) {    // BarChart hinzufügen
                 chartContainer.children.add(barChart)
                 VBox.setVgrow(barChart, Priority.ALWAYS)
                 toggleChartButton.text = "Zu Kuchendiagramm wechseln"
-                // Cache zurücksetzen für sofortiges Update
-                val tempData = lastData
+                val tempData = lastData // Cache zurücksetzen für sofortiges Update
                 lastData = emptyList()
                 updateBarChart()
                 if (tempData.isEmpty()) {
@@ -190,8 +186,6 @@ object dashboardView : StackPane() {
                 toggleChartButton.text = "Zu Balkendiagramm wechseln"
                 updatePieChart()
             }
-
-            // Layout neu berechnen
             chartContainer.layout()
         }
     }
@@ -240,8 +234,6 @@ object dashboardView : StackPane() {
 
             }
             series.name = "2026"
-
-            // Series zum Chart hinzufügen
             barChart.data.add(series)
 
             // Y-Achse mit 0.5er-Schritten konfigurieren, nachdem Daten geladen sind
