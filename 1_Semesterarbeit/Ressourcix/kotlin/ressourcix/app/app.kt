@@ -15,7 +15,11 @@ object app  {
     var jasonFileAktiv: Boolean= true
 
     fun run() {
-        // JASON FILE LADEN
+
+        // Config laden
+        jsonReader.readConfig()
+
+        // JASON employees FILE LADEN
         if (jasonFileAktiv) {
             val loadedEmployees = jsonReader.read()
             if (loadedEmployees.isNotEmpty()) {
