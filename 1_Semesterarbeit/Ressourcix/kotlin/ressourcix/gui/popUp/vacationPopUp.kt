@@ -13,6 +13,13 @@ import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.text.TextAlignment
+import ressourcix.app.app
+import ressourcix.gui.pages.calenderView
+import ressourcix.gui.pages.calenderView.closePopup
+import ressourcix.gui.pages.calenderView.refreshVacations
+import ressourcix.gui.pages.calenderView.selectedEmployee
+import ressourcix.gui.pages.calenderView.showPopup
+import ressourcix.logger.logger
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
@@ -106,9 +113,27 @@ object vacationPopUp {
                 )
             )
             onClose()
-        }
+            }
 
         }
+
+        val checkBtn = createButton("Antrag\nBearbeiten").apply {
+            setOnAction {
+                showPopup(
+                    checkVacationPopUp.build(
+                        onClose = { closePopup() },
+                        onSave = {
+                            app.management.updateOverlapList()
+                            refreshVacations()
+                            closePopup()
+                        }
+                    )
+                )
+            }
+        }
+
+
+
 
         val closeBtn = createButton("X").apply {
             style = """
@@ -182,7 +207,7 @@ object vacationPopUp {
                     alignment = Pos.CENTER
                     padding = Insets(20.0)
                     spacing = 80.0
-                    children.addAll(saveBtn, deleteBtn)
+                    children.addAll(saveBtn, deleteBtn, checkBtn)
                 }
             )
         }
