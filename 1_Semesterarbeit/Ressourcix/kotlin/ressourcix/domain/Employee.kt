@@ -19,12 +19,21 @@ class Employee(private val id: UInt) {
     private var birthday: LocalDate? = null
     private var city: String = ""
     private var vacationLimit : UInt = 5u // Anzahl Ferien nur über get und set
+    private val plannedVacation = vacationList.sum()
 
     private val birthdayFormatter: DateTimeFormatter =
         DateTimeFormatter.ofPattern("dd.MM.uuuu")
             .withResolverStyle(ResolverStyle.STRICT)
 
     fun getId(): UInt = id
+    fun checkVacationLimits(newVacationEntry: VacationEntry): Boolean{
+        val vacationRange = newVacationEntry.range.endWeek - newVacationEntry.range.startWeek
+        var check = false
+        if ((vacationLimit - vacationRange)< 0u){
+             check = false
+        }else {check = true}
+        return check
+    }
     fun getFirstName(): String = firstName
     fun getLastName(): String = lastName
     fun getWorkloadPercent(): UByte = workloadPercent

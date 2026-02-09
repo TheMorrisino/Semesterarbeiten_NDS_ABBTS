@@ -8,7 +8,7 @@ package ressourcix.domain
  */
 class VacationEntry(
     val id: UInt,
-    val employeeId: UInt,
+    private val employeeId: UInt,
     val year: UInt,
     val range: WeekRange,
     initialStatus: VacationStatus = VacationStatus.GENERATED

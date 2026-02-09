@@ -26,7 +26,7 @@ import ressourcix.logger.logger
 object calenderView : StackPane() {
 
     // ---------------- Overlay (Popup) ----------------
-
+    lateinit var selectedEmployee : Employee
     private val dim = Region().apply {
         style = "-fx-background-color: rgba(0,0,0,0.35);"
         isVisible = false
@@ -376,7 +376,7 @@ object calenderView : StackPane() {
         val empId = employee.getId()
         vacationPopUp.idField.text = empId.toString()
         vacationPopUp.nameField.text = employee.getFullName()
-
+        selectedEmployee = employee
         showPopup(
             vacationPopUp.build(
                 onClose = { closePopup() },
