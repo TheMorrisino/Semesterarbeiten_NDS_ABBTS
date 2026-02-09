@@ -95,8 +95,4 @@ fun main() {
     } catch (e: Exception) {
         logger.fatal("Fehler beim Starten der GUI", e)
     }
-
-    logger.info("=" .repeat(50))
-    logger.info("Ressourcix beendet")
-    logger.info("=" .repeat(50))
 }

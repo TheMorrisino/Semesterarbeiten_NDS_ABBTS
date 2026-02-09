@@ -1,5 +1,7 @@
 package ressourcix.essential
 
+import ressourcix.logger.logger
+
 
 data class IdState(
     val nextId: UInt,
@@ -17,6 +19,7 @@ class IdProvider(
     @Synchronized
     fun generateId(): UInt {
         if (nextId == UInt.MAX_VALUE) {
+            logger.fatal("No more IDs available")
             throw IllegalStateException("No more IDs available")
         }
 

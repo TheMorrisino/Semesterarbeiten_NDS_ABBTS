@@ -15,14 +15,19 @@ object app  {
     var jasonFileAktiv: Boolean= true
 
     fun run() {
-        // JASON FILE LADEN
+
+        // Config laden
+        jsonReader.readConfig()
+        logger.debug("Daten aus Config.jason geladen")
+
+        // JASON employees FILE LADEN
         if (jasonFileAktiv) {
             val loadedEmployees = jsonReader.read()
             if (loadedEmployees.isNotEmpty()) {
                 management.employees.clear()
                 management.employees.addAll(loadedEmployees)
                 management.updateOverlapList()
-                logger.info("Daten aus JSON geladen")
+                logger.debug("Daten aus employees.jason geladen")
             } else
                 logger.debug("JASON File konnte nicht geladen werden")
         }
