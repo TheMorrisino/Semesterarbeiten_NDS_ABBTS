@@ -1,8 +1,7 @@
 package ressourcix.gui
 
-//import Graphical
+
 import javafx.application.Application
-import javafx.application.Platform
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.image.Image
@@ -11,7 +10,6 @@ import javafx.stage.Stage
 import ressourcix.app.app.jasonFileAktiv
 import ressourcix.essential.jsonWriter
 import ressourcix.gui.navigation.*
-import ressourcix.gui.pages.dashboardView
 import ressourcix.logger.logger
 import java.util.*
 import kotlin.system.exitProcess
@@ -39,7 +37,6 @@ class GuiBorderPane : Application() {
 
             if (stream == null) {
                 println("Das Bild wurde nicht gefunden unter: $pathIcon")
-//                println("Arbeitsverzeichnis: " + System.getProperty("user.dir"))
             } else {
                 val appIcon = Image(stream)
                 stage.icons.add(appIcon)
