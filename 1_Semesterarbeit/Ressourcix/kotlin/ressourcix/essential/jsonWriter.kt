@@ -2,6 +2,7 @@ package ressourcix.essential
 
 import java.io.File
 import ressourcix.app.app
+import ressourcix.domain.config
 import ressourcix.logger.logger
 
 object jsonWriter {
@@ -22,6 +23,7 @@ object jsonWriter {
         }
 
         val targetFile = jsonDir.resolve("employees.json")
+        val configFile = jsonDir.resolve("config.json")
 
         try {
             // Alle Mitarbeitenden holen
@@ -100,8 +102,42 @@ object jsonWriter {
             }
 
             targetFile.writeText(json)
+
+            val configJson = buildString {
+                appendLine("{")
+                appendLine("  \"minEmployeeNumber\": ${config.minEmployeeNumber},")
+                appendLine("  \"minApprenticeNumber\": ${config.minApprenticeNumber},")
+                appendLine("  \"minManagerNumber\": ${config.minManagerNumber},")
+                appendLine("  \"vacation25Years\": ${config.vacation25Years},")
+                appendLine("  \"vacationOver25Years\": ${config.vacationOver25Years},")
+                appendLine("  \"vacationOver50Years\": ${config.vacationOver50Years},")
+
+                // Vacation Block als Array
+                appendLine("  \"vacationBlock\": [")
+                config.vacationBlock.forEachIndexed { index, value ->
+                    append("    $value")
+                    if (index < config.vacationBlock.size - 1) appendLine(",")
+                    else appendLine()
+                }
+                appendLine("  ],")
+
+                // Vacation School Block als Array
+                appendLine("  \"vacationSchoolBlock\": [")
+                config.vacationSchoolBlock.forEachIndexed { index, value ->
+                    append("    $value")
+                    if (index < config.vacationSchoolBlock.size - 1) appendLine(",")
+                    else appendLine()
+                }
+                appendLine("  ]")
+                appendLine("}")
+            }
+            configFile.writeText(configJson)
+
             logger.info("JSON erfolgreich geschrieben nach: ${targetFile.absolutePath}")
-            println("${employees.size} Mitarbeitende exportiert")
+            logger.info("Config gespeichert nach: ${configFile.absolutePath}")
+            println("${employees.size} Mitarbeiter exportiert")
+            println("Konfiguration gespeichert")
+
         } catch (e: Exception) {
             logger.fatal("Fehler beim Schreiben von JSON: ${e.message}")
             e.printStackTrace()

@@ -16,6 +16,7 @@ import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import javafx.scene.text.TextAlignment
 import javafx.scene.input.KeyEvent
+import ressourcix.domain.config
 import ressourcix.gui.popups.weekPickerPopUp
 import ressourcix.logger.logger
 
@@ -24,9 +25,6 @@ private const val BTN_WIDTH = 140.0
 private const val TFL_HEIGHT = 30.0
 private const val TFL_WIDTH = 300.0
 
-//TODO Speichern und Zurücksetzen Funktion implementieren.
-//TODO Daten verknüpfen zum Speichern und Zurücksetzen
-//TODO logger.Warning/Error funktionen implementieren
 //TODO Clean Code bearbeitung mit employeemanagementView.kt
 
 object parameterview: BorderPane() {
@@ -64,18 +62,23 @@ object parameterview: BorderPane() {
     }
 
     private val parameterChangeBtn = createButton("Parameter \nändern").apply {
-        setOnAction { setFieldsEditable(true)
+        setOnAction {
+            setFieldsEditable(true)
             logger.info("Parameter wurden entsperrt.")}
     }
     private val parameterSaveBtn = createButton("Parameter \nspeichern").apply {
         setOnAction{
             if (!isEditMode) return@setOnAction
+            saveFromUiToConfig()
             setFieldsEditable(false)
+            calenderView.refreshVacations()
             logger.info("Parameter wurden erfolgreich gespeichert.")
         }
     }
     private val parameterRestoreBtn = createButton("Parameter \nzurücksetzen").apply {
-        setOnAction { setFieldsEditable(false)
+        setOnAction {
+            loadFromConfigToUi()
+            setFieldsEditable(false)
             logger.info("Parameter wurden erfolgreich zurückgesetzt.")}
     }
 
@@ -156,6 +159,7 @@ object parameterview: BorderPane() {
         center = centerStack
         setFieldsEditable(false)
         installWeekPopupHandlers()
+        loadFromConfigToUi()
     }
 
 
@@ -246,6 +250,7 @@ object parameterview: BorderPane() {
         vacationFrom45Tfl.isDisable = !editable
         vacationsBlockTfl.isDisable = !editable
         vacationsSchoolBlockTfl.isDisable = !editable
+        parameterSaveBtn.isDisable = !editable
         isEditMode = editable
     }
 
@@ -254,6 +259,55 @@ object parameterview: BorderPane() {
         tfl.isFocusTraversable = false
         tfl.addEventFilter(KeyEvent.ANY) { it.consume() }
     }
+
+    private fun copyWeeks(src: BooleanArray, dst: BooleanArray) {
+        for (i in dst.indices) dst[i] = false
+        val n = minOf(src.size, dst.size)
+        for (i in 0 until n) dst[i] = src[i]
+    }
+
+    private fun weeksToText(weeks: BooleanArray): String {
+        val ranges = mutableListOf<Pair<Int, Int>>()
+        var i = 1
+        while (i <= 52) {
+            if (!weeks[i]) { i++; continue }
+            val start = i
+            var end = i
+            while (end + 1 <= 52 && weeks[end + 1]) end++
+            ranges += start to end
+            i = end + 1
+        }
+
+        return ranges.joinToString(", ") { (s, e) ->
+            if (s == e) "KW $s" else "KW $s-$e"
+        }
+    }
+
+
+    private fun loadFromConfigToUi() {
+        minEmployeeTfl.text = config.minEmployeeNumber.toString()
+        minApprenticeTfl.text = config.minApprenticeNumber.toString()
+        minManagerTfl.text = config.minManagerNumber.toString()
+        vacationsUntil25Tfl.text = config.vacation25Years.toString()
+        vacationFrom25Tfl.text = config.vacationOver25Years.toString()
+        vacationFrom45Tfl.text = config.vacationOver50Years.toString()
+        copyWeeks(src = config.vacationBlock, dst = weeksForBlocker)
+        copyWeeks(src = config.vacationSchoolBlock, dst = weeksForSchool)
+        vacationsBlockTfl.text = weeksToText(weeksForBlocker)
+        vacationsSchoolBlockTfl.text = weeksToText(weeksForSchool)
+    }
+
+    private fun saveFromUiToConfig() {
+        config.minEmployeeNumber = minEmployeeTfl.text.trim().toIntOrNull() ?: 0
+        config.minApprenticeNumber = minApprenticeTfl.text.trim().toIntOrNull() ?: 0
+        config.minManagerNumber = minManagerTfl.text.trim().toIntOrNull() ?: 0
+        config.vacation25Years = vacationsUntil25Tfl.text.trim().toIntOrNull() ?: config.vacation25Years
+        config.vacationOver25Years = vacationFrom25Tfl.text.trim().toIntOrNull() ?: config.vacationOver25Years
+        config.vacationOver50Years = vacationFrom45Tfl.text.trim().toIntOrNull() ?: config.vacationOver50Years
+        config.vacationBlock = weeksForBlocker.copyOf()
+        config.vacationSchoolBlock = weeksForSchool.copyOf()
+    }
+
 
 
 }

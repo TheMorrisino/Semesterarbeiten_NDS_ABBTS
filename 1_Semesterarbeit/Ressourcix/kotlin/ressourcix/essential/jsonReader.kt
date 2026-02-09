@@ -20,7 +20,7 @@ object jsonReader {
         try {
             val json = targetFile.readText()
 
-            // ---------- Gesamtes Dokument parsen ----------
+
             val rootMap = parseJsonObject(json)
 
             val employeesJson = rootMap["employees"] ?: "[]"
@@ -141,6 +141,60 @@ object jsonReader {
             e.printStackTrace()
             return emptyList()
         }
+    }
+
+    fun readConfig() {
+        val configFile = jsonDir.resolve("config.json")
+
+        if (!configFile.exists()) {
+            logger.warn("Config-Datei nicht gefunden: ${configFile.absolutePath}")
+            return
+        }
+
+        try {
+            val json = configFile.readText()
+            val fields = parseJsonObject(json)
+
+
+            fields["minEmployeeNumber"]?.toIntOrNull()?.let { config.minEmployeeNumber = it }
+            fields["minApprenticeNumber"]?.toIntOrNull()?.let { config.minApprenticeNumber = it }
+            fields["minManagerNumber"]?.toIntOrNull()?.let { config.minManagerNumber = it }
+            fields["vacation25Years"]?.toIntOrNull()?.let { config.vacation25Years = it }
+            fields["vacationOver25Years"]?.toIntOrNull()?.let { config.vacationOver25Years = it }
+            fields["vacationOver50Years"]?.toIntOrNull()?.let { config.vacationOver50Years = it }
+
+
+            fields["vacationBlock"]?.let { arrayStr ->
+                val booleans = parseBooleanArray(arrayStr)
+                if (booleans.size == config.vacationBlock.size) {
+                    config.vacationBlock = booleans
+                }
+            }
+
+            fields["vacationSchoolBlock"]?.let { arrayStr ->
+                val booleans = parseBooleanArray(arrayStr)
+                if (booleans.size == config.vacationSchoolBlock.size) {
+                    config.vacationSchoolBlock = booleans
+                }
+            }
+
+            logger.info("Konfiguration geladen")
+            println("Konfiguration geladen")
+
+        } catch (e: Exception) {
+            logger.fatal("Fehler beim Lesen der Config: ${e.message}")
+            e.printStackTrace()
+        }
+    }
+
+    private fun parseBooleanArray(arrayStr: String): BooleanArray {
+        // Entferne [ ] und whitespace
+        val content = arrayStr.trim().removePrefix("[").removeSuffix("]")
+
+        // Splitte bei Kommas und konvertiere zu Boolean
+        return content.split(",")
+            .map { it.trim().toBoolean() }
+            .toBooleanArray()
     }
 
 

@@ -8,27 +8,25 @@ import javafx.geometry.Side
 import javafx.scene.chart.*
 import javafx.scene.control.*
 import javafx.scene.layout.*
-import javafx.scene.text.Font
-import javafx.scene.text.FontWeight
-import ressourcix.domain.Employee.*
-import ressourcix.domain.VacationEntry
+import javafx.scene.text.TextAlignment
 import javafx.util.Duration
 import ressourcix.app.app
 import ressourcix.domain.Employee
-import ressourcix.domain.EmployeeManagement
-import ressourcix.gui.GuiBorderPane
+import ressourcix.domain.label
 import ressourcix.logger.logger
 
 
 object dashboardView : StackPane() {
 
+    private const val BTN_HEIGHT = 80.0
+    private const val BTN_WIDTH = 200.0
+    private const val TFL_HEIGHT = 30.0
+    private const val TFL_WIDTH = 300.0
 
+    private var barChart: BarChart<String, Number>
+    private  var pieChart: PieChart
+    private  var chartContainer: VBox
 
-    private lateinit var barChart: BarChart<String, Number>
-    private lateinit var pieChart: PieChart
-    private lateinit var chartContainer: VBox
-
-    private val employees = app.employees
 
 
 
@@ -37,18 +35,16 @@ object dashboardView : StackPane() {
     private val xAxis = CategoryAxis().apply {
         label = "Kalenderwochen"
         side = javafx.geometry.Side.BOTTOM
-
     }
     private val yAxis = NumberAxis().apply {
         label = "Anzahl MA"
         side = javafx.geometry.Side.LEFT
         minorTickCount = 0
         isAutoRanging = true
-
     }
 
-    val toggleChartButton = Button()
-    val refreshButton = Button()
+    var toggleChartButton = Button()
+    var refreshButton = Button()
 
     // Aktueller Chart-Modus: true = BarChart, false = PieChart
     private var showingBarChart = true
@@ -92,7 +88,7 @@ object dashboardView : StackPane() {
 
         pieChart = PieChart().apply {
             animated = true
-            title = "Mitarbeiter mit und ohne Ferien"
+            title = "Geplante/Verfügbare Ferien von Mitarbeitern"
             isLegendVisible = false
             legendSide = Side.TOP
         }
@@ -125,8 +121,9 @@ object dashboardView : StackPane() {
             padding = Insets(5.0)
             alignment = Pos.CENTER
 
-            toggleChartButton.text = "Zu Kuchendiagramm wechseln"
-            refreshButton.text = "Aktualisieren"
+            toggleChartButton  = createButton("Zu Kuchendiagramm wechseln")
+
+            refreshButton = createButton("Aktualisieren")
 
             children.addAll(toggleChartButton, refreshButton)
 
@@ -208,35 +205,36 @@ object dashboardView : StackPane() {
     // ====================================================================================================
     // Aktualisiert das BarChart mit Mitarbeitern, die Ferien in KW Wochen haben
     // ====================================================================================================
+    private var lastWeekDetails: List<WeekInfo> = emptyList()
     fun updateBarChart() {
-        val overlapCounts = try {
-            computeWeeklyOverlap(app.employees)
-
+        val weekDetails = try {
+            computeWeeklyOverlapWithDetails(app.employees)
         } catch (e: UninitializedPropertyAccessException) {
             return
         }
 
+        // Prüfe ob sich die Counts geändert haben
+        val overlapCounts = weekDetails.map { it.count }
         if (overlapCounts == lastData) {
             return
         }
 
         lastData = overlapCounts
+        lastWeekDetails = weekDetails
 
         Platform.runLater {
             barChart.data.clear()
-            // Neue Series erstellen
+
             val series = XYChart.Series<String, Number>().apply {
-
-                overlapCounts.forEachIndexed { idx, cnt ->
+                weekDetails.forEachIndexed { idx, weekInfo ->
                     val weekLabel = "${idx + 1}"
-                    data.add(XYChart.Data(weekLabel, cnt))
+                    data.add(XYChart.Data(weekLabel, weekInfo.count))
                 }
-
             }
             series.name = "2026"
             barChart.data.add(series)
 
-            // Y-Achse mit 0.5er-Schritten konfigurieren, nachdem Daten geladen sind
+            // Y-Achse konfigurieren
             Platform.runLater {
                 val maxValue = if (overlapCounts.isNotEmpty()) overlapCounts.max() else 1
                 yAxis.apply {
@@ -247,10 +245,26 @@ object dashboardView : StackPane() {
                 }
             }
 
-            // Tooltips für jeden Datenpunkt hinzufügen
-            series.data.forEach { point ->
-                val tip = Tooltip("KW ${point.xValue}\nAnzahl: ${point.yValue}").apply {
+            // Tooltips mit Mitarbeiternamen
+            series.data.forEachIndexed { idx, point ->
+                val weekInfo = weekDetails[idx]
+
+                val tooltipText = buildString {
+                    appendLine("KW ${point.xValue}")
+                    appendLine("Anzahl: ${weekInfo.count}")
+
+                    if (weekInfo.employees.isNotEmpty()) {
+                        appendLine()
+                        appendLine("Mitarbeiter:")
+                        weekInfo.employees.forEach { empName ->
+                            appendLine("  • $empName")
+                        }
+                    }
+                }
+
+                val tip = Tooltip(tooltipText.trim()).apply {
                     showDelay = Duration.millis(100.0)
+                    showDuration = Duration.seconds(120.0)
                 }
                 point.node?.let { Tooltip.install(it, tip) }
             }
@@ -271,34 +285,126 @@ object dashboardView : StackPane() {
         Platform.runLater {
             pieChart.data.clear()
 
+            val dataWithVacation = PieChart.Data(
+                "Geplante Ferienwochen (${stats.withVacation})",
+                stats.withVacation.toDouble()
+            )
+
+            val dataWithoutVacation = PieChart.Data(
+                "Verfügbare Ferienwochen (${stats.withoutVacation})",
+                stats.withoutVacation.toDouble()
+            )
+
             val data = FXCollections.observableArrayList(
-                PieChart.Data("Mit Ferien (${stats.withVacation})", stats.withVacation.toDouble()),
-                PieChart.Data("Ohne Ferien (${stats.withoutVacation})", stats.withoutVacation.toDouble())
+                dataWithVacation,
+                dataWithoutVacation
             )
 
             pieChart.data = data
+
+            // Tooltips mit Mitarbeiterlisten
+            Platform.runLater {
+                // Tooltip für "Mit Ferien"
+                val withVacationTooltip = buildString {
+                    appendLine("Geplante Ferienwochen: ${stats.withVacation}")
+                    if (stats.employeesWithVacation.isNotEmpty()) {
+                        appendLine()
+                        appendLine("Mitarbeiter:")
+                        stats.employeesWithVacation.forEach { emp ->
+                            appendLine("  • $emp")
+                        }
+                    }
+                }
+
+                dataWithVacation.node?.let {
+                    Tooltip.install(it, Tooltip(withVacationTooltip.trim()).apply {
+                        showDelay = Duration.millis(100.0)
+                        showDuration = Duration.seconds(120.0)
+                    })
+                }
+
+                // Tooltip für "Ohne Ferien"
+                val withoutVacationTooltip = buildString {
+                    appendLine("Verfügbare Ferienwochen: ${stats.withoutVacation}")
+                    if (stats.employeesWithoutVacation.isNotEmpty()) {
+                        appendLine()
+                        appendLine("Mitarbeiter ohne Ferien:")
+                        stats.employeesWithoutVacation.forEach { emp ->
+                            appendLine("  • $emp")
+                        }
+                    }
+                }
+
+                dataWithoutVacation.node?.let {
+                    Tooltip.install(it, Tooltip(withoutVacationTooltip.trim()).apply {
+                        showDelay = Duration.millis(100.0)
+                        showDuration = Duration.seconds(120.0)
+                    })
+                }
+            }
         }
     }
 
+    private fun createButton(text: String): Button =
+        Button(text).apply {
+            prefHeight = BTN_HEIGHT
+            prefWidth = BTN_WIDTH
+            textAlignment = TextAlignment.CENTER
+            alignment = Pos.CENTER
+            isFocusTraversable = false
+            style = " -fx-font-weight: bold;"
+        }
 
 
-    private fun computeWeeklyOverlap(employees: List<Employee>): List<Int> {
-        val counts = app.management.getOverlapList()
+    private data class WeekInfo(
+        val count: Int,
+        val employees: List<String>
+    )
 
-        return counts
+
+//    private fun computeWeeklyOverlap(employees: List<Employee>): List<Int> {
+//        val counts = app.management.getOverlapList()
+//
+//        return counts
+//    }
+
+    private fun computeWeeklyOverlapWithDetails(employees: List<Employee>): List<WeekInfo> {
+        val weekData = MutableList(52) { mutableListOf<String>() }
+
+        employees.forEach { emp ->
+            emp.getVacationEntries().forEach { entry ->
+                for (w in entry.range.startWeek..entry.range.endWeek) {
+                    val weekIndex = (w - 1u).toInt()
+                    if (weekIndex in 0..51) {
+                        weekData[weekIndex].add(emp.getFullName())
+                    }
+                }
+            }
+        }
+
+        // Konvertiere zu WeekInfo-Liste
+        return weekData.map { empList ->
+            WeekInfo(
+                count = empList.size,
+                employees = empList.sorted()  // Alphabetisch sortiert
+            )
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Berechnet Statistiken über Mitarbeiter mit und ohne Ferien
+    // Berechnet Statistiken über Mitarbeiter mit und ohne Ferien für PieChart
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private fun computeVacationStats(employees: List<Employee>): VacationStats {
         var totalUsedWeeks = 0
         var totalAvailableWeeks = 0
 
+        val empsWithVacation = mutableListOf<String>()
+        val empsWithoutVacation = mutableListOf<String>()
+
         employees.forEach { emp ->
             val limit = emp.getVacationLimit().toInt()
-            val plannedWeeks = mutableSetOf<UInt>()
 
+            val plannedWeeks = mutableSetOf<UInt>()
             emp.getVacationEntries().forEach { entry ->
                 for (week in entry.range.startWeek..entry.range.endWeek) {
                     plannedWeeks.add(week)
@@ -308,21 +414,37 @@ object dashboardView : StackPane() {
             val usedByThisEmployee = plannedWeeks.size
             totalUsedWeeks += usedByThisEmployee
 
-
             val availableByThisEmployee = maxOf(0, limit - usedByThisEmployee)
             totalAvailableWeeks += availableByThisEmployee
+
+            // NEU: Mitarbeiter kategorisieren
+            if (usedByThisEmployee > 0) {
+
+                val remaining = limit - usedByThisEmployee
+                empsWithVacation.add(
+                    "${emp.getFullName()}: ${usedByThisEmployee}/${limit} Wochen" +
+                            if (remaining > 0) " (noch $remaining verfügbar)" else ""
+                )
+            } else {
+                // Hat noch keine Ferien geplant
+                empsWithoutVacation.add("${emp.getFullName()}: 0/${limit} Wochen")
+            }
         }
 
         return VacationStats(
             withVacation = totalUsedWeeks,
             withoutVacation = totalAvailableWeeks,
-            total = totalUsedWeeks + totalAvailableWeeks
+            total = totalUsedWeeks + totalAvailableWeeks,
+            employeesWithVacation = empsWithVacation.sorted(),
+            employeesWithoutVacation = empsWithoutVacation.sorted()
         )
     }
 
     private data class VacationStats(
         val withVacation: Int,
         val withoutVacation: Int,
-        val total: Int
-    )
+        val total: Int,
+        val employeesWithVacation: List<String>,
+        val employeesWithoutVacation: List<String>
+        )
 }
