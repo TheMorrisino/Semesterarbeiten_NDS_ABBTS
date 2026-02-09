@@ -1,8 +1,10 @@
 package ressourcix
 
 import javafx.application.Application
+import javafx.stage.Stage
 import ressourcix.app.app
 import ressourcix.gui.GuiBorderPane
+import ressourcix.gui.SplashScreenAdvanced
 import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.dashboardView
 import ressourcix.logger.logger
@@ -30,29 +32,7 @@ fun main() {
         name = "App-Logic-Thread"
     }.start()
 
-    // UI-Update-Thread (nur für calenderView)
-//    Thread {
-//        logger.info("UI-Update-Thread gestartet")
-//
-//        // Kurz warten, bis die GUI initialisiert ist
-//        Thread.sleep(2000)
-//
-//        while (true) {
-//            try {
-//                Thread.sleep(1000)
-//
-//
-//            } catch (e: InterruptedException) {
-//                logger.info("UI-Update-Thread wurde beendet")
-//                break
-//            } catch (e: Exception) {
-//                logger.error("Fehler beim UI-Update", e)
-//            }
-//        }
-//    }.apply {
-//        isDaemon = true
-//        name = "UI-Update-Thread"
-//    }.start()
+
 
 
     Thread {
@@ -83,12 +63,24 @@ fun main() {
     }.start()
 
     logger.debug("Alle Threads gestartet, starte JavaFX...")
-
+    class RessourcixApp : Application() {
+        override fun start(primaryStage: Stage) {
+            // Splash-Screen anzeigen
+            val splash = SplashScreenAdvanced {
+                // Danach Hauptapp starten
+                val gui = GuiBorderPane()
+                gui.start(primaryStage)
+            }
+            splash.show()
+        }
+    }
 
     // JavaFX Application starten (blockiert bis Fenster geschlossen wird)
     try {
         logger.info("Starte Ressourcix...")
-        Application.launch(GuiBorderPane::class.java)
+//        Application.launch(GuiBorderPane::class.java)
+            Application.launch(RessourcixApp::class.java)
+
 
 
 
