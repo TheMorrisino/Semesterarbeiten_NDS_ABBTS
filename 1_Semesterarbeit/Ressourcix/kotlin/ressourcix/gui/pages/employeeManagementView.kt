@@ -290,6 +290,7 @@ object employeeManagementView : BorderPane() {
                                 newEmployee = false
                                 setFieldsEditable(false)
                                 fillEmployeeFields(emp)
+                                calenderView.refreshVacations()
                                 logger.info("Neuer Mitarbeitender unter ID:${emp.getId()} erfolgreich gespeichert.")
                                 return@setOnAction
                             }
@@ -305,6 +306,7 @@ object employeeManagementView : BorderPane() {
                             emp.abbreviationSting()
                             setFieldsEditable(false)
                             fillEmployeeFields(emp)
+                            calenderView.refreshVacations()
                             logger.info("Mitarbeitender unter ID:${emp.getId()} erfolgreich gespeichert.")
 
                         } catch (e: Exception) {
