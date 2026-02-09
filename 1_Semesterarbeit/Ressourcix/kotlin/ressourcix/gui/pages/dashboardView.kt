@@ -1,5 +1,7 @@
 package ressourcix.gui.pages
 
+
+import ressourcix.gui.util.*
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.geometry.Insets
@@ -28,7 +30,6 @@ object dashboardView : StackPane() {
     private lateinit var barChart: BarChart<String, Number>
     private lateinit var pieChart: PieChart
     private lateinit var chartContainer: VBox
-
     private val toggleChartButton = Button()
     private val refreshButton = Button()
 
@@ -37,6 +38,7 @@ object dashboardView : StackPane() {
     // ====================================================================================================
     private var showingBarChart = true
     private var lastData: List<Int> = emptyList()
+    private var toolTippON = true
 
     init {
         initializeCharts()
@@ -90,7 +92,7 @@ object dashboardView : StackPane() {
             hgap = 1.0
             vgap = 1.0
 
-            // Spalten/Zeilen
+
             columnConstraints.add(ColumnConstraints().apply {
                 percentWidth = 100.0
                 hgrow = Priority.ALWAYS
@@ -124,7 +126,7 @@ object dashboardView : StackPane() {
             pieChart.prefWidthProperty().bind(widthProperty())
             pieChart.prefHeightProperty().bind(heightProperty())
 
-            // Initial BarChart anzeigen
+
             children.add(barChart)
             VBox.setVgrow(barChart, Priority.ALWAYS)
         }
@@ -238,7 +240,11 @@ object dashboardView : StackPane() {
             }
             barChart.data.add(series)
             updateYAxis(counts)
-            addBarChartTooltips(series, weekDetails)
+            if (toolTippON) {
+                addBarChartTooltips(series, weekDetails)
+            } else {
+                logger.info("Tooltips ausgeschaltet")
+            }
         }
     }
 
@@ -306,9 +312,12 @@ object dashboardView : StackPane() {
             pieChart.data = data
 
             // Tooltips hinzufügen
+            if (toolTippON) {
             Platform.runLater {
                 addPieChartTooltips(data, stats)
-            }
+            }} else
+                logger.info("PieChart Tooltips ausgeschaltet")
+
         }
     }
 
