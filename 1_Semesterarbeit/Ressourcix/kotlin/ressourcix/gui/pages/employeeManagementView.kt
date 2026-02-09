@@ -5,20 +5,11 @@ package ressourcix.gui.pages
 import javafx.collections.FXCollections
 import javafx.geometry.Insets
 import javafx.geometry.Pos
-import javafx.scene.Node
-import javafx.scene.control.Alert
-import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
-import javafx.scene.control.ListCell
-import javafx.scene.control.TextField
-import javafx.scene.control.TextFormatter
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
-import javafx.scene.layout.Region
-import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
-import javafx.scene.text.TextAlignment
 import ressourcix.app.app
 import ressourcix.domain.Department
 import ressourcix.domain.Education
@@ -27,16 +18,24 @@ import ressourcix.domain.Role
 import ressourcix.gui.popUp.filterPopUp
 import ressourcix.gui.popUp.filteredEmployeePopUp
 import ressourcix.logger.logger
+import ressourcix.gui.util.createButton
+import ressourcix.gui.util.createDataBox
+import ressourcix.gui.util.createLabeledComboBox
+import ressourcix.gui.util.createTfl
+import ressourcix.gui.util.lettersMaxFormatter
+import ressourcix.gui.util.positiveIntNoZeroFormatter
+import ressourcix.gui.util.promptWhenNull
+import ressourcix.gui.components.PopupLayer
+import ressourcix.gui.util.installBirthdayField
+import ressourcix.gui.util.showEmployeeNotFound
+import ressourcix.gui.util.showDeleteFailed
+import ressourcix.gui.util.showSaveFailed
 
-private const val BTN_HEIGHT = 50.0
-private const val BTN_WIDTH = 140.0
-private const val TFL_HEIGHT = 30.0
-private const val TFL_WIDTH = 300.0
-
-//TODO Code organisieren. Evt. Funktionen usw. auslagern.
 //TODO Executions abfangen, anzeigen und loggen
 
 object employeeManagementView : BorderPane() {
+
+    private val popupLayer = PopupLayer()
 
     private var selectedEmployee: Employee? = null
     private var isEditMode: Boolean = false
@@ -53,15 +52,11 @@ object employeeManagementView : BorderPane() {
     val roleField = ComboBox<Role>().apply {
         items = FXCollections.observableArrayList(Role.values().toList())
         promptText = "Rolle auswählen..."
-        prefHeight = TFL_HEIGHT
-        prefWidth = TFL_WIDTH
         promptWhenNull()
     }
     val departmentField = ComboBox<Department>().apply {
         items = FXCollections.observableArrayList(Department.values().toList())
         promptText = "Abteilung auswählen..."
-        prefHeight = TFL_HEIGHT
-        prefWidth = TFL_WIDTH
         isFocusTraversable = false
         promptWhenNull()
     }
@@ -78,8 +73,6 @@ object employeeManagementView : BorderPane() {
     val educationField = ComboBox<Education>().apply {
         items = FXCollections.observableArrayList(Education.values().toList())
         promptText = "Ausbildung auswählen..."
-        prefHeight = TFL_HEIGHT
-        prefWidth = TFL_WIDTH
         isFocusTraversable = false
         promptWhenNull()
     }
@@ -93,32 +86,8 @@ object employeeManagementView : BorderPane() {
 
     var newEmployee = false
 
-    private val dim = Region().apply {
-        style = "-fx-background-color: rgba(0,0,0,0.35);"
-        isVisible = false
-        isMouseTransparent = false
-        isManaged = true
-        setOnMouseClicked { closePopup() }
-    }
-
-    private val popupHost = StackPane().apply {
-        isVisible = false
-        isMouseTransparent = false
-        isManaged = true
-        alignment = Pos.CENTER
-        maxWidth = Double.MAX_VALUE
-        maxHeight = Double.MAX_VALUE
-
-    }
-
     private val mainContent = BorderPane().apply {
         padding = Insets(10.0)
-    }
-
-    private val centerStack = StackPane().apply {
-        children.addAll(mainContent, dim, popupHost)
-        StackPane.setAlignment(dim, Pos.CENTER)
-        StackPane.setAlignment(popupHost, Pos.CENTER)
     }
 
     private val filterBar = HBox(50.0).apply {
@@ -127,21 +96,21 @@ object employeeManagementView : BorderPane() {
 
         val filterBtn = createButton("Filter").apply {
             setOnAction {
-                showPopup(
+                popupLayer.show(
                     filterPopUp.build(
-                        onClose = { closePopup() },
+                        onClose = { popupLayer.close() },
                         onApply = { department, education ->
                             val filtered = app.employees.filter { emp ->
                                 emp.getDepartment() == department && emp.getEducation() == education
                             }
                             logger.info("Mitarbeiter nach $department, $education. Gefunden: ${filtered.size} Mitarbeiter")
-                            closePopup()
-                            showPopup(
+                            popupLayer.close()
+                            popupLayer.show(
                                 filteredEmployeePopUp.build(
                                     department = department,
                                     education = education,
                                     employees = filtered,
-                                    onClose = { closePopup() }
+                                    onClose = { popupLayer.close() }
                                 )
                             )
                         }
@@ -163,7 +132,7 @@ object employeeManagementView : BorderPane() {
                 } else {
 
                     selectedEmployee = null
-                    showNotFoundAlert("Suche nach ID", idField.text)
+                    showEmployeeNotFound("Suche nach ID", idField.text)
                     clearEmployeeFields()
                     setFieldsEditable(false)
                 }
@@ -197,7 +166,7 @@ object employeeManagementView : BorderPane() {
                 } else {
                     logger.warn("Kein Mitarbeiter unter Kürzel: ${abbreviationField.text} gefunden.")
                     selectedEmployee = null
-                    showNotFoundAlert("Suche nach Kürzel", kuerzel)
+                    showEmployeeNotFound("Suche nach Kürzel", kuerzel)
                     clearEmployeeFields()
                     setFieldsEditable(false)
                 }
@@ -225,8 +194,8 @@ object employeeManagementView : BorderPane() {
             alignment = Pos.CENTER
             children.addAll(
                 createDataBox("Name", nameField),
-                createComboBox("Rolle", roleField),
-                createComboBox("Abteilung", departmentField),
+                createLabeledComboBox("Rolle", roleField),
+                createLabeledComboBox("Abteilung", departmentField),
                 createDataBox("Wohnort", cityField),
                 createDataBox("Anzahl Ferienwochen", remainingVacationWeeksField)
             )
@@ -237,7 +206,7 @@ object employeeManagementView : BorderPane() {
             children.addAll(
                 createDataBox("Nachname", surnameField),
                 createDataBox("Pensum", workloadField),
-                createComboBox("Ausbildung", educationField),
+                createLabeledComboBox("Ausbildung", educationField),
                 createDataBox("Geburtstag", birthdayField),
                 createDataBox("Gebrauchte Ferienwochen", usedVacationWeeksField)
             )
@@ -266,7 +235,7 @@ object employeeManagementView : BorderPane() {
                 setOnAction {
                     val emp = selectedEmployee
                     if (emp == null) {
-                        showNotFoundAlert("Mitarbeiter ändern", "Kein Mitarbeitender ausgewählt")
+                        showEmployeeNotFound("Mitarbeiter ändern", "Kein Mitarbeitender ausgewählt")
                         return@setOnAction
                     }
                     setFieldsEditable(true)
@@ -290,12 +259,13 @@ object employeeManagementView : BorderPane() {
                                 newEmployee = false
                                 setFieldsEditable(false)
                                 fillEmployeeFields(emp)
+                                calenderView.refreshVacations()
                                 logger.info("Neuer Mitarbeitender unter ID:${emp.getId()} erfolgreich gespeichert.")
                                 return@setOnAction
                             }
                             val emp = selectedEmployee
                             if (emp == null) {
-                                showNotFoundAlert("Mitarbeiter speichern", "Kein Mitarbeitender ausgewählt")
+                                showEmployeeNotFound("Mitarbeiter speichern", "Kein Mitarbeitender ausgewählt")
                                 return@setOnAction
                             }
 
@@ -305,16 +275,12 @@ object employeeManagementView : BorderPane() {
                             emp.abbreviationSting()
                             setFieldsEditable(false)
                             fillEmployeeFields(emp)
+                            calenderView.refreshVacations()
                             logger.info("Mitarbeitender unter ID:${emp.getId()} erfolgreich gespeichert.")
 
                         } catch (e: Exception) {
                             logger.error("Speichern fehlgeschlagen: ${e.message}", e)
-                            Alert(Alert.AlertType.ERROR).apply {
-                                title = "Speichern fehlgeschlagen"
-                                headerText = "Bitte Eingaben prüfen"
-                                contentText = e.message ?: "Unbekannter Fehler"
-                                showAndWait()
-                            }
+                            showSaveFailed(e.message)
                         }
                     }
             },
@@ -322,7 +288,7 @@ object employeeManagementView : BorderPane() {
                 setOnAction {
                     val emp = selectedEmployee
                     if (emp == null) {
-                        showNotFoundAlert("Mitarbeiter löschen", "Kein Mitarbeitender ausgewählt")
+                        showEmployeeNotFound("Mitarbeiter löschen", "Kein Mitarbeitender ausgewählt")
                         return@setOnAction
                     }
 
@@ -335,12 +301,7 @@ object employeeManagementView : BorderPane() {
                         logger.info("Mitarbeitender unter ID:${emp.getId()} erfolgreich gelöscht.")
                     } else {
                         logger.warn("Löschen fehlgeschlagen für ID:${emp.getId()})")
-                        Alert(Alert.AlertType.WARNING).apply {
-                            title = "Löschen"
-                            headerText = "Mitarbeitender nicht gefunden"
-                            contentText = "ID: ${emp.getId()}"
-                            showAndWait()
-                        }
+                        showDeleteFailed(emp.getId())
                     }
                 }
             }
@@ -352,80 +313,9 @@ object employeeManagementView : BorderPane() {
         mainContent.top = filterBar
         mainContent.center = employeeInfoBox
         mainContent.right = functionsBox
-        center = centerStack
+        center = popupLayer.wrap(mainContent) { popupLayer.close() }
         setFieldsEditable(false)
         setNoSelectionState()
-    }
-
-    fun showPopup(popupContent: Node) {
-        popupHost.children.setAll(popupContent)
-        dim.isVisible = true
-        popupHost.isVisible = true
-        dim.toFront()
-        popupHost.toFront()
-    }
-
-    fun closePopup() {
-        popupHost.children.clear()
-        dim.isVisible = false
-        popupHost.isVisible = false
-    }
-
-    private fun createTfl(text: String,prompt: String): TextField =
-        TextField(text).apply {
-            promptText = prompt
-            prefHeight = TFL_HEIGHT
-            prefWidth = TFL_WIDTH
-            isFocusTraversable = false
-        }
-
-    private fun createButton(text: String): Button =
-        Button(text).apply {
-            prefHeight = BTN_HEIGHT
-            prefWidth = BTN_WIDTH
-            textAlignment = TextAlignment.CENTER
-            alignment = Pos.CENTER
-            isFocusTraversable = false
-            style = " -fx-font-weight: bold;"
-        }
-
-    private fun createDataBox(labelText: String, field: TextField): VBox =
-        VBox(6.0).apply {
-            children.addAll(Label(labelText).apply {
-                style = " -fx-font-weight: bold;"
-            }, field)
-        }
-
-    private fun <T> createComboBox(labelText: String, field: ComboBox<T>): VBox =
-        VBox(6.0).apply {
-            children.addAll(
-                Label(labelText).apply { style = "-fx-font-weight: bold;" },
-                field
-            )
-        }
-
-    private fun positiveIntNoZeroFormatter(maxDigits: Int,maxValue: Int): TextFormatter<String> {
-        return TextFormatter { change ->
-            val newText = change.controlNewText
-            val ok = newText.isEmpty() || (newText.matches(Regex("[1-9][0-9]*"))
-                    && newText.length <= maxDigits
-                    && newText.toInt() <= maxValue)
-            if (ok) change else null
-        }
-    }
-
-    private fun lettersMaxFormatter(maxLetters: Int, bigLetters: Boolean): TextFormatter<String> {
-        val allowedChars = if (bigLetters) "A-ZÄÖÜ \\-" else "A-Za-zÄÖÜäöü  \\-"
-        val pattern = Regex("^[$allowedChars]{0,$maxLetters}$")
-
-        return TextFormatter { change ->
-            if (!change.isContentChange) return@TextFormatter change
-            if (bigLetters && change.text.isNotEmpty()) {
-                change.text = change.text.uppercase()
-            }
-            val newText = change.controlNewText
-            if (pattern.matches(newText)) change else null
-        }
     }
 
     private fun fillEmployeeFields(emp:Employee) {
@@ -471,15 +361,6 @@ object employeeManagementView : BorderPane() {
         usedVacationWeeksField.clear()
     }
 
-    private fun showNotFoundAlert(title: String, searchValue: String) {
-        Alert(Alert.AlertType.WARNING).apply {
-            this.title = title
-            headerText = "Kein Mitarbeitender gefunden"
-            contentText = "Suchwert: $searchValue"
-            showAndWait()
-        }
-    }
-
     private fun resetSearch() {
         selectedEmployee = null
         newEmployee = false
@@ -510,74 +391,6 @@ object employeeManagementView : BorderPane() {
         setFieldsEditable(false)
     }
     }
-
-private fun installBirthdayField(field: TextField) {
-    field.textFormatter = TextFormatter<String> { change ->
-        if (!change.isContentChange) return@TextFormatter change
-
-        val old = change.controlText
-
-        if (change.text.isEmpty() && change.rangeStart < change.rangeEnd) {
-            val deleted = old.substring(change.rangeStart, change.rangeEnd)
-            if (deleted == ".") {
-                val s = change.rangeStart
-                val e = change.rangeEnd
-                if (s > 0) {
-                    change.setRange(s - 1, e)
-                } else if (e < old.length) {
-                    change.setRange(s, e + 1)
-                }
-            }
-        }
-
-        val newText = change.controlNewText
-        if (newText.isEmpty()) return@TextFormatter change
-
-        if (!newText.all { it.isDigit() || it == '.' }) return@TextFormatter null
-        if (newText.count { it.isDigit() } > 8) return@TextFormatter null
-
-        change
-    }
-
-    var updating = false
-
-    field.textProperty().addListener { _, _, value ->
-        if (updating) return@addListener
-
-        val caret = field.caretPosition
-        val digitsBeforeCaret = value.take(caret).count { it.isDigit() }
-
-        val digits = value.filter { it.isDigit() }.take(8)
-        val formatted = buildString {
-            digits.forEachIndexed { i, c ->
-                append(c)
-                if (i == 1 || i == 3) append('.')
-            }
-        }
-
-        if (value == formatted) return@addListener
-
-        updating = true
-        field.text = formatted
-
-        var newCaret = digitsBeforeCaret
-        if (digitsBeforeCaret >= 2) newCaret += 1
-        if (digitsBeforeCaret >= 4) newCaret += 1
-
-        field.positionCaret(newCaret.coerceIn(0, formatted.length))
-        updating = false
-    }
-}
-
-private fun <T> ComboBox<T>.promptWhenNull() {
-    val p = promptText
-    buttonCell = object : ListCell<T>() {
-        override fun updateItem(item: T?, empty: Boolean) {
-            super.updateItem(item, empty)
-            text = if (empty || item == null) p else item.toString()
-        }
-    }
-}
 
 
 

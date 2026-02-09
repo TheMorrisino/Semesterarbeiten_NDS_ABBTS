@@ -7,6 +7,7 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.text.Text
+import ressourcix.gui.pages.calenderView
 
 object topNavigationBar {
 
@@ -72,6 +73,7 @@ object topNavigationBar {
 
         calenderBtn.setOnAction {
             setActive(calenderBtn)
+            calenderView.refreshVacations()
             router.navigate(Route.CALENDER)
         }
 

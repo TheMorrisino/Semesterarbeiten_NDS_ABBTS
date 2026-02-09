@@ -3,19 +3,16 @@ package ressourcix.gui.popUp
 import javafx.beans.binding.Bindings
 import javafx.geometry.Insets
 import javafx.scene.Node
-import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
 import javafx.scene.control.ComboBox
-import javafx.scene.text.TextAlignment
 import ressourcix.domain.Department
 import ressourcix.domain.Education
+import ressourcix.gui.util.*
 
-private const val BTN_HEIGHT = 50.0
-private const val BTN_WIDTH = 140.0
 private const val BOX_HEIGHT = 270.0
 private const val BOX_WIDTH = 520.0
 
@@ -77,10 +74,12 @@ object filterPopUp {
                 },
                 VBox().apply {
                     children.addAll(
-                        HBox().apply {
+                        HBox(40.0).apply {
+                            spacing = 40.0
+                            padding = Insets(10.0, 0.0, 10.0, 0.0)
                             children.addAll(
-                                createComboBox("Abteilung:", departmentField),
-                                createComboBox("Ausbildung:", educationField)
+                                createLabeledComboBox("Abteilung:", departmentField),
+                                createLabeledComboBox("Ausbildung:", educationField)
                             )
                         },
                         HBox().apply {
@@ -95,21 +94,7 @@ object filterPopUp {
         }
     }
 }
-private fun createComboBox(labelText: String, choise: ComboBox<*>) = VBox(6.0).apply {
-    padding = Insets(20.0)
-    children.addAll(Label(labelText).apply {
-        style = "-fx-font-weight: bold;"
-    }, choise)
-    }
 
-private fun createButton(text: String) = Button(text).apply {
-    prefHeight = BTN_HEIGHT
-    prefWidth = BTN_WIDTH
-    textAlignment = TextAlignment.CENTER
-    alignment = Pos.CENTER
-    isFocusTraversable = false
-    style = " -fx-font-weight: bold;"
-    }
 
 
 

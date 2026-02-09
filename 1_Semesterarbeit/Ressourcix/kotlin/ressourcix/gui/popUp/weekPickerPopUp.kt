@@ -5,16 +5,13 @@ package ressourcix.gui.popups
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
-import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ToggleButton
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
-import javafx.scene.text.TextAlignment
+import ressourcix.gui.util.*
 
-private const val BTN_HEIGHT = 50.0
-private const val BTN_WIDTH = 140.0
 private const val BOX_HEIGHT = 300.0
 private const val BOX_WIDTH = 800.0
 
@@ -99,13 +96,4 @@ class weekPickerPopUp(private val label: String,
         }
     }
 
-    private fun createButton(text: String): Button =
-        Button(text).apply {
-            prefHeight = BTN_HEIGHT
-            prefWidth = BTN_WIDTH
-            textAlignment = TextAlignment.CENTER
-            alignment = Pos.CENTER
-            isFocusTraversable = false
-            style = " -fx-font-weight: bold;"
-        }
 }

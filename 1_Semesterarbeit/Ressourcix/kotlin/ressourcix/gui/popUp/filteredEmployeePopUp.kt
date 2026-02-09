@@ -5,11 +5,9 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
-import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
-import javafx.scene.control.TextField
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
@@ -17,13 +15,10 @@ import javafx.scene.text.TextAlignment
 import ressourcix.domain.Department
 import ressourcix.domain.Education
 import ressourcix.domain.Employee
+import ressourcix.gui.util.*
 
-private const val BTN_HEIGHT = 50.0
-private const val BTN_WIDTH = 140.0
 private const val BOX_WIDTH = 800.0
 private const val BOX_HEIGHT = 420.0
-private const val TFL_HEIGHT = 30.0
-private const val TFL_WIDTH = 300.0
 
 object filteredEmployeePopUp {
 
@@ -135,30 +130,4 @@ object filteredEmployeePopUp {
         }
     }
 
-    private fun createButton(text: String): Button =
-        Button(text).apply {
-            prefHeight = BTN_HEIGHT
-            prefWidth = BTN_WIDTH
-            textAlignment = TextAlignment.CENTER
-            alignment = Pos.CENTER
-            isFocusTraversable = false
-            style = " -fx-font-weight: bold;"
-        }
-
-    private fun createDataBox(labelText: String, field: TextField): VBox =
-        VBox(6.0).apply {
-            children.addAll(Label(labelText).apply {
-                style = " -fx-font-weight: bold;"
-            }, field)
-        }
-
-    private fun createTfl(text: String,prompt: String): TextField =
-        TextField(text).apply {
-            promptText = prompt
-            prefHeight = TFL_HEIGHT
-            prefWidth = TFL_WIDTH
-            isFocusTraversable = false
-            isEditable = false
-            setDisable(true)
-        }
 }
