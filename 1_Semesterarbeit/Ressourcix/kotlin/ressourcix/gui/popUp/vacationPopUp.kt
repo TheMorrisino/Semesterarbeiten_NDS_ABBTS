@@ -123,7 +123,7 @@ object vacationPopUp {
                     checkVacationPopUp.build(
                         onClose = { closePopup() },
                         onSave = {
-                            app.management.updateOverlapList()
+
                             refreshVacations()
                             closePopup()
                         }
