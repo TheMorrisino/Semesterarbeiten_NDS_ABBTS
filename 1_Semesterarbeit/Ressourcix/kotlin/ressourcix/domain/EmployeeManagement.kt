@@ -5,7 +5,6 @@ import ressourcix.app.app.vacationIds
 import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.calenderView.updateEmployees
 import ressourcix.logger.logger
-import ressourcix.essential.IdProvider
 
 class EmployeeManagement () {
     val employees: MutableList<Employee> = mutableListOf()
@@ -32,10 +31,6 @@ class EmployeeManagement () {
     fun findById(id: UInt): Employee? = employees.firstOrNull { it.getId() == id }
 
 
-
-    /**
-     * Demo-Seed: 10 Mitarbeiter IDs 1..10.
-     */
 //    fun seed10Employees() {
 //        employees.clear()
 //        val ids = IdProvider(start = 1u)

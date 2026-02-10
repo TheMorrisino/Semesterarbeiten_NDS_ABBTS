@@ -1,0 +1,274 @@
+@startuml Ressourcix_Class_Diagram_Vertical
+
+' Styling für bessere Lesbarkeit
+skinparam classAttributeIconSize 0
+skinparam classFontSize 10
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 80
+skinparam defaultFontSize 10
+
+' Vertikales Layout
+top to bottom direction
+
+' ==================== Main Entry Point ====================
+class Main <<(M, orchid)>> {
+    + main()
+}
+
+' ==================== App Layer ====================
+
+    object app {
+        + management: EmployeeManagement
+        + employees: MutableList<Employee>
+        + employeeIds: IdProvider
+        + vacationIds: IdProvider
+        + jasonFileAktiv: Boolean
+        --
+        + run()
+    }
+
+
+' ==================== GUI Layer ====================
+
+
+    class GuiBorderPane {
+        - btnSave: ButtonType
+        - btNotSave: ButtonType
+        - btnCancel: ButtonType
+        --
+        + start(stage: Stage)
+        + exit()
+    }
+
+    object bottomBar {
+        - status: TextField
+        - clockLabel: Label
+        - bar: HBox
+        --
+        + getView(): HBox
+        - updateClock()
+        - updateStatus()
+    }
+
+    object topNavigationBar {
+        + getView(): Node
+        + bind(router)
+    }
+
+
+' ==================== Domain Layer ====================
+
+
+    together {
+        class EmployeeManagement {
+            + employees: MutableList<Employee>
+            - overlapList: MutableList<Int>
+            + maxOverlapsPerKw: Int
+            + year: UInt
+            --
+            + add(employee: Employee)
+            + removeById(id: UInt): Boolean
+            + findById(id: UInt): Employee?
+            + addVacationSafe(...)
+            + updateOverlapList()
+            + countAllOverlaps(): Int
+            + getEmployeesInWeek(week: Int)
+        }
+
+        class Employee {
+            - id: UInt
+            - firstName: String
+            - lastName: String
+            - workloadPercent: UByte
+            - role: Role
+            - vacationEntries: MutableList<VacationEntry>
+            - vacationList: MutableList<Int>
+            - department: Department?
+            - education: Education?
+            - birthday: LocalDate?
+            - vacationLimit: UInt
+            --
+            + getId(): UInt
+            + getFullName(): String
+            + addVacationEntry(entry)
+            + removeVacationEntry(...)
+            + createVacationList()
+        }
+
+
+    class VacationEntry {
+        + id: UInt
+        + employeeId: UInt
+        + year: UInt
+        + range: WeekRange
+        - statusByWeek: Map<UInt, VacationStatus>
+        --
+        + hasWeek(week: UInt): Boolean
+        + getStatus(week: UInt): VacationStatus?
+        + setStatus(week, status)
+    }
+
+    class WeekRange {
+        + startWeek: UInt
+        + endWeek: UInt
+        --
+        + contains(week: UInt): Boolean
+        + overlaps(other: WeekRange): Boolean
+    }
+
+    together {
+        enum Role {
+            APPRENTICE
+            STAFF
+            TEAM_LEAD
+            MANAGER
+        }
+
+        enum VacationStatus {
+            REQUESTED
+            APPROVED
+            GENERATED
+            REJECTED
+            CANCELLED
+        }
+
+        enum Department {
+            AUSSENDIENST
+            ADMIN
+            PLANUNG
+        }
+
+        enum Education {
+            LEHRLING
+            EFZ
+            DIPLOM_PFLEGE_HF
+        }
+
+        enum OverlapStatus {
+            OK
+            WARNING
+            CRITICAL
+        }
+    }
+
+    object vacationPlanner {
+        + generateForAll(...)
+    }
+
+    object config {
+        + minEmployeeNumber: Int
+        + vacation25Years: Int
+        + vacationBlock: BooleanArray
+        + vacationSchoolBlock: BooleanArray
+    }
+}
+
+' ==================== Essential Layer ====================
+
+
+    class IdProvider {
+        + start: UInt
+        - nextId: UInt
+        - issuedIds: MutableSet<UInt>
+        --
+        + generateId(): UInt
+        + getIssuedIds(): Set<UInt>
+        + restore(state: IdState)
+    }
+
+    class IdState <<data class>> {
+        + nextId: UInt
+        + issuedIds: List<UInt>
+    }
+
+    object jsonReader {
+        - jsonDir: File
+        --
+        + read(): List<Employee>
+        + readConfig()
+    }
+
+    object jsonWriter {
+        - jsonDir: File
+        --
+        + write()
+    }
+
+
+' ==================== Logger Layer ====================
+
+
+    object logger {
+        - currentLevel: Level
+        - logBuffer: Queue<LogEntry>
+        --
+        + debug(message, exception?)
+        + info(message, exception?)
+        + warn(message, exception?)
+        + error(message, exception?)
+        + fatal(message, exception?)
+        + getLastLogEntry(): LogEntry?
+    }
+
+    class LogEntry <<data class>> {
+        + timestamp: LocalDateTime
+        + level: Level
+        + message: String
+        + exception: Throwable?
+        --
+        + toFormattedString(): String
+    }
+
+    enum Level {
+        DEBUG
+        INFO
+        WARN
+        ERROR
+        FATAL
+    }
+
+
+' ==================== Relationships ====================
+
+' Main connections
+Main .down.> GuiBorderPane : launches
+Main .down.> app : starts
+Main .down.> logger : configures
+
+' App layer
+app -down-> EmployeeManagement : uses
+app -down-> IdProvider : uses\n(2 instances)
+
+' GUI layer
+GuiBorderPane .down.> app : uses
+bottomBar .down.> logger : reads logs
+
+' Domain relationships (vertical)
+EmployeeManagement "1" o-down- "0..*" Employee : manages
+Employee "1" *-down- "0..*" VacationEntry : contains
+VacationEntry *-down- "1" WeekRange : contains
+
+' Domain relationships (horizontal)
+Employee -right-> Role : has
+Employee -right-> Department : has
+Employee -right-> Education : has
+VacationEntry -right-> VacationStatus : has
+
+' Essential layer
+IdProvider -down-> IdState : restores
+jsonReader .up.> Employee : creates
+jsonReader .up.> config : configures
+jsonWriter .up.> Employee : serializes
+jsonWriter .up.> config : serializes
+
+' Logger relationships
+logger -right-> LogEntry : creates
+LogEntry -right-> Level : uses
+
+' Cross-layer dependencies
+jsonReader -up-> EmployeeManagement : loads data
+jsonWriter -up-> EmployeeManagement : saves data
+
+@enduml

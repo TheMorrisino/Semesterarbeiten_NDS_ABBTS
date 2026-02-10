@@ -1,11 +1,5 @@
 package ressourcix.domain
 
-/**
- * Ferien-Eintrag für einen Mitarbeiter.
- *
- * Besonderheit:
- * - pro Woche wird ein Status gespeichert -> damit kann man einzelne Wochen bewerten.
- */
 class VacationEntry(
     val id: UInt,
     val employeeId: UInt,
