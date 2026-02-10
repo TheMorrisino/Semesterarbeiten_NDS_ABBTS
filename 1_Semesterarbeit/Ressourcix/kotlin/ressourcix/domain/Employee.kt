@@ -128,7 +128,7 @@ class Employee(private val id: UInt) {
             for (e in 1..52) {
                 if (e >= vacation.range.startWeek.toInt() && (e <= vacation.range.endWeek.toInt())) {
                     vacationList[e - 1] = 1
-                    println(vacationList)
+//                    println(vacationList)
 
                 }
             }

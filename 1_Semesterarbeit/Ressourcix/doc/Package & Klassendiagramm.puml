@@ -2,7 +2,7 @@
 ' ==========================================================
 ' Packages & Klassendiagramm
 ' ==========================================================
-package "ressourcix.domain" {
+
     class Employee {
         - id: UInt
         - firstName: String
@@ -99,16 +99,11 @@ package "ressourcix.domain" {
         + getIcon(): String
     }
 
-    class vacationPlanner {
-        + generateForAll(year: UInt,\n                 employees: List<Employee>,\n                 nextVacationId: () -> UInt,\n                 addVacationSafe: (Employee, VacationEntry) -> VacationAddResult,\n                 blocks: List<WeekRange> = …): List<String>
-    }
 
-    ' Extension functions
-    Employee ..> "label()" : extension
-    VacationStatus ..> "code" : extension
-}
 
-package "ressourcix.app" {
+
+
+
     object app {
         + io: ConsoleIO
         + management: EmployeeManagement
@@ -117,9 +112,9 @@ package "ressourcix.app" {
         + vacationIds: IdProvider
         + run()
     }
-}
 
-package "ressourcix.util" {
+
+
     class IdProvider {
         - start: UInt
         - nextId: UInt
@@ -128,9 +123,9 @@ package "ressourcix.util" {
         + generateId(): UInt
         + Issued(id: UInt): Boolean
     }
-}
 
-package "ressourcix.ui" {
+
+
     class ConsoleIO {
         + println(msg: String = "")
         + print(msg: String)
@@ -152,25 +147,10 @@ package "ressourcix.ui" {
         + readChoice(prompt: String = ""): Int
         + printMainMenu(year: Int)
     }
-}
 
-package "ressourcix.calendar" {
-    interface CalendarOutput {
-        + printYearPlan(year: UInt, employees: List<Employee>)
-    }
 
-    class consoleCalendarOutput {
-        - year: UInt = 2026u
-        + printYearPlan(year: UInt, employees: List<Employee>)
-        + addVacation(empId: UInt, startWeek: UInt, endWeek: UInt): VacationAddResult
-        + getYear(): UInt
-        - statusForWeek(year: UInt, employee: Employee, week: UInt): VacationStatus?
-    }
 
-    consoleCalendarOutput ..|> CalendarOutput
-}
 
-package "ressourcix.gui" {
     class GuiBorderPane <<Application>> {
         + start(stage: Stage)
         + exit()
@@ -239,16 +219,16 @@ package "ressourcix.gui" {
         EMPLOYEEMANAGEMENT
         PARAMETER
     }
-}
 
-package "ressourcix.ui.menu" {
+
+
     class MainMenu {
         + init(io: ConsoleIO, management: EmployeeManagement,\n               employeeIds: IdProvider, vacationIds: IdProvider)
         + loop()
         - printMainMenu()
         - rateSingleWeek()
     }
-}
+
 
 ' ==========================================================
 ' Relationships
@@ -298,15 +278,5 @@ ConsoleIO <-- EmployeeManagement : uses >
 vacationPlanner --> Employee : generates for >
 vacationPlanner --> VacationEntry : creates >
 vacationPlanner ..> VacationAddResult : receives >
-
-' ==========================================================
-' Styling
-' ==========================================================
-hide circle
-skinparam backgroundColor #F9F9F9
-skinparam classBackgroundColor #FFFFFF
-skinparam arrowColor #555555
-skinparam classBorderColor #CCCCCC
-
 
 @enduml
