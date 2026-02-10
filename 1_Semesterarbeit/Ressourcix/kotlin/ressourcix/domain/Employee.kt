@@ -12,7 +12,7 @@ class Employee(private val id: UInt) {
     private var workloadPercent: UByte = 100u
     private var role: Role = Role.APPRENTICE
     private var abbreviation: String = ""
-    private val vacationEntries: MutableList<VacationEntry> = mutableListOf()
+    val vacationEntries: MutableList<VacationEntry> = mutableListOf()
     private val vacationEntryIds : MutableList<UInt> = mutableListOf()
     private var vacationList: MutableList<Int> = MutableList(52) { 0 }
     private var department: Department? = null
@@ -42,7 +42,7 @@ class Employee(private val id: UInt) {
     fun getLastName(): String = lastName
     fun getWorkloadPercent(): UByte = workloadPercent
     fun getRole(): Role = role
-    fun getVacationEntries(): List<VacationEntry> = vacationEntries.toList()
+    //fun getVacationEntries(): List<VacationEntry> = vacationEntries.toList()
     fun getDepartment(): Department? = department
     fun getEducation(): Education? = education
     fun getBirthday(): LocalDate? = birthday

@@ -102,7 +102,7 @@ class EmployeeManagement () {
             employeeId = empId,
             year = year,
             range = WeekRange(startWeek, endWeek),
-            initialStatus = VacationStatus.REQUESTED
+            status = VacationStatus.REQUESTED
         )
 
         val currentOverlaps = countAllOverlaps()

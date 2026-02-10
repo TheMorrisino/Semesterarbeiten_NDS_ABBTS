@@ -120,17 +120,13 @@ object vacationPopUp {
         val checkBtn = createButton("Antrag\nBearbeiten").apply {
             setOnAction {
                 showPopup(
-                    checkVacationPopUp.build(
-                        onClose = { closePopup() },
-                        onSave = {
-
-                            refreshVacations()
-                            closePopup()
-                        }
+                    CheckVacationPopUp.build(
+                        onClose = { closePopup() }
                     )
                 )
             }
         }
+
 
 
 
