@@ -2,10 +2,12 @@ package ressourcix.gui
 
 
 import javafx.application.Application
+import javafx.scene.Group
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.image.Image
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.StackPane
 import javafx.stage.Stage
 import ressourcix.app.app.jasonFileAktiv
 import ressourcix.essential.jsonWriter
@@ -17,22 +19,43 @@ import kotlin.system.exitProcess
 class GuiBorderPane : Application() {
     override fun start(stage: Stage) {
 
+        val baseW = 1300.0
+        val baseH = 800.0
+
         val pathIcon = "/Ressourcix_Icon_OhneB2.png"
         val stream = javaClass.getResourceAsStream(pathIcon)
 
         val root = BorderPane().apply {
             top = topNavigationBar.getView()
             bottom = bottomBar.getView()
+            prefWidth = baseW
+            prefHeight = baseH
         }
 
         val router = NavigationsController(root)
         topNavigationBar.bind(router)
         router.navigate(Route.DASHBOARD)
 
+        val contentGroup = Group(root)
+        val outer = StackPane(contentGroup)
+
+        val scene = Scene(outer, baseW, baseH)
+
+        fun updateScale() {
+            val sx = scene.width / baseW
+            val sy = scene.height / baseH
+            contentGroup.scaleX = sx
+            contentGroup.scaleY = sy
+        }
+
+        scene.widthProperty().addListener { _, _, _ -> updateScale() }
+        scene.heightProperty().addListener { _, _, _ -> updateScale() }
+        updateScale()
+
         stage.apply {
-            scene = Scene(root,1300.0,800.0)
-            minHeight = 700.0
-            minWidth = 700.0
+            this.scene = scene
+            minWidth = 1100.0
+            minHeight = 600.0
             title = "Ressourcix"
 
             if (stream == null) {
