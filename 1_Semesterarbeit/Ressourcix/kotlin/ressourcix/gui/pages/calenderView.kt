@@ -46,7 +46,7 @@ object calenderView : StackPane() {
 
     // ---------------- Data / Tables ----------------
 
-    private val employees = app.management.employees
+    private var employees = app.management.employees
 
     private val fixedTable = TableView<Employee>()
     private val weekTable = TableView<Employee>()
@@ -234,7 +234,8 @@ object calenderView : StackPane() {
     /** Cache für alle Mitarbeiter für ein Jahr: KW1..KW52 */
     private fun rebuildCache(year: UInt, weeks: UInt = 52u) {
         weekCodeCache.clear()
-
+        employees = app.management.employees
+        //println(app.management.employees[0].vacationEntries[0].status)
         for (employee in employees) {
             val codes = Array(weeks.toInt() + 1) { "💼" }
             if (employee.getRole() == Role.APPRENTICE) {
@@ -253,7 +254,8 @@ object calenderView : StackPane() {
                }
             }
 
-            val entries = employee.getVacationEntries().filter { it.year == year }
+
+            val entries = employee.vacationEntries
             val seen = BooleanArray(weeks.toInt() + 1)
 
             for (entry in entries) {
@@ -267,7 +269,7 @@ object calenderView : StackPane() {
                     }
                     seen[wi] = true
 
-                    val status: VacationStatus? = entry.getStatus(week)
+                    val status = entry.status
                     codes[wi] = if (status != null) {
                         "ID${entry.id}.${status.code}"
                     } else {
@@ -364,18 +366,20 @@ object calenderView : StackPane() {
             vacationPopUp.build(
                 onClose = { closePopup() },
                 onSave = { kw ->
+                    if (app.management.canAddVacation(employee, kw.startKW, kw.endKW)){
                     app.management.addVacationSafe(employee, kw.startKW, kw.endKW)
                     logger.info("Ferieneintrag hinzugefügt Mitarbeiter $empId von ${kw.startKW} bis ${kw.endKW} ")
                     app.management.updateOverlapList()
                     refreshVacations()
-                    closePopup()
+                   // closePopup()
+                    }
                 },
                 onRemove = { kw ->
                     app.management.removeVacation(empId, kw.startKW, kw.endKW)
                     logger.info("Ferieneintrag entfernt Mitarbeiter $empId mit ${kw.startKW}")
                     app.management.updateOverlapList()
                     refreshVacations()
-                    closePopup()
+                    //closePopup()
                 }
             )
         )

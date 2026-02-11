@@ -160,13 +160,10 @@ object CheckVacationPopUp {
                     ?.apply {
                         status = newStatus
                     }
+
+                loadTableData()
             }
 
-
-
-        // 🔄 UI & Daten aktualisieren
-        app.management.updateOverlapList()
-        loadTableData()
 
         }
 
@@ -183,7 +180,9 @@ object CheckVacationPopUp {
             prefWidth = 40.0
             isFocusTraversable = false
             alignment = Pos.TOP_RIGHT
-            setOnAction { onClose() }
+            setOnAction {
+                refreshVacations()
+                onClose() }
         }
 
         /* ================= Header ================= */
