@@ -54,11 +54,15 @@ object vacationPopUp {
         fun validate(): String? {
             val start = firstVacationWeek.text.toIntOrNull()
             val end = lastVacationWeek.text.toIntOrNull()
-
             if (start == null || end == null) return "Bitte Start- und Endwoche ausfüllen"
             if (start !in 1..52) return "Start-KW muss 1–52 sein"
             if (end !in 1..52) return "End-KW muss 1–52 sein"
             if (end < start) return "End-KW darf nicht kleiner sein als Start-KW"
+            val startWeek = start ?: return null
+            val endWeek = end ?: return null
+            if (app.management.canAddVacation(selectedEmployee, startWeek.toUInt(), endWeek.toUInt())) {
+            return "Es wurde eine Überschneidung mit den bereits beantragten Ferien erkannt"
+            }
             return null
         }
 
@@ -120,17 +124,13 @@ object vacationPopUp {
         val checkBtn = createButton("Antrag\nBearbeiten").apply {
             setOnAction {
                 showPopup(
-                    checkVacationPopUp.build(
-                        onClose = { closePopup() },
-                        onSave = {
-                            app.management.updateOverlapList()
-                            refreshVacations()
-                            closePopup()
-                        }
+                    CheckVacationPopUp.build(
+                        onClose = { closePopup() }
                     )
                 )
             }
         }
+
 
 
 

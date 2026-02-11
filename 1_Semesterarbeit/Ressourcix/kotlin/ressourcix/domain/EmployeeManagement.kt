@@ -81,7 +81,7 @@ class EmployeeManagement () {
 //    }
 
     fun allVacationInKwFiltern() {
-        val allVacation = employees.flatMap { it.getVacationEntries() }
+        val allVacation = employees.flatMap { it.vacationEntries }
 
     }
 
@@ -89,89 +89,47 @@ class EmployeeManagement () {
         employees[empId.toInt()-1].removeByStartWeek(startWeek)
     }
 
-    fun addVacationSafe(employee: Employee, startWeek: UInt, endWeek: UInt, maxAllowed: Int = maxOverlapsPerKw) {
-        // To Do Ferienliste erstelle aller Mitableitern mit Index 1 = KW1 = alle Mitarbeiterferien aufrufen in KW 1 etc.
-        val empId = employee.getId()
-        val entry = VacationEntry(
-            id = vacationIds.generateId(),
-            employeeId = empId,
-            year = year,
-            range = WeekRange(startWeek, endWeek),
-            initialStatus = VacationStatus.REQUESTED
-        )
+    fun canAddVacation(
+        employee: Employee,
+        startWeek: UInt,
+        endWeek: UInt
+    ): Boolean {
 
-        val currentOverlaps = countAllOverlaps()
+        return employee.vacationEntries.none { existing ->
+            val existingStart = existing.range.startWeek
+            val existingEnd = existing.range.endWeek
 
-        val conflictingEmployees = mutableSetOf<String>()
-
-        employees.forEach { otherEmp ->
-            if (otherEmp.getId() != employee.getId()) {
-                otherEmp.getVacationEntries().forEach { otherEntry ->
-                    if (entry.overlapsWith(otherEntry)) {
-                        conflictingEmployees.add(otherEmp.getFullName())
-                    }
-                }
-            }
+            // Intervall-Überschneidung
+            startWeek <= existingEnd && endWeek >= existingStart
         }
-
-        // Anzahl Überschneidungen
-        val newOverlapCount = conflictingEmployees.size
-        // Prüfen, ob das Limit überschritten würde
-        val totalOverlapsAfter = currentOverlaps + newOverlapCount
-
-        val status = when {
-            newOverlapCount == 0 -> OverlapStatus.OK
-            totalOverlapsAfter < maxAllowed -> OverlapStatus.WARNING
-            else -> OverlapStatus.CRITICAL
-        }
-
-        // Bei maxAllowed = 0: keine Überschneidung erlaubt (>=)
-        // Bei maxAllowed > 0: maxAllowed Überschneidungen erlaubt (>)
-        val limitExceeded = if (maxAllowed == 0) {
-            totalOverlapsAfter >= 1
-        } else {
-            totalOverlapsAfter > maxAllowed
-        }
-
-        if (limitExceeded) {
-            val names = conflictingEmployees.toList()
-            val namesList = when {
-                names.isEmpty() -> ""
-                names.size == 1 -> names[0]
-                names.size <= 3 -> names.joinToString(" und ")
-                else -> "${names.take(3).joinToString(", ")} und ${names.size - 3} weitere(r)"
-            }
-
-//            val message = if (names.isEmpty()) {
-//                "Überschneidung: Kein Ferieneintrag für ${employee.label()} (${employee.getFullName()}) möglich, da das Überschneidungslimit erreicht ist."
-//            } else {
-//                "Überschneidung: Kein Ferieneintrag für ${employee.label()} (${employee.getFullName()}) möglich, da die Ferien mit $namesList überlappen (Max. $maxAllowed erlaubt, danach wären es $totalOverlapsAfter)."
-//            }
-            val message = when (status) {
-                OverlapStatus.OK ->
-                    logger.info("Keine Überschneidung. Ferieneintrag für ${employee.label()} (${employee.getFullName()}) wurde hinzugefügt.")
-
-
-                OverlapStatus.WARNING ->
-                    logger.warn("WARNING: Ferieneintrag für ${employee.label()} (${employee.getFullName()}) überlappt mit $namesList. " +
-                            "Aktuelle Überschneidungen: $totalOverlapsAfter von max. $maxAllowed erlaubt.")
-
-                OverlapStatus.CRITICAL ->
-                    logger.error("CRITICAL: Parametrierung der Ferieneintrage für ${employee.label()} (${employee.getFullName()}) überschritten. " +
-                            "Überlappung mit $namesList würde das Limit überschreiten " +
-                            "(Aktuell: $currentOverlaps, Neu: +$newOverlapCount, Total: $totalOverlapsAfter, Max: $maxAllowed).")
-            }
-            println(message)
-        }
-        employee.addVacationEntry(entry)
-        Thread.sleep(10)
-        updateOverlapList()
-        calenderView.refreshVacations()
     }
 
 
+    fun addVacationSafe(
+        employee: Employee,
+        startWeek: UInt,
+        endWeek: UInt
+    ): Boolean {
 
-    //Die FerienListe mit 52 Einträgen aus Employee wird bei jedem Employee durchgegangen
+        if (!canAddVacation(employee, startWeek, endWeek)) {
+            return false
+        }
+
+        val entry = VacationEntry(
+            id = vacationIds.generateId(),
+            employeeId = employee.getId(),
+            year = year,
+            range = WeekRange(startWeek, endWeek),
+            status = VacationStatus.REQUESTED
+        )
+
+        employee.addVacationEntry(entry)
+        updateOverlapList()
+
+        return true
+    }
+
+
 
     fun updateOverlapList (){
         overlapList.replaceAll { 0 }
@@ -194,7 +152,7 @@ class EmployeeManagement () {
     }
 
     fun countAllOverlaps(): Int {
-        val allVacation = employees.flatMap { it.getVacationEntries() }
+        val allVacation = employees.flatMap { it.vacationEntries }
         var count = 0
 
         for (i in allVacation.indices) {

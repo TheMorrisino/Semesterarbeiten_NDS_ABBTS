@@ -356,7 +356,7 @@ object dashboardView : StackPane() {
         val weekData = MutableList(52) { mutableListOf<String>() }
 
         employees.forEach { emp ->
-            emp.getVacationEntries().forEach { entry ->
+            emp.vacationEntries.forEach { entry ->
                 for (week in entry.range.startWeek..entry.range.endWeek) {
                     val index = (week - 1u).toInt()
                     if (index in 0..51) {
@@ -386,7 +386,7 @@ object dashboardView : StackPane() {
 
             // Geplante Wochen zählen
             val plannedWeeks = mutableSetOf<UInt>()
-            emp.getVacationEntries().forEach { entry ->
+            emp.vacationEntries.forEach { entry ->
                 for (week in entry.range.startWeek..entry.range.endWeek) {
                     plannedWeeks.add(week)
                 }

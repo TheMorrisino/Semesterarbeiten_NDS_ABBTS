@@ -48,7 +48,7 @@ object jsonWriter {
                     appendLine("      \"vacationLimit\": ${emp.getVacationLimit()},")
 
                     appendLine("      \"vacationEntries\": [")
-                    val entries = emp.getVacationEntries()
+                    val entries = emp.vacationEntries
                     entries.forEachIndexed { vIdx, vac ->
                         appendLine("        {")
                         appendLine("          \"id\": ${vac.id},")
