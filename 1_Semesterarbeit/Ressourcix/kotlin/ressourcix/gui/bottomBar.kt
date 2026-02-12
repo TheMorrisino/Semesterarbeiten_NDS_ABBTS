@@ -1,5 +1,3 @@
-//  Autor:        Pedro Santos
-
 package ressourcix.gui
 
 import javafx.animation.KeyFrame
@@ -18,75 +16,102 @@ import ressourcix.logger.logger
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+
 object bottomBar {
 
-    // Status-TextField (links)
-    private val status = TextField("").apply {
-        isDisable = true
-        isEditable = false
-        style = "-fx-background-color: #f5f5f5; -fx-opacity: 1.0;"
-        text = "Bereit"
+    // ====================================================================================================
+    // CONSTANTS
+    // ====================================================================================================
+
+    private const val TIME_FORMAT = "dd.MM.yyyy HH:mm:ss"
+    private const val DEFAULT_STATUS = "Bereit"
+
+    // ====================================================================================================
+    // UI COMPONENTS
+    // ====================================================================================================
+
+    private val statusField = createStatusField()
+    private val clockLabel = createClockLabel()
+    private val bar = createBar()
+
+    // ====================================================================================================
+    // STATE
+    // ====================================================================================================
+
+    private var lastMessage = ""
+
+    // ====================================================================================================
+    // INITIALIZATION
+    // ====================================================================================================
+
+    init {
+        startStatusUpdater()
     }
 
-    // Uhr-Label (rechts)
-    private val clockLabel = Label().apply {
-        isDisable = false
+    // ====================================================================================================
+    // UI CREATION
+    // ====================================================================================================
+
+    private fun createStatusField() = TextField().apply {
+        isDisable = true
+        isEditable = false
+        text = DEFAULT_STATUS
+        style = "-fx-background-color: #f5f5f5; -fx-opacity: 1.0;"
+    }
+
+    private fun createClockLabel() = Label().apply {
         style = "-fx-text-fill: black;"
     }
 
-    // Formatter
-    private val timeFmt = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
-
-    // Cache für letzte Log-Message
-    private var lastMessage = ""
-
-    private val bar = HBox(10.0).apply {
+    private fun createBar() = HBox(10.0).apply {
         padding = Insets(5.0)
         alignment = Pos.CENTER_LEFT
+        style = "-fx-border-color: #cccccc; -fx-border-width: 1 0 0 0;"
 
         val spacer = Region().apply {
             HBox.setHgrow(this, Priority.ALWAYS)
         }
 
-        children.addAll(status, spacer, clockLabel)
-
-        HBox.setHgrow(status, Priority.ALWAYS)
-        style = "-fx-border-color: #cccccc; -fx-border-width: 1 0 0 0;"
+        HBox.setHgrow(statusField, Priority.ALWAYS)
+        children.addAll(statusField, spacer, clockLabel)
     }
 
+    // ====================================================================================================
+    // STATUS UPDATE
+    // ====================================================================================================
 
-
-
-    private val statusUpdateThread = Thread {
-        while (true) {
-            try {
-                val currentMessage = logger.getLastLogMessageWithTimestamp() ?: "Bereit"
-                if (currentMessage != lastMessage) {
-                    lastMessage = currentMessage
-
-                    val lastEntry = logger.getLastLogEntry()
-
-                    // UI-Update im JavaFX-Thread
-                    Platform.runLater {
-                        updateStatus(currentMessage, lastEntry?.level)
-                    }
+    private fun startStatusUpdater() {
+        Thread {
+            while (true) {
+                try {
+                    updateStatusIfChanged()
+                } catch (e: InterruptedException) {
+                    break
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
+            }
+        }.apply {
+            isDaemon = true
+            name = "BottomBar-Status-Updater"
+            start()
+        }
+    }
 
-            } catch (e: InterruptedException) {
-                break // Thread beenden
-            } catch (e: Exception) {
-                e.printStackTrace()
+    private fun updateStatusIfChanged() {
+        val currentMessage = logger.getLastLogMessageWithTimestamp() ?: DEFAULT_STATUS
+
+        if (currentMessage != lastMessage) {
+            lastMessage = currentMessage
+            Platform.runLater {
+                statusField.text = currentMessage
             }
         }
-    }.apply {
-        isDaemon = true
-        name = "BottomBar-Status-Updater"
-        start()
     }
 
-    private fun updateClock() {
-        clockLabel.text = LocalDateTime.now().format(timeFmt)
-    }
+    // ====================================================================================================
+    // CLOCK UPDATE
+    // ====================================================================================================
 
     val clockTimeline = Timeline().apply {
         keyFrames.add(KeyFrame(Duration.ZERO, EventHandler { updateClock() }))
@@ -95,8 +120,14 @@ object bottomBar {
         play()
     }
 
-    private fun updateStatus(message: String, level: logger.Level?) {
-        status.text = message
+    private fun updateClock() {
+        val formatter = DateTimeFormatter.ofPattern(TIME_FORMAT)
+        clockLabel.text = LocalDateTime.now().format(formatter)
     }
+
+    // ====================================================================================================
+    // GETTER
+    // ====================================================================================================
+
     fun getView(): HBox = bar
 }

@@ -11,10 +11,8 @@ import javafx.scene.layout.*
 import javafx.scene.text.TextAlignment
 import ressourcix.app.app
 import ressourcix.domain.VacationStatus
-import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.calenderView.selectedEmployee
 import ressourcix.gui.pages.calenderView.refreshVacations
-import ressourcix.gui.pages.calenderView.showYear
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 160.0
@@ -23,7 +21,7 @@ private const val TFL_WIDTH = 300.0
 private const val BOX_HEIGHT = 520.0
 private const val BOX_WIDTH = 720.0
 
-object CheckVacationPopUp {
+object checkVacationPopUp {
 
     /* ================= Tabellenmodell ================= */
 
