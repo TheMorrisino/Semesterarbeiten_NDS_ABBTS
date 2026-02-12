@@ -38,7 +38,9 @@ class IdProvider(
     fun getIssuedIds(): Set<UInt> = issuedIds.toSet()
     fun getNextId(): UInt = nextId
     fun isIssued(id: UInt): Boolean = id in issuedIds
-// Für das JASON File
+
+
+    // Für das JASON File
     fun restore(state: IdState) {
         nextId = state.nextId
         issuedIds.clear()

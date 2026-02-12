@@ -65,7 +65,7 @@ fun main() {
     logger.debug("Alle Threads gestartet, starte JavaFX...")
     class RessourcixApp : Application() {
         override fun start(primaryStage: Stage) {
-            // Splash-Screen anzeigen
+            // Animation anzeigen
             val splash = SplashScreenAdvanced {
                 // Danach Hauptapp starten
                 val gui = GuiBorderPane()
@@ -75,10 +75,10 @@ fun main() {
         }
     }
 
-    // JavaFX Application starten (blockiert bis Fenster geschlossen wird)
+
     try {
         logger.info("Starte Ressourcix...")
-//        Application.launch(GuiBorderPane::class.java)
+//          Application.launch(GuiBorderPane::class.java)
             Application.launch(RessourcixApp::class.java)
 
 
