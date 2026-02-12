@@ -5,7 +5,7 @@ import ressourcix.app.app.vacationIds
 import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.calenderView.updateEmployees
 import ressourcix.logger.logger
-
+// Als Klasse definiert um später Verschiedene Jahre zu verwalten
 class EmployeeManagement () {
     val employees: MutableList<Employee> = mutableListOf()
     private val overlapList : MutableList<Int> = MutableList(52) { 0 }
@@ -30,55 +30,6 @@ class EmployeeManagement () {
 
     fun findById(id: UInt): Employee? = employees.firstOrNull { it.getId() == id }
 
-
-//    fun seed10Employees() {
-//        employees.clear()
-//        val ids = IdProvider(start = 1u)
-//        val names = listOf(
-//            "Max" to "Müller",
-//            "Sara" to "Schmidt",
-//            "Lena" to "Weber",
-//            "Noah" to "Meier",
-//            "Mia" to "Keller",
-//            "Leo" to "Fischer",
-//            "Emma" to "Brunner",
-//            "Paul" to "Baumann",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Nina" to "Steiner",
-//            "Tom" to "Hug"
-//        )
-//        for ((first, last) in names) {
-//            val e = Employee(ids.generateId()).apply {
-//                setFirstName(first)
-//                setLastName(last)
-//                setRole(Role.STAFF)
-//                setWorkloadPercent(100u)
-//            }
-//            employees.add(e)
-//        }
-//    }
 
     fun allVacationInKwFiltern() {
         val allVacation = employees.flatMap { it.vacationEntries }

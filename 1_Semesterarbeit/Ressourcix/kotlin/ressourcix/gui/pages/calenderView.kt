@@ -244,14 +244,12 @@ object calenderView : StackPane() {
                         codes[weekIndex] = "✈"
                     }
                 }
+            }
 
-               for (block in config.vacationSchoolBlock) {
-                   var counter = 0
-                   if (block) {
-                       codes[counter] = "🚫"
-                       counter+1
-                   }
-               }
+            config.vacationBlock.forEachIndexed { weekIndex, isVacationWeek ->
+                if (isVacationWeek && weekIndex < codes.size) {
+                    codes[weekIndex] = "🚫"
+                }
             }
 
 
