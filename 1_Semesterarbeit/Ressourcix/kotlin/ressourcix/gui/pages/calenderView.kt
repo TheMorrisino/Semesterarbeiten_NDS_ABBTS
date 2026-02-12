@@ -46,7 +46,7 @@ object calenderView : StackPane() {
 
     // ---------------- Data / Tables ----------------
 
-    private val employees = app.employees
+    private var employees = app.management.employees
 
     private val fixedTable = TableView<Employee>()
     private val weekTable = TableView<Employee>()
@@ -84,13 +84,13 @@ object calenderView : StackPane() {
         maxHeight = 0.0
     }
 
-    // Guards (damit nichts doppelt installiert wird)
+
     private var scrollSyncInstalled = false
     private var wheelForwardInstalled = false
     private var selectionSyncInstalled = false
 
     init {
-        // --- Tabellen Setup ---
+
         fixedTable.columns.setAll(idColumn, nameColumn)
         fixedTable.columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
         fixedTable.isFocusTraversable = false
@@ -98,28 +98,23 @@ object calenderView : StackPane() {
         weekTable.columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
         weekTable.isFocusTraversable = false
 
-        // gleiche Zeilenhöhe gegen Drift/Offset
         val rowHeight = 24.0
         fixedTable.fixedCellSize = rowHeight
         weekTable.fixedCellSize = rowHeight
 
-        // Items teilen (gleiche Reihenfolge!)
         fixedTable.items.setAll(employees)
         weekTable.items = fixedTable.items
 
-        // linke Tabelle: Breite fix
         val fixedWidth = idColumn.prefWidth + nameColumn.prefWidth + 24.0
         fixedTable.minWidth = fixedWidth
         fixedTable.prefWidth = fixedWidth
         fixedTable.maxWidth = fixedWidth
 
-        // leftPane = fixedTable + spacer unten
         val leftPane = BorderPane().apply {
             center = fixedTable
             bottom = spacer
         }
 
-        // center = leftPane direkt neben weekTable (kein Abstand)
         val center = HBox(leftPane, weekTable).apply {
             HBox.setHgrow(leftPane, Priority.NEVER)
             HBox.setHgrow(weekTable, Priority.ALWAYS)
@@ -127,10 +122,8 @@ object calenderView : StackPane() {
 
         val root = BorderPane().apply { this.center = center }
 
-        // ✅ children NUR EINMAL füllen -> kein duplicate children
         children.setAll(root, dim, popupHost, vScroll)
 
-        // RowFactory ohne updateItem-style-spam (weniger Flackern)
         fixedTable.setRowFactory { makeRow() }
         weekTable.setRowFactory { makeRow() }
 
@@ -168,13 +161,10 @@ object calenderView : StackPane() {
         val rightV = findScrollBar(weekTable, Orientation.VERTICAL)
         if (leftV == null || rightV == null) return
 
-        // Linke vertikale Scrollbar verstecken (nur rechts sichtbar)
         hideVerticalBar(leftV)
 
-        // Linke horizontale Scrollbar verstecken (frozen)
         findScrollBar(fixedTable, Orientation.HORIZONTAL)?.let { hideHorizontalBar(it) }
 
-        // Spacer unten links: Höhe = Höhe der horizontalen Scrollbar rechts
         val rightH = findScrollBar(weekTable, Orientation.HORIZONTAL)
         if (rightH != null && !spacer.prefHeightProperty().isBound) {
             spacer.prefHeightProperty().bind(rightH.heightProperty())
@@ -182,23 +172,19 @@ object calenderView : StackPane() {
             spacer.maxHeightProperty().bind(rightH.heightProperty())
         }
 
-        // Scroll Sync: rechts steuert links (one-way) -> Listener nur einmal
         if (!scrollSyncInstalled) {
             scrollSyncInstalled = true
             rightV.valueProperty().addListener { _, _, v ->
                 leftV.value = v.toDouble()
             }
         }
-        // direkt angleichen
         leftV.value = rightV.value
 
-        // Wheel Forward nur einmal
         if (!wheelForwardInstalled) {
             wheelForwardInstalled = true
             forwardWheelScrollToWeekTable()
         }
 
-        // Selection Sync einmal
         if (!selectionSyncInstalled) {
             selectionSyncInstalled = true
             fixedTable.selectionModel.selectedIndexProperty().addListener { _, _, idx ->
@@ -248,29 +234,28 @@ object calenderView : StackPane() {
     /** Cache für alle Mitarbeiter für ein Jahr: KW1..KW52 */
     private fun rebuildCache(year: UInt, weeks: UInt = 52u) {
         weekCodeCache.clear()
-
+        employees = app.management.employees
+        //println(app.management.employees[0].vacationEntries[0].status)
         for (employee in employees) {
             val codes = Array(weeks.toInt() + 1) { "💼" }
-            // Wenn der Mitarbeiter ein Lehrling ist (APPRENTICE)
             if (employee.getRole() == Role.APPRENTICE) {
-                // Durchlaufe alle Wochen mit Index und prüfe, ob es eine Ferienwoche ist
                 config.vacationSchoolBlock.forEachIndexed { weekIndex, isVacationWeek ->
                     if (isVacationWeek && weekIndex < codes.size) {
                         codes[weekIndex] = "✈"
                     }
                 }
-               //setze die Ferienblocker
-           for (block in config.vacationSchoolBlock) {
-               var counter = 0
-               if (block) {
-                   codes[counter] = "🚫"
-                   counter+1
+
+               for (block in config.vacationSchoolBlock) {
+                   var counter = 0
+                   if (block) {
+                       codes[counter] = "🚫"
+                       counter+1
+                   }
                }
-           }
-        }
+            }
 
 
-            val entries = employee.getVacationEntries().filter { it.year == year }
+            val entries = employee.vacationEntries
             val seen = BooleanArray(weeks.toInt() + 1)
 
             for (entry in entries) {
@@ -284,7 +269,7 @@ object calenderView : StackPane() {
                     }
                     seen[wi] = true
 
-                    val status: VacationStatus? = entry.getStatus(week)
+                    val status = entry.status
                     codes[wi] = if (status != null) {
                         "ID${entry.id}.${status.code}"
                     } else {
@@ -381,18 +366,22 @@ object calenderView : StackPane() {
             vacationPopUp.build(
                 onClose = { closePopup() },
                 onSave = { kw ->
+                    if (app.management.canAddVacation(employee, kw.startKW, kw.endKW)){
                     app.management.addVacationSafe(employee, kw.startKW, kw.endKW)
                     logger.info("Ferieneintrag hinzugefügt Mitarbeiter $empId von ${kw.startKW} bis ${kw.endKW} ")
                     app.management.updateOverlapList()
                     refreshVacations()
-                    closePopup()
+                    dashboardView.refreshCurrentChart()
+                   // closePopup()
+                    }
                 },
                 onRemove = { kw ->
                     app.management.removeVacation(empId, kw.startKW, kw.endKW)
                     logger.info("Ferieneintrag entfernt Mitarbeiter $empId mit ${kw.startKW}")
                     app.management.updateOverlapList()
                     refreshVacations()
-                    closePopup()
+                    dashboardView.refreshCurrentChart()
+                    //closePopup()
                 }
             )
         )

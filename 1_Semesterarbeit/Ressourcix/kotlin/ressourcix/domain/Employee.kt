@@ -12,7 +12,8 @@ class Employee(private val id: UInt) {
     private var workloadPercent: UByte = 100u
     private var role: Role = Role.APPRENTICE
     private var abbreviation: String = ""
-    private val vacationEntries: MutableList<VacationEntry> = mutableListOf()
+    val vacationEntries: MutableList<VacationEntry> = mutableListOf()
+    private val vacationEntryIds : MutableList<UInt> = mutableListOf()
     private var vacationList: MutableList<Int> = MutableList(52) { 0 }
     private var department: Department? = null
     private var education: Education? = null
@@ -26,6 +27,9 @@ class Employee(private val id: UInt) {
             .withResolverStyle(ResolverStyle.STRICT)
 
     fun getId(): UInt = id
+
+
+
     fun checkVacationLimits(newVacationEntry: VacationEntry): Boolean{
         val vacationRange = newVacationEntry.range.endWeek - newVacationEntry.range.startWeek
         var check = false
@@ -38,7 +42,7 @@ class Employee(private val id: UInt) {
     fun getLastName(): String = lastName
     fun getWorkloadPercent(): UByte = workloadPercent
     fun getRole(): Role = role
-    fun getVacationEntries(): List<VacationEntry> = vacationEntries.toList()
+    //fun getVacationEntries(): List<VacationEntry> = vacationEntries.toList()
     fun getDepartment(): Department? = department
     fun getEducation(): Education? = education
     fun getBirthday(): LocalDate? = birthday
@@ -90,6 +94,7 @@ class Employee(private val id: UInt) {
 
     fun addVacationEntry(entry: VacationEntry) {
         vacationEntries.add(entry)
+        vacationEntryIds.add(entry.id)
         createVacationList()
     }
 
@@ -111,6 +116,7 @@ class Employee(private val id: UInt) {
             it.range.startWeek == startWeek
         } ?: return false
         vacationEntries.remove(entry)
+        vacationEntryIds.remove(entry.id)
         createVacationList()
         return true
     }

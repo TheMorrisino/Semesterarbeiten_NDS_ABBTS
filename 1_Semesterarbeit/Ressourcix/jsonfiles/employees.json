@@ -114,6 +114,19 @@
             "44": "REQUESTED",
             "45": "REQUESTED"
           }
+        },
+        {
+          "id": 7,
+          "employeeId": 4,
+          "year": 2026,
+          "startWeek": 1,
+          "endWeek": 4,
+          "weekStatus": {
+            "1": "REQUESTED",
+            "2": "REQUESTED",
+            "3": "REQUESTED",
+            "4": "REQUESTED"
+          }
         }
       ]
     }
@@ -124,8 +137,8 @@
       "issuedIds": [0, 1, 2, 3, 4]
     },
     "vacationIds": {
-      "nextId": 6,
-      "issuedIds": [0, 1, 2, 3, 4, 5, 6]
+      "nextId": 7,
+      "issuedIds": [0, 1, 2, 3, 4, 5, 6, 7]
     }
   }
 }

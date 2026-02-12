@@ -16,6 +16,7 @@ import ressourcix.domain.Employee
 import ressourcix.logger.logger
 import kotlin.math.ceil
 
+
 object dashboardView : StackPane() {
 
     // ====================================================================================================
@@ -46,13 +47,10 @@ object dashboardView : StackPane() {
         val mainLayout = createMainLayout()
         children.add(mainLayout)
 
-        Platform.runLater {
-            Thread.sleep(100)
             Platform.runLater {
                 refreshCurrentChart()
                 logger.info("Dashboard initial geladen")
             }
-        }
     }
 
     // ====================================================================================================
@@ -134,30 +132,24 @@ object dashboardView : StackPane() {
     }
 
     private fun createButtonBox(): HBox {
-        return HBox().apply {
+        var box = HBox().apply {
             spacing = 10.0
             padding = Insets(5.0)
             alignment = Pos.CENTER
-
-            // Buttons konfigurieren
-            toggleChartButton.apply {
-                text = "Zu Kuchendiagramm wechseln"
-                prefHeight = BTN_HEIGHT
-                prefWidth = BTN_WIDTH
-                style = "-fx-font-weight: bold;"
-                setOnAction { toggleChart() }
-            }
-
-            refreshButton.apply {
-                text = "Aktualisieren"
-                prefHeight = BTN_HEIGHT
-                prefWidth = BTN_WIDTH
-                style = "-fx-font-weight: bold;"
-                setOnAction { refreshCurrentChart() }
-            }
-
-            children.addAll(toggleChartButton, refreshButton)
         }
+
+        toggleChartButton.apply {
+            text = "Zu Kuchendiagramm wechseln"
+            prefHeight = BTN_HEIGHT
+            prefWidth = BTN_WIDTH
+
+            style = "-fx-font-weight: bold;"
+            setOnAction { toggleChart() }
+        }
+
+        children.addAll(toggleChartButton, refreshButton)
+
+        return box
     }
 
     // ====================================================================================================
@@ -204,14 +196,12 @@ object dashboardView : StackPane() {
     // REFRESH
     // ====================================================================================================
 
-    private fun refreshCurrentChart() {
+     fun refreshCurrentChart() {
         if (showingBarChart) {
             lastData = emptyList()
             updateBarChart()
-            logger.info("BarChart aktualisiert")
-        } else {
             updatePieChart()
-            logger.info("PieChart aktualisiert")
+            logger.info("BarChart & PieChart aktualisiert")
         }
     }
 
@@ -356,7 +346,7 @@ object dashboardView : StackPane() {
         val weekData = MutableList(52) { mutableListOf<String>() }
 
         employees.forEach { emp ->
-            emp.getVacationEntries().forEach { entry ->
+            emp.vacationEntries.forEach { entry ->
                 for (week in entry.range.startWeek..entry.range.endWeek) {
                     val index = (week - 1u).toInt()
                     if (index in 0..51) {
@@ -386,7 +376,7 @@ object dashboardView : StackPane() {
 
             // Geplante Wochen zählen
             val plannedWeeks = mutableSetOf<UInt>()
-            emp.getVacationEntries().forEach { entry ->
+            emp.vacationEntries.forEach { entry ->
                 for (week in entry.range.startWeek..entry.range.endWeek) {
                     plannedWeeks.add(week)
                 }
