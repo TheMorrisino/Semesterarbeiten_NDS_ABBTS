@@ -1,7 +1,7 @@
 package ressourcix.gui.pages
 
 
-import ressourcix.gui.util.*
+
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.geometry.Insets
@@ -15,6 +15,7 @@ import ressourcix.app.app
 import ressourcix.domain.Employee
 import ressourcix.logger.logger
 import kotlin.math.ceil
+
 
 object dashboardView : StackPane() {
 
@@ -31,7 +32,7 @@ object dashboardView : StackPane() {
     private lateinit var pieChart: PieChart
     private lateinit var chartContainer: VBox
     private val toggleChartButton = Button()
-    private val refreshButton = Button()
+
 
     // ====================================================================================================
     // STATE
@@ -46,13 +47,10 @@ object dashboardView : StackPane() {
         val mainLayout = createMainLayout()
         children.add(mainLayout)
 
-        Platform.runLater {
-            Thread.sleep(100)
             Platform.runLater {
                 refreshCurrentChart()
                 logger.info("Dashboard initial geladen")
             }
-        }
     }
 
     // ====================================================================================================
@@ -75,6 +73,7 @@ object dashboardView : StackPane() {
         barChart = BarChart(xAxis, yAxis).apply {
             animated = false
             isLegendVisible = false
+            title = "Urlaubsübersicht"
         }
 
         // PieChart
@@ -134,32 +133,24 @@ object dashboardView : StackPane() {
     }
 
     private fun createButtonBox(): HBox {
-        return HBox().apply {
+        val box = HBox().apply {
             spacing = 10.0
             padding = Insets(5.0)
             alignment = Pos.CENTER
-
-            // Buttons konfigurieren
-            toggleChartButton.apply {
-                text = "Zu Kuchendiagramm wechseln"
-                prefHeight = BTN_HEIGHT
-                prefWidth = BTN_WIDTH
-                style = "-fx-font-weight: bold;"
-                setOnAction { toggleChart() }
-            }
-
-            refreshButton.apply {
-                text = "Aktualisieren"
-                prefHeight = BTN_HEIGHT
-                prefWidth = BTN_WIDTH
-                style = "-fx-font-weight: bold;"
-                setOnAction { refreshCurrentChart() }
-            }
-
-            children.addAll(toggleChartButton, refreshButton)
         }
-    }
 
+        toggleChartButton.apply {
+            text = "Urlaubsübersicht"
+            prefHeight = BTN_HEIGHT
+            prefWidth = BTN_WIDTH
+            style = "-fx-font-weight: bold;"
+            setOnAction { toggleChart() }
+        }
+
+        box.children.add(toggleChartButton)
+
+        return box
+    }
     // ====================================================================================================
     // CHART WECHSEL
     // ====================================================================================================
@@ -172,21 +163,18 @@ object dashboardView : StackPane() {
             chartContainer.children.forEach { VBox.setVgrow(it, null) }
             chartContainer.children.clear()
 
-            // Chart wechseln
             if (showingBarChart) {
                 showBarChart()
             } else {
                 showPieChart()
             }
-
             chartContainer.layout()
         }
     }
-
     private fun showBarChart() {
         chartContainer.children.add(barChart)
         VBox.setVgrow(barChart, Priority.ALWAYS)
-        toggleChartButton.text = "Zu Kuchendiagramm wechseln"
+        toggleChartButton.text = "Geplant/Verfügbare Ferien"
 
         lastData = emptyList() // Force update
         updateBarChart()
@@ -195,7 +183,7 @@ object dashboardView : StackPane() {
     private fun showPieChart() {
         chartContainer.children.add(pieChart)
         VBox.setVgrow(pieChart, Priority.ALWAYS)
-        toggleChartButton.text = "Zu Balkendiagramm wechseln"
+        toggleChartButton.text = "Urlaubsübersicht"
 
         updatePieChart()
     }
@@ -204,14 +192,12 @@ object dashboardView : StackPane() {
     // REFRESH
     // ====================================================================================================
 
-    private fun refreshCurrentChart() {
+     fun refreshCurrentChart() {
         if (showingBarChart) {
             lastData = emptyList()
             updateBarChart()
-            logger.info("BarChart aktualisiert")
-        } else {
             updatePieChart()
-            logger.info("PieChart aktualisiert")
+            logger.info("BarChart & PieChart aktualisiert")
         }
     }
 

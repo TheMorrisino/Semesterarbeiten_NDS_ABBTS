@@ -1,6 +1,5 @@
 @startuml Ressourcix_Class_Diagram_Vertical
 
-' Styling für bessere Lesbarkeit
 skinparam classAttributeIconSize 0
 skinparam classFontSize 10
 skinparam packageStyle rectangle
@@ -233,42 +232,42 @@ class Main <<(M, orchid)>> {
 ' ==================== Relationships ====================
 
 ' Main connections
-Main .down.> GuiBorderPane : launches
-Main .down.> app : starts
-Main .down.> logger : configures
+Main .down.> GuiBorderPane : startet
+Main .down.> app : startet
+Main .down.> logger : konfiguriert
 
 ' App layer
-app -down-> EmployeeManagement : uses
-app -down-> IdProvider : uses\n(2 instances)
+app -down-> EmployeeManagement : verwendet
+app -down-> IdProvider : verwendet\n(2 Instanzen)
 
 ' GUI layer
-GuiBorderPane .down.> app : uses
-bottomBar .down.> logger : reads logs
+GuiBorderPane .down.> app : verwendet
+bottomBar .down.> logger : liest Logs
 
 ' Domain relationships (vertical)
-EmployeeManagement "1" o-down- "0..*" Employee : manages
-Employee "1" *-down- "0..*" VacationEntry : contains
-VacationEntry *-down- "1" WeekRange : contains
+EmployeeManagement "1" o-down- "0..*" Employee : verwaltet
+Employee "1" *-down- "0..*" VacationEntry : enthält
+VacationEntry *-down- "1" WeekRange : enthält
 
 ' Domain relationships (horizontal)
-Employee -right-> Role : has
-Employee -right-> Department : has
-Employee -right-> Education : has
-VacationEntry -right-> VacationStatus : has
+Employee -right-> Role : hat
+Employee -right-> Department : hat
+Employee -right-> Education : hat
+VacationEntry -right-> VacationStatus : hat
 
 ' Essential layer
-IdProvider -down-> IdState : restores
-jsonReader .up.> Employee : creates
-jsonReader .up.> config : configures
-jsonWriter .up.> Employee : serializes
-jsonWriter .up.> config : serializes
+IdProvider -down-> IdState : stellt wieder her
+jsonReader .up.> Employee : erstellt
+jsonReader .up.> config : konfiguriert
+jsonWriter .up.> Employee : serialisiert
+jsonWriter .up.> config : serialisiert
 
 ' Logger relationships
-logger -right-> LogEntry : creates
-LogEntry -right-> Level : uses
+logger -right-> LogEntry : erstellt
+LogEntry -right-> Level : verwendet
 
 ' Cross-layer dependencies
-jsonReader -up-> EmployeeManagement : loads data
-jsonWriter -up-> EmployeeManagement : saves data
+jsonReader -up-> EmployeeManagement : lädt Daten
+jsonWriter -up-> EmployeeManagement : speichert Daten
 
 @enduml

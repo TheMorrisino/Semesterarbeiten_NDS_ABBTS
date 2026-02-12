@@ -10,7 +10,7 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.scene.input.KeyEvent
 import ressourcix.domain.config
-import ressourcix.gui.popups.weekPickerPopUp
+import gui.popUp.weekPickerPopUp
 import ressourcix.logger.logger
 import ressourcix.gui.util.createButton
 import ressourcix.gui.util.createDataBox

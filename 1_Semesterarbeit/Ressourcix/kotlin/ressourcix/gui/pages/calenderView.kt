@@ -369,6 +369,7 @@ object calenderView : StackPane() {
                     logger.info("Ferieneintrag hinzugefügt Mitarbeiter $empId von ${kw.startKW} bis ${kw.endKW} ")
                     app.management.updateOverlapList()
                     refreshVacations()
+                    dashboardView.refreshCurrentChart()
                    // closePopup()
                     }
                 },
@@ -377,6 +378,7 @@ object calenderView : StackPane() {
                     logger.info("Ferieneintrag entfernt Mitarbeiter $empId mit ${kw.startKW}")
                     app.management.updateOverlapList()
                     refreshVacations()
+                    dashboardView.refreshCurrentChart()
                     //closePopup()
                 }
             )

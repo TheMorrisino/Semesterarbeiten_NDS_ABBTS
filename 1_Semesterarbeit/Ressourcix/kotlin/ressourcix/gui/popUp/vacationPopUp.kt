@@ -14,12 +14,9 @@ import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.text.TextAlignment
 import ressourcix.app.app
-import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.calenderView.closePopup
-import ressourcix.gui.pages.calenderView.refreshVacations
 import ressourcix.gui.pages.calenderView.selectedEmployee
 import ressourcix.gui.pages.calenderView.showPopup
-import ressourcix.logger.logger
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
@@ -136,7 +133,7 @@ object vacationPopUp {
         val checkBtn = createButton("Antrag\nBearbeiten").apply {
             setOnAction {
                 showPopup(
-                    CheckVacationPopUp.build(
+                    checkVacationPopUp.build(
                         onClose = { closePopup() }
                     )
                 )
