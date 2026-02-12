@@ -60,9 +60,21 @@ object vacationPopUp {
             if (end < start) return "End-KW darf nicht kleiner sein als Start-KW"
             val startWeek = start ?: return null
             val endWeek = end ?: return null
-            if (app.management.canAddVacation(selectedEmployee, startWeek.toUInt(), endWeek.toUInt())) {
-            return "Es wurde eine Überschneidung mit den bereits beantragten Ferien erkannt"
+
+            val employee = app.management.employees
+                .find { it.getId() == selectedEmployee.getId() }
+            if (employee == null) {
+                return "Mitarbeiter wurde nicht gefunden"
             }
+            if (!app.management.canAddVacation(
+                    employee,
+                    startWeek.toUInt(),
+                    endWeek.toUInt()
+                )
+            ) {
+                return "Es wurde eine Überschneidung mit den bereits beantragten Ferien erkannt"
+            }
+
             return null
         }
 
