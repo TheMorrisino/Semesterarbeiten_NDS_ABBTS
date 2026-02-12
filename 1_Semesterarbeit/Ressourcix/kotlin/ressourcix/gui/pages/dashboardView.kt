@@ -32,7 +32,7 @@ object dashboardView : StackPane() {
     private lateinit var pieChart: PieChart
     private lateinit var chartContainer: VBox
     private val toggleChartButton = Button()
-    private val refreshButton = Button()
+
 
     // ====================================================================================================
     // STATE
@@ -73,6 +73,7 @@ object dashboardView : StackPane() {
         barChart = BarChart(xAxis, yAxis).apply {
             animated = false
             isLegendVisible = false
+            title = "Urlaubsübersicht"
         }
 
         // PieChart
@@ -132,26 +133,24 @@ object dashboardView : StackPane() {
     }
 
     private fun createButtonBox(): HBox {
-        var box = HBox().apply {
+        val box = HBox().apply {
             spacing = 10.0
             padding = Insets(5.0)
             alignment = Pos.CENTER
         }
 
         toggleChartButton.apply {
-            text = "Zu Kuchendiagramm wechseln"
+            text = "Urlaubsübersicht"
             prefHeight = BTN_HEIGHT
             prefWidth = BTN_WIDTH
-
             style = "-fx-font-weight: bold;"
             setOnAction { toggleChart() }
         }
 
-        children.addAll(toggleChartButton, refreshButton)
+        box.children.add(toggleChartButton)
 
         return box
     }
-
     // ====================================================================================================
     // CHART WECHSEL
     // ====================================================================================================
@@ -164,21 +163,18 @@ object dashboardView : StackPane() {
             chartContainer.children.forEach { VBox.setVgrow(it, null) }
             chartContainer.children.clear()
 
-            // Chart wechseln
             if (showingBarChart) {
                 showBarChart()
             } else {
                 showPieChart()
             }
-
             chartContainer.layout()
         }
     }
-
     private fun showBarChart() {
         chartContainer.children.add(barChart)
         VBox.setVgrow(barChart, Priority.ALWAYS)
-        toggleChartButton.text = "Zu Kuchendiagramm wechseln"
+        toggleChartButton.text = "Geplant/Verfügbare Ferien"
 
         lastData = emptyList() // Force update
         updateBarChart()
@@ -187,7 +183,7 @@ object dashboardView : StackPane() {
     private fun showPieChart() {
         chartContainer.children.add(pieChart)
         VBox.setVgrow(pieChart, Priority.ALWAYS)
-        toggleChartButton.text = "Zu Balkendiagramm wechseln"
+        toggleChartButton.text = "Urlaubsübersicht"
 
         updatePieChart()
     }
