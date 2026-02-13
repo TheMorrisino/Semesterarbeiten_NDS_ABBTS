@@ -35,9 +35,7 @@ object app  {
                 logger.debug("JASON File konnte nicht geladen werden")
         }
         logger.debug("JASON File ausgeschaltet")
-    }
 
-    fun loggerRun(){
         while (true) {
             try {
                 updateStatusIfChanged()
@@ -48,4 +46,4 @@ object app  {
             }
         }
     }
-}
+    }

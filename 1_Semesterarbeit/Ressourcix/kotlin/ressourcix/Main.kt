@@ -3,7 +3,6 @@ package ressourcix
 import javafx.application.Application
 import ressourcix.app.app
 import gui.StartAnimation
-import ressourcix.app.app.loggerRun
 import ressourcix.logger.logger
 
 fun main() {
@@ -17,7 +16,6 @@ fun main() {
         try {
             logger.info("App-Logic-Thread gestartet")
             app.run()
-            loggerRun()
         } catch (e: Exception) {
             logger.fatal("Kritischer Fehler in App-Logic", e)
         }
