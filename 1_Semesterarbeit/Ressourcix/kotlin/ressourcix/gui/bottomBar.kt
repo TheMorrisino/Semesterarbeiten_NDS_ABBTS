@@ -38,12 +38,6 @@ object bottomBar {
     // ====================================================================================================
     private var lastMessage = ""
 
-    // ====================================================================================================
-    // INITIALIZATION
-    // ====================================================================================================
-    init {
-        startStatusUpdater()
-    }
 
     // ====================================================================================================
     // UI CREATION
@@ -72,30 +66,12 @@ object bottomBar {
         children.addAll(statusField, spacer, clockLabel)
     }
 
-    // ====================================================================================================
-    // STATUS UPDATE
-    // ====================================================================================================
-    private fun startStatusUpdater() {
-        Thread {
-            while (true) {
-                try {
-                    updateStatusIfChanged()
-                } catch (e: InterruptedException) {
-                    break
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }.apply {
-            isDaemon = true
-            name = "BottomBar-Status-Updater"
-            start()
-        }
-    }
 
-    private fun updateStatusIfChanged() {
+    // ====================================================================================================
+    // LOGGER STATUS UPDATE NUR BEI ÄNDERUNGEN
+    // ====================================================================================================
+    fun updateStatusIfChanged() {
         val currentMessage = logger.getLastLogMessageWithTimestamp() ?: DEFAULT_STATUS
-
         if (currentMessage != lastMessage) {
             lastMessage = currentMessage
             Platform.runLater {
