@@ -22,8 +22,8 @@ object dashboardView : StackPane() {
     // ====================================================================================================
     // KONSTANTEN
     // ====================================================================================================
-    private const val BTN_HEIGHT = 80.0
-    private const val BTN_WIDTH = 200.0
+    private const val BTN_HEIGHT = 50.0
+    private const val BTN_WIDTH = 180.0
 
     // ====================================================================================================
     // UI KOMPONENTEN
@@ -140,7 +140,7 @@ object dashboardView : StackPane() {
         }
 
         toggleChartButton.apply {
-            text = "Urlaubsübersicht"
+            text = "Geplant/Verfügbare Ferien"
             prefHeight = BTN_HEIGHT
             prefWidth = BTN_WIDTH
             style = "-fx-font-weight: bold;"
