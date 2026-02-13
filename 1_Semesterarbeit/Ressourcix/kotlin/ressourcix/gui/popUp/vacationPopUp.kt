@@ -56,7 +56,6 @@ object vacationPopUp {
             if (start !in 1..52) return "Start‑KW muss 1–52 sein"
             if (end !in 1..52)   return "End‑KW muss 1–52 sein"
             if (end < start)     return "End‑KW darf nicht kleiner sein als Start‑KW"
-
             val employee = app.management.employees
                 .find { it.getId() == selectedEmployee.getId() }
             if (employee == null) {
@@ -75,7 +74,6 @@ object vacationPopUp {
             if (end < start) return "End-KW darf nicht kleiner sein als Start-KW"
             val startWeek = start ?: return null
             val endWeek = end ?: return null
-
             val employee = app.management.employees
                 .find { it.getId() == selectedEmployee.getId() }
             if (employee == null) {
