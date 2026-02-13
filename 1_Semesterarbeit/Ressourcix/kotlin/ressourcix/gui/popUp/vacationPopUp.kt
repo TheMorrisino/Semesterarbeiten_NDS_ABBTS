@@ -14,12 +14,9 @@ import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.text.TextAlignment
 import ressourcix.app.app
-import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.calenderView.closePopup
-import ressourcix.gui.pages.calenderView.refreshVacations
 import ressourcix.gui.pages.calenderView.selectedEmployee
 import ressourcix.gui.pages.calenderView.showPopup
-import ressourcix.logger.logger
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
@@ -38,6 +35,7 @@ object vacationPopUp {
     var idField = createTfl("", "")
     var nameField = createTfl("", "")
 
+
     fun build(onClose: () -> Unit, onRemove: (vacationRequestWK) -> Unit, onSave: (vacationRequestWK) -> Unit): Node {
         var firstVacationWeek = createTfl("", "Erste Ferien Woche eintragen...")
         var lastVacationWeek = createTfl("", "Letzte Ferien Woche eintragen...")
@@ -50,6 +48,23 @@ object vacationPopUp {
             style = "-fx-text-fill: red;"
 
         }
+
+        fun basicValidate(): String? {
+            val start = firstVacationWeek.text.toIntOrNull()
+            val end   = lastVacationWeek.text.toIntOrNull()
+            if (start == null || end == null) return "Bitte Start‑ und Endwoche ausfüllen"
+            if (start !in 1..52) return "Start‑KW muss 1–52 sein"
+            if (end !in 1..52)   return "End‑KW muss 1–52 sein"
+            if (end < start)     return "End‑KW darf nicht kleiner sein als Start‑KW"
+
+            val employee = app.management.employees
+                .find { it.getId() == selectedEmployee.getId() }
+            if (employee == null) {
+                return "Mitarbeiter wurde nicht gefunden"
+            }
+            return null
+        }
+
 
         fun validate(): String? {
             val start = firstVacationWeek.text.toIntOrNull()
@@ -111,17 +126,17 @@ object vacationPopUp {
         val deleteBtn = createButton("Antrag\nLöschen").apply {
             disableProperty().bind(
                 Bindings.createBooleanBinding(
-                    { validate() != null },
+                    { basicValidate() != null },
                     firstVacationWeek.textProperty(),
                     lastVacationWeek.textProperty()
                 )
             )
             setOnAction {
-            val err = validate()
-            if (err != null) {
-                updateError()
-                return@setOnAction
-            }
+//            val err = validate()
+//            if (err != null) {
+//                updateError()
+//                return@setOnAction
+//            }
             onRemove(
                 vacationRequestWK(
                     firstVacationWeek.text.toUInt(),
@@ -136,7 +151,7 @@ object vacationPopUp {
         val checkBtn = createButton("Antrag\nBearbeiten").apply {
             setOnAction {
                 showPopup(
-                    CheckVacationPopUp.build(
+                    checkVacationPopUp.build(
                         onClose = { closePopup() }
                     )
                 )
