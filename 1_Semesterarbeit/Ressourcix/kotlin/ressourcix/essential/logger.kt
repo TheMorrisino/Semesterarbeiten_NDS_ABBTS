@@ -5,42 +5,27 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.ConcurrentLinkedQueue
 
-/**
- * Zentrales Logging-System für Ressourcix
- *
- * Verwendung:
- * Logger.info("Anwendung gestartet")
- * Logger.error("Fehler beim Laden", exception)
- * Logger.debug("Mitarbeiter geladen: ${employee.name}")
- */
+
 object logger {
 
-    // Log-Level
+
+    private object logConfig {
+        const val MAX_BUFFER_SIZE = 1000
+        const val LOG_DIR_NAME = "logs"
+        const val TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS"
+        const val FILE_DATE_FORMAT = "yyyy-MM-dd"
+        const val FILE_NAME_PREFIX = "ressourcix_"
+        const val FILE_EXTENSION = ".log"
+    }
+
     enum class Level {
         DEBUG,   // Detaillierte Informationen für Entwicklung
         INFO,    // Allgemeine Informationen
         WARN,    // Warnungen
         ERROR,   // Fehler
-        FATAL    // Kritische Fehler
-    }
+        FATAL;   // Kritische Fehler
 
-    // Konfiguration
-    private var currentLevel: Level = Level.INFO
-    private var logToFile: Boolean = true
-    private var logToConsole: Boolean = true
-    private val logDir = File("logs")
-    private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-    private val fileDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
-    // In-Memory Log-Speicher (für UI-Anzeige)
-    private val logBuffer = ConcurrentLinkedQueue<LogEntry>()
-    private val maxBufferSize = 1000
-
-    init {
-        // Log-Verzeichnis erstellen, falls nicht vorhanden
-        if (logToFile && !logDir.exists()) {
-            logDir.mkdirs()
-        }
+        fun isLoggable(currentLevel: Level): Boolean = this.ordinal >= currentLevel.ordinal
     }
 
     data class LogEntry(
@@ -51,157 +36,149 @@ object logger {
         val threadName: String = Thread.currentThread().name,
         val className: String? = null
     ) {
-        fun toFormattedString(): String {
-            val time = timestamp.format(dateFormatter)
-            val thread = "[$threadName]"
-            val lvl = level.name.padEnd(5)
-            val cls = className?.let { "[$it]" } ?: ""
-            val msg = message
-            val ex = exception?.let { "\n${it.stackTraceToString()}" } ?: ""
-            return "$time $thread $lvl $cls $msg$ex"
+        fun toFormattedString(): String = buildString {
+            append(timestamp.format(timestampFormatter))
+            append(" [").append(threadName).append("]")
+            append(" ").append(level.name.padEnd(5))
+            className?.let { append(" [").append(it).append("]") }
+            append(" ").append(message)
+            exception?.let { append("\n").append(it.stackTraceToString()) }
         }
     }
 
+    private var currentLevel: Level = Level.INFO
+    private var logToFile: Boolean = true
+    private var logToConsole: Boolean = true
+
+    private val logDir = File(logConfig.LOG_DIR_NAME)
+    private val logBuffer = ConcurrentLinkedQueue<LogEntry>()
+    private val logChangeListeners = mutableListOf<(LogEntry) -> Unit>()
+
+
+    private val timestampFormatter = DateTimeFormatter.ofPattern(logConfig.TIMESTAMP_FORMAT)
+    private val fileDateFormatter = DateTimeFormatter.ofPattern(logConfig.FILE_DATE_FORMAT)
+
+
+    init {
+        ensureLogDirectoryExists()
+    }
+
+    private fun ensureLogDirectoryExists() {
+        if (logToFile && !logDir.exists()) {
+            logDir.mkdirs()
+        }
+    }
 
     fun setLevel(level: Level) {
         currentLevel = level
         info("Log-Level gesetzt auf: $level")
     }
 
-
     fun setFileLogging(enabled: Boolean) {
         logToFile = enabled
+        if (enabled) ensureLogDirectoryExists()
     }
-
 
     fun setConsoleLogging(enabled: Boolean) {
         logToConsole = enabled
     }
 
-    // ====================================================================================
-    // Log-Methoden
-    // ====================================================================================
-
-    fun debug(message: String, exception: Throwable? = null) {
+    fun debug(message: String, exception: Throwable? = null) =
         log(Level.DEBUG, message, exception)
-    }
 
-    fun info(message: String, exception: Throwable? = null) {
+    fun info(message: String, exception: Throwable? = null) =
         log(Level.INFO, message, exception)
-    }
 
-    fun warn(message: String, exception: Throwable? = null) {
+    fun warn(message: String, exception: Throwable? = null) =
         log(Level.WARN, message, exception)
-    }
 
-    fun error(message: String, exception: Throwable? = null) {
+    fun error(message: String, exception: Throwable? = null) =
         log(Level.ERROR, message, exception)
-    }
 
-    fun fatal(message: String, exception: Throwable? = null) {
+    fun fatal(message: String, exception: Throwable? = null) =
         log(Level.FATAL, message, exception)
+
+    fun addLogChangeListener(listener: (LogEntry) -> Unit) {
+        synchronized(logChangeListeners) {
+            logChangeListeners.add(listener)
+        }
     }
 
-    private fun log(level: Level, message: String, exception: Throwable? = null) {
-        // Prüfen ob Level aktiv ist
-        if (level.ordinal < currentLevel.ordinal) {
-            return
+    fun removeLogChangeListener(listener: (LogEntry) -> Unit) {
+        synchronized(logChangeListeners) {
+            logChangeListeners.remove(listener)
         }
+    }
 
-        // Klassenname ermitteln (aus StackTrace)
-        val className = try {
-            Thread.currentThread().stackTrace
-                .firstOrNull {
-                    !it.className.contains("essential") &&
-                            !it.className.contains("java.lang.Thread")
-                }?.className?.split(".")?.last()
-        } catch (e: Exception) {
-            null
-        }
+    private fun log(level: Level, message: String, exception: Throwable?) {
+        if (!level.isLoggable(currentLevel)) return
 
-        val entry = LogEntry(
-            timestamp = LocalDateTime.now(),
-            level = level,
-            message = message,
-            exception = exception,
-            className = className
-        )
+        val entry = createLogEntry(level, message, exception)
 
-        // Zu Buffer hinzufügen
         addToBuffer(entry)
 
-        // Console-Output
-        if (logToConsole) {
-            printToConsole(entry)
-        }
+        if (logToConsole) outputToConsole(entry)
+        if (logToFile) outputToFile(entry)
 
-        // File-Output
-        if (logToFile) {
-            writeToFile(entry)
-        }
+        notifyListeners(entry)
     }
+
+    private fun createLogEntry(level: Level, message: String, exception: Throwable?) = LogEntry(
+        timestamp = LocalDateTime.now(),
+        level = level,
+        message = message,
+        exception = exception,
+        className = extractCallerClassName()
+    )
 
     private fun addToBuffer(entry: LogEntry) {
         logBuffer.offer(entry)
+        trimBufferIfNeeded()
+    }
 
-        // Buffer-Größe limitieren
-        while (logBuffer.size > maxBufferSize) {
+    private fun trimBufferIfNeeded() {
+        while (logBuffer.size > logConfig.MAX_BUFFER_SIZE) {
             logBuffer.poll()
         }
     }
 
-    // ====================================================================================
-    // Gibt Log auf der Console aus
-    // ====================================================================================
-    private fun printToConsole(entry: LogEntry) {
+    private fun outputToConsole(entry: LogEntry) {
         val output = entry.toFormattedString()
-
-        when (entry.level) {
-            Level.ERROR, Level.FATAL -> System.err.println(output)
-            else -> println(output)
-        }
+        val stream = if (entry.level in setOf(Level.ERROR, Level.FATAL)) System.err else System.out
+        stream.println(output)
     }
 
-    // ====================================================================================
-    // Schreibt die Logs in Datei
-    // ====================================================================================
-    private fun writeToFile(entry: LogEntry) {
-        try {
-            val today = LocalDateTime.now().format(fileDateFormatter)
-            val logFile = File(logDir, "ressourcix_$today.log")
-
+    private fun outputToFile(entry: LogEntry) {
+        runCatching {
+            val logFile = getCurrentLogFile()
             logFile.appendText(entry.toFormattedString() + "\n")
-        } catch (e: Exception) {
-            System.err.println("Fehler beim Schreiben der Log-Datei: ${e.message}")
+        }.onFailure { exception ->
+            System.err.println("Fehler beim Schreiben der Log-Datei: ${exception.message}")
         }
     }
-    // ====================================================================================
-    // Log-Abruf für UI
-    // ====================================================================================
-    fun getLastLogMessage(): String? {
-        return logBuffer.lastOrNull()?.message
+
+    private fun getCurrentLogFile(): File {
+        val today = LocalDateTime.now().format(fileDateFormatter)
+        return File(logDir, "${logConfig.FILE_NAME_PREFIX}$today${logConfig.FILE_EXTENSION}")
     }
 
-    // ====================================================================================
-    // Gibt den letzten Log-Eintrag zurück (komplett)
-    // ====================================================================================
-    fun getLastLogEntry(): LogEntry? {
-        return logBuffer.lastOrNull()
-    }
+    private fun notifyListeners(entry: LogEntry) {
+        val listeners = synchronized(logChangeListeners) { logChangeListeners.toList() }
 
-    // ====================================================================================
-    // Gibt den letzten Log-Eintrag aller Level zurück für das objet bottomBar
-    // ====================================================================================
-
-    fun getLastLogMessageWithTimestamp(format: String = "HH:mm:ss"): String? {
-        val entry = logBuffer.lastOrNull()
-
-        return if (entry != null) {
-            val timeFormatter = DateTimeFormatter.ofPattern(format)
-            val time = entry.timestamp.format(timeFormatter)
-            "$time - ${entry.message}"
-        } else {
-            null
+        listeners.forEach { listener ->
+            runCatching {
+                listener(entry)
+            }.onFailure { exception ->
+                System.err.println("Fehler beim Benachrichtigen eines Log-Listeners: ${exception.message}")
+            }
         }
     }
+
+    private fun extractCallerClassName(): String? = runCatching {
+        Thread.currentThread().stackTrace
+            .firstOrNull {
+                !it.className.contains("logger") &&
+                        !it.className.contains("java.lang.Thread")
+            }?.className?.substringAfterLast('.')
+    }.getOrNull()
 }

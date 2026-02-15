@@ -14,6 +14,7 @@ fun main() {
     try {
         logger.info("App-Logic-Thread gestartet")
         app.run()
+
     } catch (e: Exception) {
         logger.fatal("Kritischer Fehler in App-Logic", e)
     }

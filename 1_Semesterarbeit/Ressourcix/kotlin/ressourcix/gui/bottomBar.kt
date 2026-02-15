@@ -1,5 +1,6 @@
 package ressourcix.gui
 
+import javafx.animation.Animation
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
 import javafx.application.Platform
@@ -19,84 +20,90 @@ import java.time.format.DateTimeFormatter
 
 object bottomBar {
 
-    // ====================================================================================================
-    // CONSTANTS
-    // ====================================================================================================
-    private const val TIME_FORMAT = "dd.MM.yyyy HH:mm:ss"
-    private const val DEFAULT_STATUS = "Bereit"
+    private object Config {
+        const val CLOCK_FORMAT = "dd.MM.yyyy HH:mm:ss"
+        const val STATUS_FORMAT = "HH:mm:ss"
+        const val DEFAULT_STATUS = "Bereit"
+        const val SPACING = 10.0
+        const val PADDING = 5.0
+        const val CLOCK_INTERVAL_SECONDS = 1.0
 
-
-    // ====================================================================================================
-    // UI COMPONENTS
-    // ====================================================================================================
-    private val statusField = createStatusField()
-    private val clockLabel = createClockLabel()
-    private val bar = createBar()
-
-    // ====================================================================================================
-    // STATE
-    // ====================================================================================================
-    private var lastMessage = ""
-
-
-    // ====================================================================================================
-    // UI CREATION
-    // ====================================================================================================
-    private fun createStatusField() = TextField().apply {
-        isDisable = true
-        isEditable = false
-        text = DEFAULT_STATUS
-        style = "-fx-background-color: #f5f5f5; -fx-opacity: 1.0;"
+        const val STATUS_STYLE = "-fx-background-color: #f5f5f5; -fx-opacity: 1.0;"
+        const val CLOCK_STYLE = "-fx-text-fill: black;"
+        const val BAR_STYLE = "-fx-border-color: #cccccc; -fx-border-width: 1 0 0 0;"
     }
 
-    private fun createClockLabel() = Label().apply {
-        style = "-fx-text-fill: black;"
-    }
+    private val statusField: TextField by lazy { createStatusField() }
+    private val clockLabel: Label by lazy { createClockLabel() }
+    private val clockTimeline: Timeline by lazy { createClockTimeline() }
 
-    private fun createBar() = HBox(10.0).apply {
-        padding = Insets(5.0)
-        alignment = Pos.CENTER_LEFT
-        style = "-fx-border-color: #cccccc; -fx-border-width: 1 0 0 0;"
+    private val clockFormatter = DateTimeFormatter.ofPattern(Config.CLOCK_FORMAT)
+    private val statusFormatter = DateTimeFormatter.ofPattern(Config.STATUS_FORMAT)
 
-        val spacer = Region().apply {
-            HBox.setHgrow(this, Priority.ALWAYS)
-        }
 
-        HBox.setHgrow(statusField, Priority.ALWAYS)
-        children.addAll(statusField, spacer, clockLabel)
+    init {
+        updateClock()
+        subscribeToLogUpdates()
     }
 
 
-    // ====================================================================================================
-    // LOGGER STATUS UPDATE NUR BEI ÄNDERUNGEN
-    // ====================================================================================================
-    fun updateStatusIfChanged() {
-        val currentMessage = logger.getLastLogMessageWithTimestamp() ?: DEFAULT_STATUS
-        if (currentMessage != lastMessage) {
-            lastMessage = currentMessage
-            Platform.runLater {
-                statusField.text = currentMessage
-            }
+    fun getView(): HBox = createBar()
+
+    fun start() {
+        clockTimeline.play()
+    }
+
+    fun stop() {
+        clockTimeline.stop()
+    }
+
+
+    private fun subscribeToLogUpdates() {
+        logger.addLogChangeListener { entry ->
+            val timestamp = entry.timestamp.format(statusFormatter)
+            val message = "$timestamp - ${entry.message}"
+            updateStatus(message)
         }
     }
 
-    // ====================================================================================================
-    // CLOCK UPDATE
-    // ====================================================================================================
-    val clockTimeline = Timeline().apply {
-        keyFrames.add(KeyFrame(Duration.ZERO, EventHandler { updateClock() }))
-        keyFrames.add(KeyFrame(Duration.seconds(1.0), EventHandler { updateClock() }))
-        cycleCount = Timeline.INDEFINITE
-        play()
+    private fun updateStatus(message: String) {
+        Platform.runLater {
+            statusField.text = message
+        }
+    }
+
+
+    private fun createClockTimeline() = Timeline(
+        KeyFrame(Duration.seconds(Config.CLOCK_INTERVAL_SECONDS), EventHandler { updateClock() })
+    ).apply {
+        cycleCount = Animation.INDEFINITE
     }
 
     private fun updateClock() {
-        val formatter = DateTimeFormatter.ofPattern(TIME_FORMAT)
-        clockLabel.text = LocalDateTime.now().format(formatter)
+        clockLabel.text = LocalDateTime.now().format(clockFormatter)
     }
 
-    // ====================================================================================================
-    // GETTER
-    // ====================================================================================================
-    fun getView(): HBox = bar
+
+    private fun createStatusField() = TextField(Config.DEFAULT_STATUS).apply {
+        isDisable = true
+        isEditable = false
+        style = Config.STATUS_STYLE
+    }
+
+    private fun createClockLabel() = Label().apply {
+        style = Config.CLOCK_STYLE
+    }
+
+    private fun createBar() = HBox(Config.SPACING).apply {
+        padding = Insets(Config.PADDING)
+        alignment = Pos.CENTER_LEFT
+        style = Config.BAR_STYLE
+
+        HBox.setHgrow(statusField, Priority.ALWAYS)
+        children.addAll(statusField, createSpacer(), clockLabel)
+    }
+
+    private fun createSpacer() = Region().apply {
+        HBox.setHgrow(this, Priority.ALWAYS)
+    }
 }
