@@ -25,7 +25,7 @@ import ressourcix.gui.util.createTfl
 import ressourcix.gui.util.lettersMaxFormatter
 import ressourcix.gui.util.positiveIntNoZeroFormatter
 import ressourcix.gui.util.promptWhenNull
-import ressourcix.gui.components.PopupLayer
+import ressourcix.gui.components.PopUpLayer
 import ressourcix.gui.util.installBirthdayField
 import ressourcix.gui.util.showEmployeeNotFound
 import ressourcix.gui.util.showDeleteFailed
@@ -35,7 +35,7 @@ import ressourcix.gui.util.showSaveFailed
 
 object employeeManagementView : BorderPane() {
 
-    private val popupLayer = PopupLayer()
+    private val popupLayer = PopUpLayer()
 
     private var selectedEmployee: Employee? = null
     private var isEditMode: Boolean = false

@@ -35,9 +35,3 @@ val VacationStatus.code: String
         VacationStatus.REJECTED  -> "❌"
     }
 
-enum class OverlapStatus {
-    OK,       // Grün: Keine Überschneidung
-    WARNING,  // Gelb: Überschneidung vorhanden, aber unter der Limite
-    CRITICAL  // Rot: Maximales Limit erreicht
-
-}

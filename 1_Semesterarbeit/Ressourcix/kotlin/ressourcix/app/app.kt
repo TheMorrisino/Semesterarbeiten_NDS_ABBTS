@@ -6,6 +6,7 @@ import ressourcix.domain.EmployeeManagement
 import ressourcix.essential.jsonReader
 import ressourcix.logger.logger
 import ressourcix.essential.IdProvider
+import ressourcix.gui.bottomBar.updateStatusIfChanged
 
 object app  {
 
@@ -14,6 +15,8 @@ object app  {
     val employeeIds = IdProvider(start = 1u)
     val vacationIds = IdProvider(start = 1u)
     var jasonFileAktiv: Boolean= true
+
+
 
     fun run() {
 
@@ -33,5 +36,15 @@ object app  {
                 logger.debug("JASON File konnte nicht geladen werden")
         }
         logger.debug("JASON File ausgeschaltet")
+
+        while (true) {
+            try {
+                updateStatusIfChanged()
+            } catch (e: InterruptedException) {
+                break
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
-}
+    }

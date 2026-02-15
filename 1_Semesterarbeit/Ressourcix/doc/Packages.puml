@@ -1,0 +1,80 @@
+@startuml Ressourcix_Package_Structure
+
+' --- Grundkonfiguration ---
+skinparam linetype ortho
+left to right direction
+allowmixing
+
+package "Ressourcix" {
+
+    class Main #LightSteelBlue
+
+
+    package "essential" <<Logic>> {
+        class IdProvider
+        object jsonReader
+        object jsonWriter
+        object logger
+    }
+
+    package "domain" <<Logic>> {
+        object config
+        class Employee
+        class EmployeeManagement
+        enum Enums
+        class VacationEntry
+        class WeekRange
+    }
+
+    package "apps" <<Logic>> {
+        object app
+    }
+
+    package "resources" {
+        component Ressourcix_Icon
+        component Ressourcix_Icon_OhneB2
+    }
+
+    package "gui" {
+        class GuiBorderPane
+        class SplashScreenAdvanced
+        class StartAnimation
+        object bottomBar
+
+        package "navigation" {
+            class NavigationsController
+            enum Route
+            object topNavigationBar
+        }
+
+        package "pages" {
+            object calenderView
+            object dashboardView
+            object employeeManagementView
+            object parameterview
+        }
+
+        package "popUp" {
+            object checkVacationPopUp
+            object filteredEmployeePopUp
+            object filterPopUp
+            object vacationPopUp
+            class weekPickerPopUp
+        }
+
+        package "components" {
+            class PopUpLayer
+        }
+
+        package "util" {
+            component Alerts
+            component BirthdayField
+            component ComboBox
+            component Controls
+            component Formatters
+            component uiConstants
+        }
+    }
+}
+
+@enduml
