@@ -147,6 +147,13 @@ class Employee(private val id: UInt) {
       vacationLimit = limit
     }
 
+    fun isOnVacation(week: UInt): Boolean {
+        require(week in 1u..52u) { "Kalenderwoche muss zwischen 1 und 52 liegen" }
+        return vacationEntries.any { entry ->
+            week in entry.range.startWeek..entry.range.endWeek
+        }
+    }
+
     fun getVacationLimit() = vacationLimit
 }
 

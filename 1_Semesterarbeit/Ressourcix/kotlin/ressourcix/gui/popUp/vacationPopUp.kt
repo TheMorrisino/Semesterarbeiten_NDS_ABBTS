@@ -50,6 +50,7 @@ object vacationPopUp {
         }
 
         fun basicValidate(): String? {
+            errorLabel.style = "-fx-text-fill: red;"
             val start = firstVacationWeek.text.toIntOrNull()
             val end   = lastVacationWeek.text.toIntOrNull()
             if (start == null || end == null) return "Bitte Start‑ und Endwoche ausfüllen"
@@ -61,11 +62,16 @@ object vacationPopUp {
             if (employee == null) {
                 return "Mitarbeiter wurde nicht gefunden"
             }
+            if (!employee.isOnVacation(start.toUInt())) {
+                errorLabel.style = "-fx-text-fill: orange;"
+                return "Der Mitarbeiter hat keine Ferien – nichts zu löschen"
+            }
             return null
         }
 
 
         fun validate(): String? {
+            errorLabel.style = "-fx-text-fill: red;"
             val start = firstVacationWeek.text.toIntOrNull()
             val end = lastVacationWeek.text.toIntOrNull()
             if (start == null || end == null) return "Bitte Start- und Endwoche ausfüllen"
@@ -91,8 +97,13 @@ object vacationPopUp {
             return null
         }
 
-        fun updateError() {
-            errorLabel.text = validate().orEmpty()
+        fun updateError(isDelete: Boolean = false) {
+            errorLabel.text = if (isDelete) {
+                basicValidate().orEmpty()
+
+            } else {
+                validate().orEmpty()
+            }
         }
 
         val saveBtn = createButton("Antrag\nspeichern").apply {
@@ -130,18 +141,19 @@ object vacationPopUp {
                 )
             )
             setOnAction {
-//            val err = validate()
-//            if (err != null) {
-//                updateError()
-//                return@setOnAction
-//            }
-            onRemove(
-                vacationRequestWK(
-                    firstVacationWeek.text.toUInt(),
-                    lastVacationWeek.text.toUInt()
+                val err = basicValidate()
+                if (err != null) {
+                    // Zeige die Fehlermeldung (falls UI‑Thread noch nicht aktualisiert hat)
+                    updateError(isDelete = true)
+                    return@setOnAction
+                }
+                onRemove(
+                    vacationRequestWK(
+                        firstVacationWeek.text.toUInt(),
+                        lastVacationWeek.text.toUInt()
+                    )
                 )
-            )
-            onClose()
+                onClose()
             }
 
         }
@@ -185,8 +197,14 @@ object vacationPopUp {
         }
 
         // Fehler live updaten
-        firstVacationWeek.textProperty().addListener { _, _, _ -> updateError() }
-        lastVacationWeek.textProperty().addListener { _, _, _ -> updateError() }
+        firstVacationWeek.textProperty().addListener { _, _, _ ->
+            updateError(isDelete = false)   // für Save‑Feedback
+            updateError(isDelete = true)    // für Delete‑Feedback (Button bleibt deaktiviert)
+        }
+        lastVacationWeek.textProperty().addListener { _, _, _ ->
+            updateError(isDelete = false)
+            updateError(isDelete = true)
+        }
 
         updateError()
 
