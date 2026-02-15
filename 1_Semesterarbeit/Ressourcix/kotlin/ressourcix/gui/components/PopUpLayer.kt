@@ -5,7 +5,7 @@ import javafx.scene.Node
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 
-class PopupLayer {
+class PopUpLayer {
 
     private val dim = Region().apply {
         style = "-fx-background-color: rgba(0,0,0,0.35);"

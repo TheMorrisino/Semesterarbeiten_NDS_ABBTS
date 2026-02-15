@@ -152,10 +152,6 @@ class Main <<(M, orchid)>> {
         }
     }
 
-    object vacationPlanner {
-        + generateForAll(...)
-    }
-
     object config {
         + minEmployeeNumber: Int
         + vacation25Years: Int

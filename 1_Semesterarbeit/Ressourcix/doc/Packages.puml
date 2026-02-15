@@ -1,0 +1,74 @@
+@startuml Ressourcix_Packages
+
+
+top to bottom direction
+
+' ==================== Packages ====================
+
+package "Main Entry Point"  {
+    [Main]
+}
+
+package "App Layer"  {
+    [app]
+}
+
+package "GUI Layer"  {
+    [GuiBorderPane]
+    [bottomBar]
+    [topNavigationBar]
+    [SplashScreenAdvanced]
+    [StartAnimation]
+    package {
+
+    }
+}
+
+package "Domain Layer"  {
+    [EmployeeManagement]
+    [Employee]
+    [VacationEntry]
+    [WeekRange]
+    [Role]
+    [VacationStatus]
+    [Department]
+    [Education]
+    [OverlapStatus]
+    [vacationPlanner]
+    [config]
+}
+
+package "Essential Layer"  {
+    [IdProvider]
+    [IdState]
+    [jsonReader]
+    [jsonWriter]
+}
+
+package "Logger Layer"  {
+    [logger]
+    [LogEntry]
+    [Level]
+}
+
+' ==================== Relationships ====================
+
+[Main] ..> [GuiBorderPane] : startet
+[Main] ..> [app] : startet
+[Main] ..> [logger] : konfiguriert
+
+[GuiBorderPane] ..> [app] : verwendet
+[bottomBar] ..> [logger] : liest Logs
+
+[app] --> [EmployeeManagement] : verwendet
+[app] --> [IdProvider] : verwendet
+
+[jsonReader] --> [EmployeeManagement] : lädt Daten
+[jsonWriter] --> [EmployeeManagement] : speichert Daten
+
+[jsonReader] ..> [Employee] : erstellt
+[jsonReader] ..> [config] : konfiguriert
+[jsonWriter] ..> [Employee] : serialisiert
+[jsonWriter] ..> [config] : serialisiert
+
+@enduml

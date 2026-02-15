@@ -1,133 +1,138 @@
-@startuml Ressourcix_Complete_Class_Diagram
+@startuml Ressourcix_Class_Diagram_Complete
 
-' Styling für bessere Lesbarkeit
 skinparam classAttributeIconSize 0
-skinparam classFontSize 9
+skinparam classFontSize 10
 skinparam packageStyle rectangle
 skinparam linetype ortho
-skinparam nodesep 70
-skinparam ranksep 90
-skinparam defaultFontSize 9
-skinparam wrapWidth 200
+skinparam nodesep 60
+skinparam ranksep 80
+skinparam defaultFontSize 10
 
 ' Vertikales Layout
 top to bottom direction
 
 ' ==================== Main Entry Point ====================
-package "Main" #WhiteSmoke {
-    class Main <<(M, orchid)>> {
-        {static} + main()
-    }
+class Main <<(M, orchid)>> {
+    + app.run()
+    +  Application.launch(StartAnimation::class.java)
+
 }
 
 ' ==================== App Layer ====================
-package "ressourcix.app" #LightBlue {
-    object app {
-        {static} + management: EmployeeManagement
-        {static} + employees: MutableList<Employee>
-        {static} + employeeIds: IdProvider
-        {static} + vacationIds: IdProvider
-        {static} + jasonFileAktiv: Boolean
-        --
-        {static} + run(): void
-    }
+
+object app {
+    + management: EmployeeManagement
+    + employees: MutableList<Employee>
+    + employeeIds: IdProvider
+    + vacationIds: IdProvider
+    + jasonFileAktiv: Boolean
+    --
+    + run()
 }
 
 ' ==================== GUI Layer ====================
-package "ressourcix.gui" #LightGreen {
 
-    class GuiBorderPane extends Application {
-        - btnSave: ButtonType
-        - btNotSave: ButtonType
-        - btnCancel: ButtonType
-        --
-        + start(stage: Stage): void
-        + exit(): void
-    }
+class GuiBorderPane {
+    - btnSave: ButtonType
+    - btNotSave: ButtonType
+    - btnCancel: ButtonType
+    --
+    + start(stage: Stage)
+    + exit()
+}
 
-    object bottomBar {
-        {static} - status: TextField
-        {static} - clockLabel: Label
-        {static} - timeFmt: DateTimeFormatter
-        {static} - lastMessage: String
-        {static} - bar: HBox
-        {static} - statusUpdateThread: Thread
-        {static} + clockTimeline: Timeline
-        --
-        {static} + getView(): HBox
-        {static} - updateClock(): void
-        {static} - updateStatus(message: String, level: logger.Level?): void
-    }
+object bottomBar {
+    - status: TextField
+    - clockLabel: Label
+    - bar: HBox
+    - statusUpdateThread: Thread
+    --
+    + getView(): HBox
+    - updateClock()
+    - updateStatus()
+}
 
-    package "ressourcix.gui.navigation" #PaleGreen {
-        object topNavigationBar {
-            {static} - NAV_HEIGHT: Double = 30.0
-            {static} - dashboardBtn: Button
-            {static} - calenderBtn: Button
-            {static} - employeeManagementBtn: Button
-            {static} - parameterBtn: Button
-            {static} - version: Text
-            {static} - spacer: Region
-            {static} - navBar: HBox
-            --
-            {static} + getView(): HBox
-            {static} + bind(router: NavigationsController): void
-            {static} - createNavButton(text: String): Button
-            {static} - baseButtonStyle(): String
-            {static} - hoverButtonStyle(): String
-            {static} - activeButtonStyle(): String
-            {static} - setActive(activeBtn: Button): void
-        }
+object topNavigationBar {
+    + getView(): Node
+    + bind(router)
+}
 
-        class NavigationsController <<missing>> {
-            - root: BorderPane
-            --
-            + navigate(route: Route)
-        }
+' ==================== GUI Pages ====================
 
-        enum Route <<missing>> {
-            DASHBOARD
-            CALENDER
-            EMPLOYEEMANAGEMENT
-            PARAMETER
-        }
-    }
+object dashboardView {
+    - barChart: BarChart
+    - pieChart: PieChart
+    - chartContainer: VBox
+    - showingBarChart: Boolean
+    --
+    + updateBarChart()
+    + updatePieChart()
+    - toggleChart()
+    - refreshCurrentChart()
+}
 
-    package "ressourcix.gui.pages" #PaleGreen {
-        object dashboardView <<missing>> {
-            + getView(): Node
-        }
+object calenderView {
+    - calendarGrid: GridPane
+    - selectedEmployee: Employee?
+    --
+    + refreshVacations()
+    + selectEmployee(emp)
+    - createCalendarGrid()
+}
 
-        object calenderView <<missing>> {
-            + updateEmployees(): void
-            + refreshVacations(): void
-            + getView(): Node
-        }
-    }
+object employeeView {
+    - employeeTable: TableView<Employee>
+    - selectedEmployee: Employee?
+    --
+    + refreshEmployees()
+    + addEmployee()
+    + editEmployee()
+    + deleteEmployee()
+}
+
+object logView {
+    - tableView: TableView<LogEntry>
+    - searchField: TextField
+    - levelFilter: ComboBox
+    --
+    + refreshLogs()
+    - searchLogs()
+    - exportLogs()
+}
+
+' ==================== Splash Screen ====================
+
+class StartAnimation {
+    start(primaryStage: Stage)
+
+}
+
+class SplashScreenAdvanced {
+    - stage: Stage
+    - letters: List<Text>
+    --
+    + show()
+    + close()
+    - startAnimation()
 }
 
 ' ==================== Domain Layer ====================
-package "ressourcix.domain" #LightYellow {
 
+together {
     class EmployeeManagement {
         + employees: MutableList<Employee>
         - overlapList: MutableList<Int>
         + maxOverlapsPerKw: Int
         + year: UInt
         --
-        + listAll(): List<Employee>
-        + add(employee: Employee): void
+        + add(employee: Employee)
         + removeById(id: UInt): Boolean
         + findById(id: UInt): Employee?
-        + allVacationInKwFiltern(): void
-        + removeVacation(empId: UInt, startWeek: UInt, endWeek: UInt): void
-        + addVacationSafe(employee: Employee, startWeek: UInt, endWeek: UInt, maxAllowed: Int): void
-        + updateOverlapList(): void
+        + addVacationSafe(...)
+        + updateOverlapList()
         + countAllOverlaps(): Int
-        + getEmployeesInWeek(week: Int): List<Employee>
-        + getEmployeeByIndex(index: Int): Employee
+        + getEmployeesInWeek(week: Int)
         + getOverlapList(): List<Int>
-        - VacationEntry.overlapsWith(other: VacationEntry): Boolean
     }
 
     class Employee {
@@ -136,51 +141,20 @@ package "ressourcix.domain" #LightYellow {
         - lastName: String
         - workloadPercent: UByte
         - role: Role
-        - abbreviation: String
         - vacationEntries: MutableList<VacationEntry>
         - vacationList: MutableList<Int>
         - department: Department?
         - education: Education?
         - birthday: LocalDate?
-        - city: String
         - vacationLimit: UInt
-        - birthdayFormatter: DateTimeFormatter
-        --
-        + Employee(id: UInt)
         --
         + getId(): UInt
-        + getFirstName(): String
-        + getLastName(): String
-        + getWorkloadPercent(): UByte
-        + getRole(): Role
-        + getVacationEntries(): List<VacationEntry>
-        + getDepartment(): Department?
-        + getEducation(): Education?
-        + getBirthday(): LocalDate?
-        + getCity(): String
-        + getVacationLimit(): UInt
-        --
-        + setFirstName(value: String): void
-        + setLastName(value: String): void
-        + setWorkloadPercent(value: UByte): void
-        + setRole(value: Role): void
-        + setDepartment(value: Department?): void
-        + setEducation(value: Education?): void
-        + setCity(value: String): void
-        + setBirthdayFromString(value: String): void
-        + setVacationLimit(limit: UInt): void
-        --
         + getFullName(): String
-        + abbreviationSting(): String
-        + addVacationEntry(entry: VacationEntry): void
-        + removeVacationEntry(vacationId: UInt, entry: VacationEntry): void
-        + getIdWithStartWeek(startWeek: UInt): UInt?
-        + removeByStartWeek(startWeek: UInt): Boolean
-        + getVacationByIndex(index: Int): Int
-        + createVacationList(): void
-        + getBirthdayAsString(): String
-        + getAbbreviation(): String
-        + label(): String
+        + addVacationEntry(entry)
+        + removeVacationEntry(...)
+        + createVacationList()
+        + getVacationEntries(): List<VacationEntry>
+        + getVacationLimit(): UInt
     }
 
     class VacationEntry {
@@ -188,268 +162,244 @@ package "ressourcix.domain" #LightYellow {
         + employeeId: UInt
         + year: UInt
         + range: WeekRange
-        - statusByWeek: MutableMap<UInt, VacationStatus>
-        --
-        + VacationEntry(id: UInt, employeeId: UInt, year: UInt, range: WeekRange, initialStatus: VacationStatus)
+        - statusByWeek: Map<UInt, VacationStatus>
         --
         + hasWeek(week: UInt): Boolean
         + getStatus(week: UInt): VacationStatus?
-        + setStatus(week: UInt, status: VacationStatus): void
-        + toString(): String
+        + setStatus(week, status)
     }
 
-    class WeekRange <<data class>> {
+    class WeekRange {
         + startWeek: UInt
         + endWeek: UInt
-        --
-        + WeekRange(startWeek: UInt, endWeek: UInt)
         --
         + contains(week: UInt): Boolean
         + overlaps(other: WeekRange): Boolean
     }
 
-    enum Role {
-        APPRENTICE("Lernende")
-        STAFF("Mitarbeitende")
-        TEAM_LEAD("Teamleitung")
-        MANAGER("Management")
-        --
-        + displayName: String
-        --
-        + toString(): String
+    together {
+        enum Role {
+            APPRENTICE
+            STAFF
+            TEAM_LEAD
+            MANAGER
+        }
+
+        enum VacationStatus {
+            REQUESTED
+            APPROVED
+            GENERATED
+            REJECTED
+            CANCELLED
+        }
+
+        enum Department {
+            AUSSENDIENST
+            ADMIN
+            PLANUNG
+        }
+
+        enum Education {
+            LEHRLING
+            EFZ
+            DIPLOM_PFLEGE_HF
+        }
+
+        enum OverlapStatus {
+            OK
+            WARNING
+            CRITICAL
+        }
     }
 
-    enum VacationStatus {
-        REQUESTED
-        APPROVED
-        GENERATED
-        REJECTED
-        CANCELLED
-        --
-        + code: String <<extension>>
-    }
-
-    enum Department {
-        AUSSENDIENST("Aussendienst")
-        ADMIN("Admin")
-        PLANUNG("Planung")
-        --
-        + displayName: String
-        --
-        + toString(): String
-    }
-
-    enum Education {
-        LEHRLING("Lehrling")
-        EFZ("EFZ")
-        DIPLOM_PFLEGE_HF("dipl. Pflegefachfrau HF")
-        --
-        + displayName: String
-        --
-        + toString(): String
-    }
-
-    enum OverlapStatus {
-        OK
-        WARNING
-        CRITICAL
-    }
-
-    object vacationPlanner {
-        {static} + generateForAll(year: UInt, employees: List<Employee>, nextVacationId: () -> UInt, addVacationSafe: (Employee, VacationEntry) -> String?, blocks: List<WeekRange>): List<String>
-    }
 
     object config {
-        {static} + minEmployeeNumber: Int
-        {static} + minApprenticeNumber: Int
-        {static} + minManagerNumber: Int
-        {static} + vacation25Years: Int
-        {static} + vacationOver25Years: Int
-        {static} + vacationOver50Years: Int
-        {static} + vacationBlock: BooleanArray
-        {static} + vacationSchoolBlock: BooleanArray
+        + minEmployeeNumber: Int
+        + vacation25Years: Int
+        + vacationBlock: BooleanArray
+        + vacationSchoolBlock: BooleanArray
+        + maxOverlapsPerWeek: Int
     }
 }
 
 ' ==================== Essential Layer ====================
-package "ressourcix.essential" #LightCoral {
 
-    class IdProvider {
-        + start: UInt
-        - nextId: UInt
-        - id: UInt
-        - issuedIds: MutableSet<UInt>
-        --
-        + IdProvider(start: UInt)
-        --
-        + generateId(): UInt <<@Synchronized>>
-        + getIssuedIds(): Set<UInt>
-        + getNextId(): UInt
-        + isIssued(id: UInt): Boolean
-        + restore(state: IdState): void
-    }
+class IdProvider {
+    + start: UInt
+    - nextId: UInt
+    - issuedIds: MutableSet<UInt>
+    --
+    + generateId(): UInt
+    + getIssuedIds(): Set<UInt>
+    + restore(state: IdState)
+}
 
-    class IdState <<data class>> {
-        + nextId: UInt
-        + issuedIds: List<UInt>
-    }
+class IdState <<data class>> {
+    + nextId: UInt
+    + issuedIds: List<UInt>
+}
 
-    object jsonReader {
-        {static} - jsonDir: File
-        --
-        {static} + read(): List<Employee>
-        {static} + readConfig(): void
-        {static} - extractJsonObjects(json: String): List<String>
-        {static} - parseJsonObject(jsonObj: String): Map<String, String>
-        {static} - parseBooleanArray(arrayStr: String): BooleanArray
-    }
+object jsonReader {
+    - jsonDir: File
+    --
+    + read(): List<Employee>
+    + readConfig()
+    + readEmployeeManagement()
+}
 
-    object jsonWriter {
-        {static} - jsonDir: File
-        {static} - jsonToFile: Boolean
-        --
-        {static} + write(): void
-        {static} - escapeJson(text: String): String
-    }
+object jsonWriter {
+    - jsonDir: File
+    --
+    + write()
+    + writeConfig()
+    + writeEmployeeManagement()
 }
 
 ' ==================== Logger Layer ====================
-package "ressourcix.logger" #Lavender {
 
-    object logger {
-        {static} - currentLevel: Level
-        {static} - logToFile: Boolean
-        {static} - logToConsole: Boolean
-        {static} - logDir: File
-        {static} - dateFormatter: DateTimeFormatter
-        {static} - fileDateFormatter: DateTimeFormatter
-        {static} - logBuffer: ConcurrentLinkedQueue<LogEntry>
-        {static} - maxBufferSize: Int
-        --
-        {static} + setLevel(level: Level): void
-        {static} + setFileLogging(enabled: Boolean): void
-        {static} + setConsoleLogging(enabled: Boolean): void
-        {static} + debug(message: String, exception: Throwable?): void
-        {static} + info(message: String, exception: Throwable?): void
-        {static} + warn(message: String, exception: Throwable?): void
-        {static} + error(message: String, exception: Throwable?): void
-        {static} + fatal(message: String, exception: Throwable?): void
-        {static} + getLastLogMessage(): String?
-        {static} + getLastLogEntry(): LogEntry?
-        {static} + getLastLogMessageWithTimestamp(format: String): String?
-        {static} - log(level: Level, message: String, exception: Throwable?): void
-        {static} - addToBuffer(entry: LogEntry): void
-        {static} - printToConsole(entry: LogEntry): void
-        {static} - writeToFile(entry: LogEntry): void
+object logger {
+    - currentLevel: Level
+    - logBuffer: ConcurrentLinkedQueue<LogEntry>
+    - logDir: File
+    - maxBufferSize: Int
+    --
+    + debug(message, exception?)
+    + info(message, exception?)
+    + warn(message, exception?)
+    + error(message, exception?)
+    + fatal(message, exception?)
+    + getLastLogEntry(): LogEntry?
+    + getLastLogMessage(): String?
+    + getLastLogMessageWithTimestamp(): String?
+    + getAllLogs(): List<LogEntry>
+    + searchLogs(text): List<LogEntry>
+    + clearBuffer()
+}
+
+class LogEntry <<data class>> {
+    + timestamp: LocalDateTime
+    + level: Level
+    + message: String
+    + exception: Throwable?
+    + threadName: String
+    + className: String?
+    --
+    + toFormattedString(): String
+}
+
+enum Level {
+    DEBUG
+    INFO
+    WARN
+    ERROR
+    FATAL
+}
+
+
+
+' ==================== Navigation ====================
+
+object NavigationsController {
+    - currentView: Node?
+    --
+    + navigate(target: NavigationTarget)
+    + createView(target)
+}
+
+enum NavigationTarget {
+    DASHBOARD
+    CALENDAR
+    EMPLOYEES
+    LOGS
+}
+
+' ==================== Data Classes ====================
+
+package "Statistics" {
+    class WeekInfo <<data class>> {
+        - count: Int
+        - employees: List<String>
     }
 
-    class LogEntry <<data class>> {
-        + timestamp: LocalDateTime
-        + level: Level
-        + message: String
-        + exception: Throwable?
-        + threadName: String
-        + className: String?
-        --
-        + toFormattedString(): String
-    }
-
-    enum Level {
-        DEBUG
-        INFO
-        WARN
-        ERROR
-        FATAL
+    class VacationStats <<data class>> {
+        - used: Int
+        - available: Int
+        - withVacation: List<String>
+        - withoutVacation: List<String>
     }
 }
 
 ' ==================== Relationships ====================
 
 ' Main connections
-Main .down.> GuiBorderPane : <<launches>>\nApplication.launch()
-Main .down.> app : <<starts>>\napp.run()
-Main .down.> logger : <<configures>>\nsetLevel()
+Main .down.> app : startet...
+Main .down.> StartAnimation : zeigt zuerst
 
-' App layer relationships
-app -down-> EmployeeManagement : uses
-app --> IdProvider : <<creates>>\nemployeeIds\nvacationIds
+' Splash Screen
+SplashScreenAdvanced .down.> GuiBorderPane : startet nach Animation
+StartAnimation .right.> SplashScreenAdvanced : uses
 
-' GUI layer relationships
-GuiBorderPane .down.> app : uses\njasonFileAktiv
-GuiBorderPane --> topNavigationBar : uses
-GuiBorderPane --> bottomBar : uses
-GuiBorderPane --> NavigationsController : creates
-topNavigationBar --> NavigationsController : <<binds to>>
-topNavigationBar --> Route : navigates using
-bottomBar .down.> logger : <<observes>>\ngetLastLogEntry()
 
-NavigationsController --> Route : uses
-NavigationsController ..> dashboardView : navigates to
-NavigationsController ..> calenderView : navigates to
 
-' Domain layer relationships (composition & aggregation)
-EmployeeManagement "1" o-down- "0..*" Employee : manages >
-Employee "1" *-down- "0..*" VacationEntry : contains >
-VacationEntry *-right- "1" WeekRange : has >
+' App layer
+app -down-> EmployeeManagement : verwendet
+app -down-> IdProvider : verwendet\n(2 Instanzen)
 
-' Domain layer relationships (associations)
-Employee -right-> Role : has >
-Employee -right-> Department : has >
-Employee -right-> Education : has >
-VacationEntry -right-> VacationStatus : has status >
-EmployeeManagement ..> OverlapStatus : uses
+' GUI layer
+GuiBorderPane .down.> app : verwendet
+GuiBorderPane .down.> NavigationsController : verwendet
+GuiBorderPane -down-> bottomBar : enthält
+GuiBorderPane -down-> topNavigationBar : enthält
 
-' Domain utilities
-vacationPlanner ..> Employee : generates for
-vacationPlanner ..> VacationEntry : creates
+' Navigation
+NavigationsController .down.> dashboardView : navigiert zu
+NavigationsController .down.> calenderView : navigiert zu
+NavigationsController .down.> employeeView : navigiert zu
+NavigationsController .down.> logView : navigiert zu
+NavigationsController -right-> NavigationTarget : verwendet
 
-' Essential layer relationships
-IdProvider -down-> IdState : <<restores>>
-jsonReader .up.> Employee : <<creates>>
-jsonReader .up.> VacationEntry : <<creates>>
-jsonReader .up.> config : <<configures>>
-jsonReader .up.> app : <<restores>>\nemployeeIds\nvacationIds
+' GUI Pages
+bottomBar .down.> logger : liest Logs
+dashboardView .down.> app : liest Daten
+dashboardView .down.> logger : schreibt Logs
+dashboardView .down.> WeekInfo : verwendet
+dashboardView .down.> VacationStats : verwendet
+calenderView .down.> app : liest/schreibt Daten
+calenderView .down.> logger : schreibt Logs
+employeeView .down.> app : liest/schreibt Daten
+employeeView .down.> logger : schreibt Logs
+logView .down.> logger : liest Logs
 
-jsonWriter .up.> Employee : <<serializes>>
-jsonWriter .up.> VacationEntry : <<serializes>>
-jsonWriter .up.> config : <<serializes>>
-jsonWriter .up.> app : <<saves>>\nIdProviders
+' Domain relationships (vertical)
+EmployeeManagement "1" o-down- "0..*" Employee : verwaltet
+Employee "1" *-down- "0..*" VacationEntry : enthält
+VacationEntry *-down- "1" WeekRange : enthält
+
+
+' Domain relationships (horizontal)
+Employee -right-> Role : hat
+Employee -right-> Department : hat
+Employee -right-> Education : hat
+VacationEntry -right-> VacationStatus : hat
+EmployeeManagement -right-> OverlapStatus : berechnet
+
+
+' Essential layer
+IdProvider -down-> IdState : stellt wieder her
+jsonReader .up.> Employee : erstellt
+jsonReader .up.> config : konfiguriert
+jsonReader .up.> EmployeeManagement : lädt
+jsonWriter .up.> Employee : serialisiert
+jsonWriter .up.> config : serialisiert
+jsonWriter .up.> EmployeeManagement : speichert
 
 ' Logger relationships
-logger -right-> LogEntry : creates >
-logger --> Level : uses
-LogEntry --> Level : has >
+logger -right-> LogEntry : erstellt
+LogEntry -right-> Level : verwendet
 
 ' Cross-layer dependencies
-app .down.> jsonReader : calls read()
-GuiBorderPane .down.> jsonWriter : calls write()
+jsonReader -up-> EmployeeManagement : lädt Daten
+jsonWriter -up-> EmployeeManagement : speichert Daten
 
-EmployeeManagement ..> calenderView : <<updates>>\nupdateEmployees()\nrefreshVacations()
-
-' Notes
-note right of NavigationsController
-  Referenced but not
-  in uploaded files
-end note
-
-note right of dashboardView
-  Referenced but not
-  in uploaded files
-end note
-
-note right of calenderView
-  Referenced but not
-  in uploaded files
-end note
-
-note top of Employee
-  Main business entity
-  with 52-week vacation tracking
-end note
-
-note top of EmployeeManagement
-  Central management class
-  with overlap detection
-end note
 
 @enduml
