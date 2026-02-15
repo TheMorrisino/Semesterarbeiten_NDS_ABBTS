@@ -3,7 +3,6 @@ package ressourcix.domain
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
-import kotlin.text.format
 
 
 class Employee(private val id: UInt) {
@@ -20,7 +19,7 @@ class Employee(private val id: UInt) {
     private var birthday: LocalDate? = null
     private var city: String = ""
     private var vacationLimit : UInt = 5u // Anzahl Ferien nur über get und set
-    private val plannedVacation = vacationList.sum()
+    var plannedVacation = vacationList.sum()
 
     private val birthdayFormatter: DateTimeFormatter =
         DateTimeFormatter.ofPattern("dd.MM.uuuu")
@@ -28,10 +27,8 @@ class Employee(private val id: UInt) {
 
     fun getId(): UInt = id
 
-
-
-    fun checkVacationLimits(newVacationEntry: VacationEntry): Boolean{
-        val vacationRange = newVacationEntry.range.endWeek - newVacationEntry.range.startWeek
+    fun checkVacationLimits(startWeek: UInt, endWeek: UInt): Boolean{
+        val vacationRange = endWeek - startWeek
         var check = false
         if ((vacationLimit - vacationRange)< 0u){
              check = false
@@ -42,7 +39,6 @@ class Employee(private val id: UInt) {
     fun getLastName(): String = lastName
     fun getWorkloadPercent(): UByte = workloadPercent
     fun getRole(): Role = role
-    //fun getVacationEntries(): List<VacationEntry> = vacationEntries.toList()
     fun getDepartment(): Department? = department
     fun getEducation(): Education? = education
     fun getBirthday(): LocalDate? = birthday
@@ -92,10 +88,12 @@ class Employee(private val id: UInt) {
         return abbreviation
     }
 
+
     fun addVacationEntry(entry: VacationEntry) {
         vacationEntries.add(entry)
         vacationEntryIds.add(entry.id)
         createVacationList()
+        plannedVacation = vacationList.sum()
     }
 
     fun removeVacationEntry(vacationId: UInt, entry: VacationEntry){
@@ -118,6 +116,7 @@ class Employee(private val id: UInt) {
         vacationEntries.remove(entry)
         vacationEntryIds.remove(entry.id)
         createVacationList()
+        plannedVacation = vacationList.sum()
         return true
     }
 
@@ -139,7 +138,6 @@ class Employee(private val id: UInt) {
                 }
             }
         }
-
     }
     fun getBirthdayAsString(): String = birthday?.format(birthdayFormatter).orEmpty()
 
