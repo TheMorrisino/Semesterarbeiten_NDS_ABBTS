@@ -1,74 +1,80 @@
-@startuml Ressourcix_Packages
+@startuml Ressourcix_Package_Structure
+
+' --- Grundkonfiguration ---
+skinparam linetype ortho
+left to right direction
+allowmixing
+
+package "Ressourcix" {
+
+    class Main #LightSteelBlue
 
 
-top to bottom direction
+    package "essential" <<Logic>> {
+        class IdProvider
+        object jsonReader
+        object jsonWriter
+        object logger
+    }
 
-' ==================== Packages ====================
+    package "domain" <<Logic>> {
+        object config
+        class Employee
+        class EmployeeManagement
+        enum Enums
+        class VacationEntry
+        class WeekRange
+    }
 
-package "Main Entry Point"  {
-    [Main]
-}
+    package "apps" <<Logic>> {
+        object app
+    }
 
-package "App Layer"  {
-    [app]
-}
+    package "resources" {
+        component Ressourcix_Icon
+        component Ressourcix_Icon_OhneB2
+    }
 
-package "GUI Layer"  {
-    [GuiBorderPane]
-    [bottomBar]
-    [topNavigationBar]
-    [SplashScreenAdvanced]
-    [StartAnimation]
-    package {
+    package "gui" {
+        class GuiBorderPane
+        class SplashScreenAdvanced
+        class StartAnimation
+        object bottomBar
 
+        package "navigation" {
+            class NavigationsController
+            enum Route
+            object topNavigationBar
+        }
+
+        package "pages" {
+            object calenderView
+            object dashboardView
+            object employeeManagementView
+            object parameterview
+        }
+
+        package "popUp" {
+            object checkVacationPopUp
+            object filteredEmployeePopUp
+            object filterPopUp
+            object vacationPopUp
+            class weekPickerPopUp
+        }
+
+        package "components" {
+            class PopUpLayer
+        }
+
+        package "util" {
+            component Alerts
+            component BirthdayField
+            component ComboBox
+            component Controls
+            component Formatters
+            component uiConstants
+        }
     }
 }
-
-package "Domain Layer"  {
-    [EmployeeManagement]
-    [Employee]
-    [VacationEntry]
-    [WeekRange]
-    [Role]
-    [VacationStatus]
-    [Department]
-    [Education]
-    [OverlapStatus]
-    [vacationPlanner]
-    [config]
-}
-
-package "Essential Layer"  {
-    [IdProvider]
-    [IdState]
-    [jsonReader]
-    [jsonWriter]
-}
-
-package "Logger Layer"  {
-    [logger]
-    [LogEntry]
-    [Level]
-}
-
-' ==================== Relationships ====================
-
-[Main] ..> [GuiBorderPane] : startet
-[Main] ..> [app] : startet
-[Main] ..> [logger] : konfiguriert
-
-[GuiBorderPane] ..> [app] : verwendet
-[bottomBar] ..> [logger] : liest Logs
-
-[app] --> [EmployeeManagement] : verwendet
-[app] --> [IdProvider] : verwendet
-
-[jsonReader] --> [EmployeeManagement] : lädt Daten
-[jsonWriter] --> [EmployeeManagement] : speichert Daten
-
-[jsonReader] ..> [Employee] : erstellt
-[jsonReader] ..> [config] : konfiguriert
-[jsonWriter] ..> [Employee] : serialisiert
-[jsonWriter] ..> [config] : serialisiert
 
 @enduml

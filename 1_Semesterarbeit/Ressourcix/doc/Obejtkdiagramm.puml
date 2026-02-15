@@ -1,0 +1,402 @@
+@startuml Ressourcix_Object_Diagram
+title Ressourcix - Objektdiagramm (Runtime)
+
+' Styling
+skinparam object {
+    BackgroundColor<<singleton>> LightYellow
+    BackgroundColor<<domain>> LightBlue
+    BackgroundColor<<gui>> LightGreen
+    BackgroundColor<<popup>> LightCoral
+    BorderColor Black
+}
+
+skinparam arrowColor Black
+skinparam arrowThickness 1.5
+
+' ========================================
+' APPLICATION LAYER (Singletons)
+' ========================================
+
+object "app" as app <<singleton>> {
+    management = empMgmt
+    employees = [emp1, emp2, emp3]
+    employeeIds = empIds
+    vacationIds = vacIds
+    jasonFileAktiv = true
+}
+
+object "employeeIds" as empIds <<singleton>> {
+    start = 1
+    nextId = 4
+    id = 3
+    issuedIds = {0, 1, 2, 3}
+}
+
+object "vacationIds" as vacIds <<singleton>> {
+    start = 1
+    nextId = 4
+    id = 3
+    issuedIds = {0, 1, 2, 3}
+}
+
+object config <<singleton>> {
+    minEmployeeNumber = 5
+    minApprenticeNumber = 2
+    minManagerNumber = 1
+    vacation25Years = 5
+    vacationOver25Years = 5
+    vacationOver50Years = 5
+    vacationBlock = BooleanArray(53) { false }
+    vacationSchoolBlock = BooleanArray(53) { false }
+}
+
+object  jsonReader <<singleton>> {
+    jsonDir = File("jsonfiles")
+}
+
+object  jsonWriter <<singleton>> {
+    jsonDir = File("jsonfiles")
+    jsonToFile = true
+}
+
+object  logger <<singleton>> {
+    currentLevel = INFO
+    logToFile = true
+    logToConsole = true
+    logDir = File("logs")
+    logBuffer = [LogEntry1, LogEntry2, ...]
+    maxBufferSize = 1000
+    dateFormatter = DateTimeFormatter("yyyy-MM-dd HH:mm:ss.SSS")
+    fileDateFormatter = DateTimeFormatter("yyyy-MM-dd")
+}
+
+' ========================================
+' DOMAIN LAYER
+' ========================================
+
+object "EmployeeManagement" as empMgmt <<domain>> {
+    employees = [emp1, emp2, emp3]
+    overlapList = [0,0,0,0,0,0,0,0,0,1,1,1,0,0,...]
+    year = 2026
+    maxOverlapsPerKw = 5
+}
+
+object "employee1:Employee" as emp1 <<domain>> {
+    id = 1
+    firstName = "Max"
+    lastName = "Mustermann"
+    workloadPercent = 100
+    role = STAFF
+    abbreviation = "MAMU"
+    department = AUSSENDIENST
+    education = EFZ
+    birthday = 1985-03-15
+    city = "Zürich"
+    vacationLimit = 5
+    vacationEntries = [vac1, vac2]
+    vacationList = [0,0,0,0,0,0,0,0,0,1,1,1,0,0,...]
+}
+
+object "employee2:Employee" as emp2 <<domain>> {
+    id = 2
+    firstName = "Anna"
+    lastName = "Schmidt"
+    workloadPercent = 80
+    role = TEAM_LEAD
+    abbreviation = "ANSC"
+    department = ADMIN
+    education = DIPLOM_PFLEGE_HF
+    birthday = 1990-07-22
+    city = "Bern"
+    vacationLimit = 5
+    vacationEntries = [vac3]
+    vacationList = [0,0,0,0,0,0,0,0,0,0,0,0,...]
+}
+
+object "employee3:Employee" as emp3 <<domain>> {
+    id = 3
+    firstName = "Tom"
+    lastName = "Weber"
+    workloadPercent = 100
+    role = APPRENTICE
+    abbreviation = "TOWE"
+    department = PLANUNG
+    education = LEHRLING
+    birthday = 2005-11-08
+    city = "Basel"
+    vacationLimit = 5
+    vacationEntries = []
+    vacationList = [0,0,0,0,0,0,0,0,0,0,0,0,...]
+}
+
+object "vacation1:VacationEntry" as vac1 <<domain>> {
+    id = 1
+    employeeId = 1
+    year = 2026
+    range = range1
+    status = APPROVED
+    statusByWeek = {10=APPROVED, 11=APPROVED, 12=APPROVED}
+}
+
+object "vacation2:VacationEntry" as vac2 <<domain>> {
+    id = 2
+    employeeId = 1
+    year = 2026
+    range = range2
+    status = REQUESTED
+    statusByWeek = {25=REQUESTED, 26=REQUESTED}
+}
+
+object "vacation3:VacationEntry" as vac3 <<domain>> {
+    id = 3
+    employeeId = 2
+    year = 2026
+    range = range3
+    status = APPROVED
+    statusByWeek = {30=APPROVED, 31=APPROVED, 32=APPROVED}
+}
+
+object "range1:WeekRange" as range1 <<domain>> {
+    startWeek = 10
+    endWeek = 12
+}
+
+object "range2:WeekRange" as range2 <<domain>> {
+    startWeek = 25
+    endWeek = 26
+}
+
+object "range3:WeekRange" as range3 <<domain>> {
+    startWeek = 30
+    endWeek = 32
+}
+
+' ========================================
+' GUI LAYER - Main Components
+' ========================================
+
+object "GuiBorderPane" as guiBorder <<gui>> {
+    top = topNav
+    bottom = bottomBar
+    center = [current view from router]
+}
+
+object "NavigationsController" as navController <<gui>> {
+    root = guiBorder
+    cache = {DASHBOARD=dashboard, CALENDER=calendar, ...}
+}
+
+object ":topNavigationBar" as topNav <<gui>> {
+    dashboardBtn = [Button instance]
+    calenderBtn = [Button instance]
+    employeeManagementBtn = [Button instance]
+    parameterBtn = [Button instance]
+    navBar = [HBox instance]
+}
+
+object "bottomBar" as bottomBar <<gui>> {
+    statusField = [TextField instance]
+    clockLabel = [Label instance]
+    bar = [HBox instance]
+    lastMessage = "15.02.2026 14:23:45 - Mitarbeiter geladen"
+    clockTimeline = [Timeline instance]
+}
+
+' ========================================
+' GUI LAYER - Views
+' ========================================
+
+object "dashboardView" as dashboard <<gui>> {
+    barChart = [BarChart instance]
+    pieChart = [PieChart instance]
+    chartContainer = [VBox instance]
+    toggleChartButton = [Button instance]
+    showingBarChart = true
+    lastData = [0,0,0,1,1,1,0,0,...]
+    toolTippON = true
+}
+
+object "calenderView" as calendar <<gui>> {
+    selectedEmployee = emp1
+    employees = [emp1, emp2, emp3]
+    fixedTable = [TableView instance]
+    weekTable = [TableView instance]
+    currentYear = 2026
+    weekCodeCache = {1=[...], 2=[...], 3=[...]}
+    scrollSyncInstalled = true
+    wheelForwardInstalled = true
+    selectionSyncInstalled = true
+    dim = [Region instance]
+    popupHost = [StackPane instance]
+}
+
+object "employeeManagementView" as empMgmtView <<gui>> {
+    popupLayer = popupLayer1
+    selectedEmployee = null
+    isEditMode = false
+    newEmployee = false
+    idField = [TextField instance]
+    nameField = [TextField instance]
+    surnameField = [TextField instance]
+    roleField = [ComboBox instance]
+    departmentField = [ComboBox instance]
+    educationField = [ComboBox instance]
+    cityField = [TextField instance]
+    workloadField = [TextField instance]
+    birthdayField = [TextField instance]
+    remainingVacationWeeksField = [TextField instance]
+    usedVacationWeeksField = [TextField instance]
+    mainContent = [BorderPane instance]
+}
+
+object "parameterview" as paramView <<gui>> {
+    popupLayer = popupLayer2
+    isEditMode = false
+    weeksForBlocker = BooleanArray(53)
+    weeksForSchool = BooleanArray(53)
+    minEmployeeTfl = [TextField instance]
+    minApprenticeTfl = [TextField instance]
+    minManagerTfl = [TextField instance]
+    vacationsBlockTfl = [TextField instance]
+    vacationsSchoolBlockTfl = [TextField instance]
+    vacationsUntil25Tfl = [TextField instance]
+    vacationFrom25Tfl = [TextField instance]
+    vacationFrom45Tfl = [TextField instance]
+    mainContent = [VBox instance]
+}
+
+' ========================================
+' GUI LAYER - PopUps
+' ========================================
+
+object "vacationPopUp" as vacPopup <<popup>> {
+    idField = [TextField with "1"]
+    nameField = [TextField with "Max Mustermann"]
+}
+
+object "checkVacationPopUp" as checkVacPopup <<popup>> {
+    [Currently not instantiated - created on demand]
+}
+
+object "filterPopUp" as filterPopup <<popup>> {
+    [Currently not instantiated - created on demand]
+}
+
+object "weekPickerPopUp1" as weekPicker1 <<popup>> {
+    label = "Ferien Blocker"
+    weeks = weeksForBlocker (from parameterview)
+    [Doppelklick auf die vacationsBlockTfl]
+}
+
+object "weekPickerPopUp2" as weekPicker2 <<popup>> {
+    label = "Schulferien"
+    weeks = weeksForSchool (from parameterview)
+    [Doppelklick auf die vacationsBlockTfl]
+}
+
+object "popupLayer1:PopUpLayer" as popupLayer1 <<popup>> {
+    dim = [Region instance]
+    popupHost = [StackPane instance]
+}
+
+object "popupLayer2:PopUpLayer" as popupLayer2 <<popup>> {
+    dim = [Region instance]
+    popupHost = [StackPane instance]
+}
+
+' ========================================
+' RELATIONSHIPS - Application Layer
+' ========================================
+
+app --> empMgmt : verwaltung
+app --> empIds : mitarbeiterIds
+app --> vacIds : ferienIds
+app --> jsonReader : verwendet
+app --> logger : verwendet
+app --> config : verwendet
+
+' ========================================
+' RELATIONSHIPS - Domain Layer
+' ========================================
+
+empMgmt --> emp1 : mitarbeiter[0]
+empMgmt --> emp2 : mitarbeiter[1]
+empMgmt --> emp3 : mitarbeiter[2]
+
+emp1 --> vac1 : ferieneinträge[0]
+emp1 --> vac2 : ferieneinträge[1]
+emp2 --> vac3 : ferieneinträge[0]
+
+vac1 --> range1 : bereich
+vac2 --> range2 : bereich
+vac3 --> range3 : bereich
+
+' ========================================
+' RELATIONSHIPS - GUI Main Structure
+' ========================================
+
+guiBorder --> topNav
+guiBorder --> bottomBar
+guiBorder --> navController : verwendet
+guiBorder --> jsonWriter : speichert beim Beenden
+
+navController --> dashboard
+navController --> calendar
+navController --> empMgmtView
+navController --> paramView
+
+' ========================================
+' RELATIONSHIPS - GUI to Domain
+' ========================================
+
+dashboard --> empMgmt : liest
+calendar --> empMgmt : liest/schreibt
+calendar --> emp1 : ausgewählterMitarbeiter (beim Bearbeiten)
+empMgmtView --> empMgmt : liest/schreibt
+paramView --> config : liest/schreibt
+
+' ========================================
+' RELATIONSHIPS - GUI to Logger
+' ========================================
+
+bottomBar --> logger : liest letzte Nachricht
+
+' ========================================
+' RELATIONSHIPS - PopUps
+' ========================================
+
+calendar --> vacPopup : zeigt
+calendar --> popupLayer1 : verwendet
+empMgmtView --> filterPopup : zeigt
+empMgmtView --> popupLayer2 : verwendet
+paramView --> popupLayer2 : verwendet
+paramView --> weekPicker1 : zeigt (Ferien Blocker)
+paramView --> weekPicker2 : zeigt (Schulferien)
+vacPopup --> checkVacPopup : kann öffnen
+
+' ========================================
+' NOTES
+' ========================================
+
+note right of app
+  **Hauptobjekt**
+  Startet beim Programmstart
+  Koordiniert alle Komponenten
+end note
+
+note right of empMgmt
+  **Kernlogik**
+  Verwaltet alle Mitarbeiter
+  Prüft Überlappungen
+  Berechnet Statistiken
+end note
+
+note right of calendar
+  **Hauptansicht**
+  52-Wochen-Kalender
+  Doppelklick öffnet vacationPopUp
+end note
+
+
+
+@enduml
