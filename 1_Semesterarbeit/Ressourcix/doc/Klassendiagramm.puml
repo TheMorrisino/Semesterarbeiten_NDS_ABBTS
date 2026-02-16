@@ -1,5 +1,5 @@
-@startuml Ressourcix_Class_Diagram_Flat
-title Ressourcix - Klassendiagramm (Flach)
+@startuml
+title Ressourcix - Klassendiagramm Detail
 
 ' Styling
 skinparam class {

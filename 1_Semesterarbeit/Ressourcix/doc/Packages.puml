@@ -1,4 +1,4 @@
-@startuml Ressourcix_Package_Structure
+@startuml
 
 ' --- Grundkonfiguration ---
 skinparam linetype ortho
