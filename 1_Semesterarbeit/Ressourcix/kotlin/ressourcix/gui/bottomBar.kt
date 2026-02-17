@@ -80,7 +80,9 @@ object bottomBar {
     }
 
     private fun updateClock() {
-        clockLabel.text = LocalDateTime.now().format(clockFormatter)
+        Platform.runLater {
+            clockLabel.text = LocalDateTime.now().format(clockFormatter)
+        }
     }
 
 

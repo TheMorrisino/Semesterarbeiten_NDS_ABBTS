@@ -55,6 +55,14 @@ legend top left
 • **Aggregation**: Schwache Zugehörigkeit (hat-ein)
 endlegend
 
+
+' ========================================
+' MAIN
+' ========================================
+
+
+object Main #LightSteelBlue
+
 ' ========================================
 ' DOMAIN - Core Classes
 ' ========================================
@@ -554,6 +562,12 @@ class PopUpLayer <<popup>> {
 }
 
 ' ========================================
+' RELATIONSHIPS - MAIN
+' ========================================
+
+Main --> StartAnimation
+
+' ========================================
 ' RELATIONSHIPS - Domain
 ' ========================================
 
@@ -590,7 +604,7 @@ GuiBorderPane "1" *-- "1" NavigationsController : besitzt
 GuiBorderPane --> topNavigationBar
 GuiBorderPane --> bottomBar
 GuiBorderPane --> jsonWriter : speichert
-StartAnimation --> GuiBorderPane : startet
+StartAnimation --> GuiBorderPane : Startet nach \n SplashScreenAdvanced
 StartAnimation --> SplashScreenAdvanced
 NavigationsController --> Route
 NavigationsController "1" o-- "1" dashboardView : cached

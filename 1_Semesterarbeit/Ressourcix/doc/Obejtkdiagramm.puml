@@ -17,6 +17,8 @@ skinparam arrowThickness 1.5
 ' APPLICATION LAYER (Singletons)
 ' ========================================
 
+object Main #LightSteelBlue
+
 object "app" as app <<singleton>> {
     management = empMgmt
     employees = [emp1, emp2, emp3]
@@ -181,6 +183,18 @@ object "GuiBorderPane" as guiBorder <<gui>> {
     center = [current view from router]
 }
 
+object StartAnimation <<gui>> {
+    --
+    + start(primaryStage: Stage)
+    + init()
+}
+
+object SplashScreenAdvanced <<gui>> {
+    - stage: Stage
+    - root: StackPane
+    - gradient: LinearGradient
+}
+
 object "NavigationsController" as navController <<gui>> {
     root = guiBorder
     cache = {DASHBOARD=dashboard, CALENDER=calendar, ...}
@@ -304,6 +318,16 @@ object "popupLayer2:PopUpLayer" as popupLayer2 <<popup>> {
     popupHost = [StackPane instance]
 }
 
+
+' ========================================
+' RELATIONSHIPS - Main Layer
+' ========================================
+Main --> StartAnimation
+StartAnimation --> guiBorder : Startet nach \n SplashScreenAdvanced
+
+
+
+
 ' ========================================
 ' RELATIONSHIPS - Application Layer
 ' ========================================
@@ -339,6 +363,8 @@ guiBorder --> topNav
 guiBorder --> bottomBar
 guiBorder --> navController : verwendet
 guiBorder --> jsonWriter : speichert beim Beenden
+
+StartAnimation --> SplashScreenAdvanced
 
 navController --> dashboard
 navController --> calendar
