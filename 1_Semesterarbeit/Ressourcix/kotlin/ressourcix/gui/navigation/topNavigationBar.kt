@@ -7,6 +7,7 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.text.Text
+import ressourcix.app.app
 import ressourcix.gui.pages.calenderView
 
 object topNavigationBar {
@@ -17,7 +18,8 @@ object topNavigationBar {
     private val calenderBtn = createNavButton("Kalender")
     private val employeeManagementBtn = createNavButton("Mitarbeiter Verwaltung")
     private val parameterBtn = createNavButton("Parameter")
-    private val version = Text("V1.0   ").apply {
+    private val year : UInt = app.management.year
+    private val version = Text("Jahr: [$year]   V1.0   ").apply {
         setDisable(false)
         style = "-fx-fill: #b0b0b0;"
 

@@ -36,8 +36,9 @@ class EmployeeManagement () {
 
     }
 
-    fun removeVacation(empId: UInt, startWeek: UInt, endWeek: UInt){
-        employees[empId.toInt()-1].removeByStartWeek(startWeek)
+    fun removeVacation(empId: UInt, startWeek: UInt): Boolean{
+        employees.find {it.getId() == empId}.apply { this!!.removeByStartWeek(startWeek)}
+        return true
     }
 
     fun canAddVacation(

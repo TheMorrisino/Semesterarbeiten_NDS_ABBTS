@@ -13,7 +13,7 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
-import ressourcix.app.app
+import ressourcix.app.app.management
 //import ressourcix.calendar.consoleCalendarOutput
 import ressourcix.domain.Employee
 import ressourcix.domain.Role
@@ -46,7 +46,7 @@ object calenderView : StackPane() {
 
     // ---------------- Data / Tables ----------------
 
-    private var employees = app.management.employees
+
 
     private val fixedTable = TableView<Employee>()
     private val weekTable = TableView<Employee>()
@@ -65,11 +65,11 @@ object calenderView : StackPane() {
         isReorderable = false
     }
 
-    private val nameColumn = TableColumn<Employee, String>("Abkürzung").apply {
-        setCellValueFactory { SimpleStringProperty(it.value.getFullName()) }
+    private val nameColumn = TableColumn<Employee, String>("Mitarbeiter").apply {
+        setCellValueFactory { SimpleStringProperty(it.value.getFullName()+it.value.vacationStatus()) }
         prefWidth = 120.0
-        isSortable = false
-        isReorderable = false
+        isSortable = true
+        isReorderable = true
     }
 
     private var currentYear: UInt = 2026u
@@ -102,10 +102,10 @@ object calenderView : StackPane() {
         fixedTable.fixedCellSize = rowHeight
         weekTable.fixedCellSize = rowHeight
 
-        fixedTable.items.setAll(employees)
+        fixedTable.items.setAll(management.employees)
         weekTable.items = fixedTable.items
 
-        val fixedWidth = idColumn.prefWidth + nameColumn.prefWidth + 24.0
+        val fixedWidth = idColumn.prefWidth + nameColumn.prefWidth
         fixedTable.minWidth = fixedWidth
         fixedTable.prefWidth = fixedWidth
         fixedTable.maxWidth = fixedWidth
@@ -234,9 +234,8 @@ object calenderView : StackPane() {
     /** Cache für alle Mitarbeiter für ein Jahr: KW1..KW52 */
     private fun rebuildCache(year: UInt, weeks: UInt = 52u) {
         weekCodeCache.clear()
-        employees = app.management.employees
         //println(app.management.employees[0].vacationEntries[0].status)
-        for (employee in employees) {
+        for (employee in management.employees) {
             val codes = Array(weeks.toInt() + 1) { "💼" }
             if (employee.getRole() == Role.APPRENTICE) {
                 config.vacationSchoolBlock.forEachIndexed { weekIndex, isVacationWeek ->
@@ -282,7 +281,7 @@ object calenderView : StackPane() {
     fun showYear(year: UInt, weeks: UInt = 52u) {
         currentYear = year
 
-        fixedTable.items.setAll(employees)
+        fixedTable.items.setAll(management.employees)
         weekTable.items = fixedTable.items
 
         rebuildCache(year, weeks)
@@ -317,7 +316,7 @@ object calenderView : StackPane() {
 
                             text = code ?: "."
 
-                            val overlaps = app.management.getOverlapList().getOrElse(overlapIndex) { 0 }
+                            val overlaps = management.getOverlapList().getOrElse(overlapIndex) { 0 }
                             val bg = colorForOverlap(overlaps)
                             style = """
                                 -fx-background-color: $bg;
@@ -347,7 +346,7 @@ object calenderView : StackPane() {
     }
 
     fun updateEmployees() {
-        fixedTable.items.setAll(employees)
+        fixedTable.items.setAll(management.employees)
         weekTable.items = fixedTable.items
         showYear(currentYear)
         Platform.runLater{refreshVacations()}
@@ -364,22 +363,20 @@ object calenderView : StackPane() {
             vacationPopUp.build(
                 onClose = { closePopup() },
                 onSave = { kw ->
-                    if (app.management.canAddVacation(employee, kw.startKW, kw.endKW)){
-                    app.management.addVacationSafe(employee, kw.startKW, kw.endKW)
+                    if (management.canAddVacation(employee, kw.startKW, kw.endKW)){
+                    management.addVacationSafe(employee, kw.startKW, kw.endKW)
                     logger.info("Ferieneintrag hinzugefügt Mitarbeiter $empId von ${kw.startKW} bis ${kw.endKW} ")
-                    app.management.updateOverlapList()
+                    management.updateOverlapList()
                     refreshVacations()
                     dashboardView.refreshCurrentChart()
-                   // closePopup()
                     }
                 },
                 onRemove = { kw ->
-                    app.management.removeVacation(empId, kw.startKW, kw.endKW)
+                    management.removeVacation(empId, kw.startKW)
                     logger.info("Ferieneintrag entfernt Mitarbeiter $empId mit ${kw.startKW}")
-                    app.management.updateOverlapList()
+                    management.updateOverlapList()
                     refreshVacations()
                     dashboardView.refreshCurrentChart()
-                    //closePopup()
                 }
             )
         )
