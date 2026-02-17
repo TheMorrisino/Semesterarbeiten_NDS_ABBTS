@@ -49,31 +49,12 @@ object vacationPopUp {
 
         }
 
-        fun basicValidate(): String? {
-            errorLabel.style = "-fx-text-fill: red;"
-            val start = firstVacationWeek.text.toIntOrNull()
-            val end   = lastVacationWeek.text.toIntOrNull()
-            if (start == null || end == null) return "Bitte Start‑ und Endwoche ausfüllen"
-            if (start !in 1..52) return "Start‑KW muss 1–52 sein"
-            if (end !in 1..52)   return "End‑KW muss 1–52 sein"
-            if (end < start)     return "End‑KW darf nicht kleiner sein als Start‑KW"
-            val employee = app.management.employees
-                .find { it.getId() == selectedEmployee.getId() }
-            if (employee == null) {
-                return "Mitarbeiter wurde nicht gefunden"
-            }
-            if (!employee.isOnVacation(start.toUInt())) {
-                errorLabel.style = "-fx-text-fill: orange;"
-                return "Der Mitarbeiter hat keine Ferien – nichts zu löschen"
-            }
-            return null
-        }
-
-
+        var validDeleteBtn = false
         fun validate(): String? {
-            errorLabel.style = "-fx-text-fill: red;"
             val start = firstVacationWeek.text.toIntOrNull()
             val end = lastVacationWeek.text.toIntOrNull()
+            validDeleteBtn = false
+            errorLabel.style = "-fx-text-fill: red;"
             if (start == null || end == null) return "Bitte Start- und Endwoche ausfüllen"
             if (start !in 1..52) return "Start-KW muss 1–52 sein"
             if (end !in 1..52) return "End-KW muss 1–52 sein"
@@ -85,6 +66,11 @@ object vacationPopUp {
             if (employee == null) {
                 return "Mitarbeiter wurde nicht gefunden"
             }
+            if (selectedEmployee.findEntryByStartweek(start.toUInt())) {
+                validDeleteBtn = true
+                errorLabel.style = "-fx-text-fill: orange;"
+                return "Ferieneintrag kann gelöscht werden"
+                }
             if (!app.management.canAddVacation(
                     employee,
                     startWeek.toUInt(),
@@ -97,13 +83,8 @@ object vacationPopUp {
             return null
         }
 
-        fun updateError(isDelete: Boolean = false) {
-            errorLabel.text = if (isDelete) {
-                basicValidate().orEmpty()
-
-            } else {
-                validate().orEmpty()
-            }
+        fun updateError() {
+            errorLabel.text = validate().orEmpty()
         }
 
         val saveBtn = createButton("Antrag\nspeichern").apply {
@@ -135,18 +116,16 @@ object vacationPopUp {
         val deleteBtn = createButton("Antrag\nLöschen").apply {
             disableProperty().bind(
                 Bindings.createBooleanBinding(
-                    { basicValidate() != null },
+                    { !validDeleteBtn },
                     firstVacationWeek.textProperty(),
                     lastVacationWeek.textProperty()
                 )
             )
             setOnAction {
-                val err = basicValidate()
-                if (err != null) {
-                    // Zeige die Fehlermeldung (falls UI‑Thread noch nicht aktualisiert hat)
-                    updateError(isDelete = true)
-                    return@setOnAction
-                }
+            if (!validDeleteBtn) {
+                updateError()
+                return@setOnAction
+            }
                 onRemove(
                     vacationRequestWK(
                         firstVacationWeek.text.toUInt(),
@@ -197,14 +176,8 @@ object vacationPopUp {
         }
 
         // Fehler live updaten
-        firstVacationWeek.textProperty().addListener { _, _, _ ->
-            updateError(isDelete = false)   // für Save‑Feedback
-            updateError(isDelete = true)    // für Delete‑Feedback (Button bleibt deaktiviert)
-        }
-        lastVacationWeek.textProperty().addListener { _, _, _ ->
-            updateError(isDelete = false)
-            updateError(isDelete = true)
-        }
+        firstVacationWeek.textProperty().addListener { _, _, _ -> updateError() }
+        lastVacationWeek.textProperty().addListener { _, _, _ -> updateError() }
 
         updateError()
 

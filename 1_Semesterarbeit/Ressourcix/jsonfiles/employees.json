@@ -1,159 +1,26 @@
 {
   "employees": [
     {
-      "id": 1,
-      "firstName": "Tiago",
-      "lastName": "King in the Jungle",
-      "workloadPercent": 31,
-      "role": "STAFF",
-      "department": "ADMIN",
-      "education": "EFZ",
-      "birthday": "",
-      "city": "",
-      "vacationLimit": 5,
-      "vacationEntries": [
-        {
-          "id": 3,
-          "employeeId": 1,
-          "year": 2026,
-          "startWeek": 10,
-          "endWeek": 11,
-          "weekStatus": {
-            "10": "REQUESTED",
-            "11": "REQUESTED"
-          }
-        }
-      ]
-    },
-    {
-      "id": 2,
+      "id": 6,
       "firstName": "Morris",
-      "lastName": "the hutt",
-      "workloadPercent": 23,
+      "lastName": "Meier",
+      "workloadPercent": 100,
       "role": "APPRENTICE",
-      "department": "",
-      "education": "",
-      "birthday": "",
-      "city": "",
-      "vacationLimit": 5,
-      "vacationEntries": [
-        {
-          "id": 2,
-          "employeeId": 2,
-          "year": 2026,
-          "startWeek": 11,
-          "endWeek": 14,
-          "weekStatus": {
-            "11": "REQUESTED",
-            "12": "REQUESTED",
-            "13": "REQUESTED",
-            "14": "REQUESTED"
-          }
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "firstName": "Pedro",
-      "lastName": "inLove",
-      "workloadPercent": 33,
-      "role": "TEAM_LEAD",
-      "department": "ADMIN",
-      "education": "LEHRLING",
-      "birthday": "",
-      "city": "",
-      "vacationLimit": 5,
-      "vacationEntries": [
-        {
-          "id": 9,
-          "employeeId": 3,
-          "year": 2026,
-          "startWeek": 1,
-          "endWeek": 5,
-          "weekStatus": {
-            "1": "REQUESTED",
-            "2": "REQUESTED",
-            "3": "REQUESTED",
-            "4": "REQUESTED",
-            "5": "REQUESTED"
-          }
-        }
-      ]
-    },
-    {
-      "id": 4,
-      "firstName": "Sarah",
-      "lastName": "Princess",
-      "workloadPercent": 90,
-      "role": "STAFF",
       "department": "AUSSENDIENST",
-      "education": "",
-      "birthday": "",
-      "city": "",
+      "education": "LEHRLING",
+      "birthday": "09.09.1999",
+      "city": "Baden",
       "vacationLimit": 5,
       "vacationEntries": [
         {
-          "id": 4,
-          "employeeId": 4,
+          "id": 11,
+          "employeeId": 6,
           "year": 2026,
-          "startWeek": 11,
-          "endWeek": 14,
-          "weekStatus": {
-            "11": "REQUESTED",
-            "12": "REQUESTED",
-            "13": "REQUESTED",
-            "14": "REQUESTED"
-          }
-        },
-        {
-          "id": 5,
-          "employeeId": 4,
-          "year": 2026,
-          "startWeek": 18,
-          "endWeek": 21,
-          "weekStatus": {
-            "18": "REQUESTED",
-            "19": "REQUESTED",
-            "20": "REQUESTED",
-            "21": "REQUESTED"
-          }
-        },
-        {
-          "id": 6,
-          "employeeId": 4,
-          "year": 2026,
-          "startWeek": 44,
-          "endWeek": 45,
-          "weekStatus": {
-            "44": "REQUESTED",
-            "45": "REQUESTED"
-          }
-        },
-        {
-          "id": 7,
-          "employeeId": 4,
-          "year": 2026,
-          "startWeek": 1,
+          "startWeek": 3,
           "endWeek": 4,
           "weekStatus": {
-            "1": "REQUESTED",
-            "2": "REQUESTED",
             "3": "REQUESTED",
             "4": "REQUESTED"
-          }
-        },
-        {
-          "id": 8,
-          "employeeId": 4,
-          "year": 2026,
-          "startWeek": 5,
-          "endWeek": 9,
-          "weekStatus": {
-            "5": "REQUESTED",
-            "6": "REQUESTED",
-            "7": "REQUESTED",
-            "8": "REQUESTED",
-            "9": "REQUESTED"
           }
         }
       ]
@@ -161,12 +28,12 @@
   ],
   "idProviders": {
     "employeeIds": {
-      "nextId": 4,
-      "issuedIds": [0, 1, 2, 3, 4]
+      "nextId": 6,
+      "issuedIds": [0, 1, 2, 3, 4, 5, 6]
     },
     "vacationIds": {
-      "nextId": 9,
-      "issuedIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+      "nextId": 11,
+      "issuedIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     }
   }
 }

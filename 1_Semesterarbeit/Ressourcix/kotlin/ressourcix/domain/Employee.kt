@@ -19,7 +19,7 @@ class Employee(private val id: UInt) {
     private var birthday: LocalDate? = null
     private var city: String = ""
     private var vacationLimit : UInt = 5u // Anzahl Ferien nur über get und set
-    var plannedVacation = vacationList.sum()
+    var plannedVacation = vacationList.sum().toUInt()
 
     private val birthdayFormatter: DateTimeFormatter =
         DateTimeFormatter.ofPattern("dd.MM.uuuu")
@@ -27,14 +27,18 @@ class Employee(private val id: UInt) {
 
     fun getId(): UInt = id
 
-    fun checkVacationLimits(startWeek: UInt, endWeek: UInt): Boolean{
-        val vacationRange = endWeek - startWeek
-        var check = false
-        if ((vacationLimit - vacationRange)< 0u){
-             check = false
-        }else {check = true}
-        return check
+    fun vacationStatus(): String {
+        val planned = vacationList.sum()
+        val remaining = vacationLimit.toInt() - planned
+
+        return when {
+            remaining > 0  -> " [$planned/$vacationLimit] ⏳"
+            remaining == 0 -> " [$planned/$vacationLimit] ✔"
+            else           -> " [$planned/$vacationLimit] ✖"
+        }
     }
+
+
     fun getFirstName(): String = firstName
     fun getLastName(): String = lastName
     fun getWorkloadPercent(): UByte = workloadPercent
@@ -79,8 +83,27 @@ class Employee(private val id: UInt) {
     }
 
 
-    fun getFullName(): String =
-        listOf(firstName, lastName).filter { it.isNotBlank() }.joinToString(" ")
+    fun getFullName(maxLength: Int = 12): String {
+        val full = listOf(firstName, lastName)
+            .filter { it.isNotBlank() }
+            .joinToString(" ")
+
+        if (full.length <= maxLength) {
+            return full
+        }
+
+        val firstInitial = firstName.firstOrNull()?.toString() ?: ""
+        val remainingLength =
+            maxLength - firstInitial.length - 1 // 1 für Leerzeichen
+
+        val shortenedLastName =
+            lastName.take(remainingLength.coerceAtLeast(0))
+
+        return listOf(firstInitial, shortenedLastName)
+            .filter { it.isNotBlank() }
+            .joinToString(" ")
+    }
+
 
     fun abbreviationSting(): String {
         if (firstName.isBlank() || lastName.isBlank()) return ""
@@ -93,7 +116,7 @@ class Employee(private val id: UInt) {
         vacationEntries.add(entry)
         vacationEntryIds.add(entry.id)
         createVacationList()
-        plannedVacation = vacationList.sum()
+        plannedVacation = vacationList.sum().toUInt()
     }
 
     fun removeVacationEntry(vacationId: UInt, entry: VacationEntry){
@@ -109,6 +132,13 @@ class Employee(private val id: UInt) {
         return null
     }
 
+    fun findEntryByStartweek (startWeek: UInt): Boolean {
+        vacationEntries.find {
+            it.range.startWeek == startWeek
+        } ?: return false
+        return true
+    }
+
     fun removeByStartWeek(startWeek: UInt): Boolean {
         val entry = vacationEntries.find {
             it.range.startWeek == startWeek
@@ -116,7 +146,7 @@ class Employee(private val id: UInt) {
         vacationEntries.remove(entry)
         vacationEntryIds.remove(entry.id)
         createVacationList()
-        plannedVacation = vacationList.sum()
+        plannedVacation = vacationList.sum().toUInt()
         return true
     }
 
