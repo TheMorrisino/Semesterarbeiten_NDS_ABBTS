@@ -1,7 +1,6 @@
 //  Autor:        Pedro Santos
 
 package ressourcix.gui.pages
-
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.TextField
@@ -80,18 +79,6 @@ object parameterview: BorderPane() {
         alignment = Pos.CENTER
         spacing = 50.0
     }
-
-    private val minEmployeeBar = HBox(50.0).apply {
-        padding = Insets(20.0)
-        alignment = Pos.BOTTOM_CENTER
-
-        val minEmployee = createDataBox("Min. Anzahl Mitarbeiter",minEmployeeTfl)
-        val minStudents = createDataBox("Min. Anzahl Lehrlinge",minApprenticeTfl)
-        val minManage = createDataBox("Min. Anzahl Leiter", minManagerTfl)
-
-        children.addAll(minEmployee,minStudents,minManage)
-    }
-
     private val vacationsBlockerBar = HBox(50.0).apply {
         padding = Insets(20.0)
         alignment = Pos.CENTER
@@ -102,6 +89,15 @@ object parameterview: BorderPane() {
         children.addAll(vacationsBlockDataB,vacationsSchoolBlockDataB)
 
     }
+    private val functionBox = HBox(50.0).apply {
+        padding = Insets(20.0)
+        alignment = Pos.BOTTOM_CENTER
+        spacing = 80.0
+
+        children.addAll(parameterChangeBtn,parameterSaveBtn,parameterRestoreBtn)
+    }
+/*
+Zukunft Feature
 
     private val maxVacationsBar = HBox(50.0).apply {
         padding = Insets(20.0)
@@ -114,17 +110,25 @@ object parameterview: BorderPane() {
         children.addAll(maxVacationUntil25DataB,maxVacationFrom25DataB,maxVacationFrom45DataB)
 
     }
-
-    private val functionBox = HBox(50.0).apply {
+    private val minEmployeeBar = HBox(50.0).apply {
         padding = Insets(20.0)
         alignment = Pos.BOTTOM_CENTER
-        spacing = 80.0
 
-        children.addAll(parameterChangeBtn,parameterSaveBtn,parameterRestoreBtn)
+        val minEmployee = createDataBox("Min. Anzahl Mitarbeiter",minEmployeeTfl)
+        val minStudents = createDataBox("Min. Anzahl Lehrlinge",minApprenticeTfl)
+        val minManage = createDataBox("Min. Anzahl Leiter", minManagerTfl)
+
+        children.addAll(minEmployee,minStudents,minManage)
     }
+ */
 
     init {
-        mainContent.children.addAll(minEmployeeBar,vacationsBlockerBar,maxVacationsBar,functionBox)
+/*
+Zukunft Feature
+
+mainContent.children.addAll(minEmployeeBar,vacationsBlockerBar,maxVacationsBar,functionBox)
+*/
+        mainContent.children.addAll(vacationsBlockerBar,functionBox)
         center = popupLayer.wrap(mainContent) { popupLayer.close() }
         setFieldsEditable(false)
         installWeekPopupHandlers()

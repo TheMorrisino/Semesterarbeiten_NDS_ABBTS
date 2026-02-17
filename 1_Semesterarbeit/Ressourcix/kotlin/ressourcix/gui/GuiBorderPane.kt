@@ -86,16 +86,10 @@ class GuiBorderPane : Application() {
             contentText = "Nicht gespeicherte Daten gehen verloren."
 
             buttonTypes.setAll(btnSave,btNotSave,btnCancel)
-
-
-
         }
         val pathIcon = "/Ressourcix_Icon_OhneB2.png"
         val stage = alert.dialogPane.scene.window as Stage
         stage.icons.add(Image(pathIcon))
-
-
-
 
         val result: Optional<ButtonType> = alert.showAndWait()
 
