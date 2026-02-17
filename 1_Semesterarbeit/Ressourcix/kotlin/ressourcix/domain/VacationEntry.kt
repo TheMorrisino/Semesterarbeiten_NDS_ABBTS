@@ -5,13 +5,13 @@ class VacationEntry(
     val employeeId: UInt,
     val year: UInt,
     val range: WeekRange,
-    initialStatus: VacationStatus = VacationStatus.GENERATED
+    var status: VacationStatus = VacationStatus.REQUESTED
 ) {
     private val statusByWeek: MutableMap<UInt, VacationStatus> = mutableMapOf()
 
     init {
         for (w in range.startWeek..range.endWeek) {
-            statusByWeek[w] = initialStatus
+            statusByWeek[w] = status
         }
     }
 

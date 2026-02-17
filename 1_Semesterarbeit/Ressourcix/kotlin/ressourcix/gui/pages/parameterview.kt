@@ -10,13 +10,13 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.scene.input.KeyEvent
 import ressourcix.domain.config
-import ressourcix.gui.popups.weekPickerPopUp
+import gui.popUp.weekPickerPopUp
 import ressourcix.logger.logger
 import ressourcix.gui.util.createButton
 import ressourcix.gui.util.createDataBox
 import ressourcix.gui.util.createTfl
 import ressourcix.gui.util.positiveIntNoZeroFormatter
-import ressourcix.gui.components.PopupLayer
+import ressourcix.gui.components.PopUpLayer
 
 object parameterview: BorderPane() {
 
@@ -73,7 +73,7 @@ object parameterview: BorderPane() {
             logger.info("Parameter wurden erfolgreich zurückgesetzt.")}
     }
 
-    private val popupLayer = PopupLayer()
+    private val popupLayer = PopUpLayer()
 
     private val mainContent = VBox().apply {
         padding = Insets(50.0)

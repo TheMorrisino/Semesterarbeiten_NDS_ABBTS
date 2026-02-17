@@ -14,12 +14,9 @@ import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.scene.text.TextAlignment
 import ressourcix.app.app
-import ressourcix.gui.pages.calenderView
 import ressourcix.gui.pages.calenderView.closePopup
-import ressourcix.gui.pages.calenderView.refreshVacations
 import ressourcix.gui.pages.calenderView.selectedEmployee
 import ressourcix.gui.pages.calenderView.showPopup
-import ressourcix.logger.logger
 
 private const val BTN_HEIGHT = 50.0
 private const val BTN_WIDTH = 140.0
@@ -38,6 +35,7 @@ object vacationPopUp {
     var idField = createTfl("", "")
     var nameField = createTfl("", "")
 
+
     fun build(onClose: () -> Unit, onRemove: (vacationRequestWK) -> Unit, onSave: (vacationRequestWK) -> Unit): Node {
         var firstVacationWeek = createTfl("", "Erste Ferien Woche eintragen...")
         var lastVacationWeek = createTfl("", "Letzte Ferien Woche eintragen...")
@@ -51,19 +49,61 @@ object vacationPopUp {
 
         }
 
+        fun basicValidate(): String? {
+            errorLabel.style = "-fx-text-fill: red;"
+            val start = firstVacationWeek.text.toIntOrNull()
+            val end   = lastVacationWeek.text.toIntOrNull()
+            if (start == null || end == null) return "Bitte Start‑ und Endwoche ausfüllen"
+            if (start !in 1..52) return "Start‑KW muss 1–52 sein"
+            if (end !in 1..52)   return "End‑KW muss 1–52 sein"
+            if (end < start)     return "End‑KW darf nicht kleiner sein als Start‑KW"
+            val employee = app.management.employees
+                .find { it.getId() == selectedEmployee.getId() }
+            if (employee == null) {
+                return "Mitarbeiter wurde nicht gefunden"
+            }
+            if (!employee.isOnVacation(start.toUInt())) {
+                errorLabel.style = "-fx-text-fill: orange;"
+                return "Der Mitarbeiter hat keine Ferien – nichts zu löschen"
+            }
+            return null
+        }
+
+
         fun validate(): String? {
+            errorLabel.style = "-fx-text-fill: red;"
             val start = firstVacationWeek.text.toIntOrNull()
             val end = lastVacationWeek.text.toIntOrNull()
-
             if (start == null || end == null) return "Bitte Start- und Endwoche ausfüllen"
             if (start !in 1..52) return "Start-KW muss 1–52 sein"
             if (end !in 1..52) return "End-KW muss 1–52 sein"
             if (end < start) return "End-KW darf nicht kleiner sein als Start-KW"
+            val startWeek = start ?: return null
+            val endWeek = end ?: return null
+            val employee = app.management.employees
+                .find { it.getId() == selectedEmployee.getId() }
+            if (employee == null) {
+                return "Mitarbeiter wurde nicht gefunden"
+            }
+            if (!app.management.canAddVacation(
+                    employee,
+                    startWeek.toUInt(),
+                    endWeek.toUInt()
+                )
+            ) {
+                return "Es wurde eine Überschneidung mit den bereits beantragten Ferien erkannt"
+            }
+
             return null
         }
 
-        fun updateError() {
-            errorLabel.text = validate().orEmpty()
+        fun updateError(isDelete: Boolean = false) {
+            errorLabel.text = if (isDelete) {
+                basicValidate().orEmpty()
+
+            } else {
+                validate().orEmpty()
+            }
         }
 
         val saveBtn = createButton("Antrag\nspeichern").apply {
@@ -95,24 +135,25 @@ object vacationPopUp {
         val deleteBtn = createButton("Antrag\nLöschen").apply {
             disableProperty().bind(
                 Bindings.createBooleanBinding(
-                    { validate() != null },
+                    { basicValidate() != null },
                     firstVacationWeek.textProperty(),
                     lastVacationWeek.textProperty()
                 )
             )
             setOnAction {
-            val err = validate()
-            if (err != null) {
-                updateError()
-                return@setOnAction
-            }
-            onRemove(
-                vacationRequestWK(
-                    firstVacationWeek.text.toUInt(),
-                    lastVacationWeek.text.toUInt()
+                val err = basicValidate()
+                if (err != null) {
+                    // Zeige die Fehlermeldung (falls UI‑Thread noch nicht aktualisiert hat)
+                    updateError(isDelete = true)
+                    return@setOnAction
+                }
+                onRemove(
+                    vacationRequestWK(
+                        firstVacationWeek.text.toUInt(),
+                        lastVacationWeek.text.toUInt()
+                    )
                 )
-            )
-            onClose()
+                onClose()
             }
 
         }
@@ -121,16 +162,12 @@ object vacationPopUp {
             setOnAction {
                 showPopup(
                     checkVacationPopUp.build(
-                        onClose = { closePopup() },
-                        onSave = {
-                            app.management.updateOverlapList()
-                            refreshVacations()
-                            closePopup()
-                        }
+                        onClose = { closePopup() }
                     )
                 )
             }
         }
+
 
 
 
@@ -160,8 +197,14 @@ object vacationPopUp {
         }
 
         // Fehler live updaten
-        firstVacationWeek.textProperty().addListener { _, _, _ -> updateError() }
-        lastVacationWeek.textProperty().addListener { _, _, _ -> updateError() }
+        firstVacationWeek.textProperty().addListener { _, _, _ ->
+            updateError(isDelete = false)   // für Save‑Feedback
+            updateError(isDelete = true)    // für Delete‑Feedback (Button bleibt deaktiviert)
+        }
+        lastVacationWeek.textProperty().addListener { _, _, _ ->
+            updateError(isDelete = false)
+            updateError(isDelete = true)
+        }
 
         updateError()
 

@@ -10,7 +10,7 @@ enum class Role (val displayName: String) {
     override fun toString(): String = displayName
 }
 
-enum class VacationStatus { REQUESTED, APPROVED, GENERATED, REJECTED, CANCELLED }
+enum class VacationStatus { REQUESTED, APPROVED, REJECTED }
 
 enum class Department(val displayName: String) {
     AUSSENDIENST("Aussendienst"),
@@ -30,16 +30,8 @@ enum class Education(val displayName: String) {
 
 val VacationStatus.code: String
     get() = when (this) {
-        VacationStatus.REQUESTED -> "REQ"
-        VacationStatus.APPROVED  -> "APP"
-        VacationStatus.GENERATED -> "GEN"
-        VacationStatus.REJECTED  -> "REJ"
-        VacationStatus.CANCELLED -> "CAN"
+        VacationStatus.REQUESTED -> "\uD83D\uDD52"
+        VacationStatus.APPROVED  -> "✅"
+        VacationStatus.REJECTED  -> "❌"
     }
 
-enum class OverlapStatus {
-    OK,       // Grün: Keine Überschneidung
-    WARNING,  // Gelb: Überschneidung vorhanden, aber unter der Limite
-    CRITICAL  // Rot: Maximales Limit erreicht
-
-}

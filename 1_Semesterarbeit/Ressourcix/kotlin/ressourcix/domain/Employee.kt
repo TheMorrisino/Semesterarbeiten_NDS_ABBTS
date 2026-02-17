@@ -3,7 +3,6 @@ package ressourcix.domain
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
-import kotlin.text.format
 
 
 class Employee(private val id: UInt) {
@@ -12,22 +11,24 @@ class Employee(private val id: UInt) {
     private var workloadPercent: UByte = 100u
     private var role: Role = Role.APPRENTICE
     private var abbreviation: String = ""
-    private val vacationEntries: MutableList<VacationEntry> = mutableListOf()
+    val vacationEntries: MutableList<VacationEntry> = mutableListOf()
+    private val vacationEntryIds : MutableList<UInt> = mutableListOf()
     private var vacationList: MutableList<Int> = MutableList(52) { 0 }
     private var department: Department? = null
     private var education: Education? = null
     private var birthday: LocalDate? = null
     private var city: String = ""
     private var vacationLimit : UInt = 5u // Anzahl Ferien nur über get und set
-    private val plannedVacation = vacationList.sum()
+    var plannedVacation = vacationList.sum()
 
     private val birthdayFormatter: DateTimeFormatter =
         DateTimeFormatter.ofPattern("dd.MM.uuuu")
             .withResolverStyle(ResolverStyle.STRICT)
 
     fun getId(): UInt = id
-    fun checkVacationLimits(newVacationEntry: VacationEntry): Boolean{
-        val vacationRange = newVacationEntry.range.endWeek - newVacationEntry.range.startWeek
+
+    fun checkVacationLimits(startWeek: UInt, endWeek: UInt): Boolean{
+        val vacationRange = endWeek - startWeek
         var check = false
         if ((vacationLimit - vacationRange)< 0u){
              check = false
@@ -38,7 +39,6 @@ class Employee(private val id: UInt) {
     fun getLastName(): String = lastName
     fun getWorkloadPercent(): UByte = workloadPercent
     fun getRole(): Role = role
-    fun getVacationEntries(): List<VacationEntry> = vacationEntries.toList()
     fun getDepartment(): Department? = department
     fun getEducation(): Education? = education
     fun getBirthday(): LocalDate? = birthday
@@ -88,9 +88,12 @@ class Employee(private val id: UInt) {
         return abbreviation
     }
 
+
     fun addVacationEntry(entry: VacationEntry) {
         vacationEntries.add(entry)
+        vacationEntryIds.add(entry.id)
         createVacationList()
+        plannedVacation = vacationList.sum()
     }
 
     fun removeVacationEntry(vacationId: UInt, entry: VacationEntry){
@@ -111,7 +114,9 @@ class Employee(private val id: UInt) {
             it.range.startWeek == startWeek
         } ?: return false
         vacationEntries.remove(entry)
+        vacationEntryIds.remove(entry.id)
         createVacationList()
+        plannedVacation = vacationList.sum()
         return true
     }
 
@@ -133,7 +138,6 @@ class Employee(private val id: UInt) {
                 }
             }
         }
-
     }
     fun getBirthdayAsString(): String = birthday?.format(birthdayFormatter).orEmpty()
 
@@ -141,6 +145,13 @@ class Employee(private val id: UInt) {
 
     fun setVacationLimit(limit: UInt){
       vacationLimit = limit
+    }
+
+    fun isOnVacation(week: UInt): Boolean {
+        require(week in 1u..52u) { "Kalenderwoche muss zwischen 1 und 52 liegen" }
+        return vacationEntries.any { entry ->
+            week in entry.range.startWeek..entry.range.endWeek
+        }
     }
 
     fun getVacationLimit() = vacationLimit

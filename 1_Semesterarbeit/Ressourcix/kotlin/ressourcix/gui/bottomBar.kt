@@ -1,7 +1,6 @@
-//  Autor:        Pedro Santos
-
 package ressourcix.gui
 
+import javafx.animation.Animation
 import javafx.animation.KeyFrame
 import javafx.animation.Timeline
 import javafx.application.Platform
@@ -18,105 +17,93 @@ import ressourcix.logger.logger
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+
 object bottomBar {
 
-    // Status-TextField (links)
-    private val status = TextField("").apply {
-        isDisable = true
-        isEditable = false
-        style = "-fx-background-color: #f5f5f5; -fx-opacity: 1.0;"
-        text = "Bereit"
+    private object Config {
+        const val CLOCK_FORMAT = "dd.MM.yyyy HH:mm:ss"
+        const val STATUS_FORMAT = "HH:mm:ss"
+        const val DEFAULT_STATUS = "Bereit"
+        const val SPACING = 10.0
+        const val PADDING = 5.0
+        const val CLOCK_INTERVAL_SECONDS = 1.0
+
+        const val STATUS_STYLE = "-fx-background-color: #f5f5f5; -fx-opacity: 1.0;"
+        const val CLOCK_STYLE = "-fx-text-fill: black;"
+        const val BAR_STYLE = "-fx-border-color: #cccccc; -fx-border-width: 1 0 0 0;"
     }
 
-    // Uhr-Label (rechts)
-    private val clockLabel = Label().apply {
-        isDisable = false
-        style = "-fx-text-fill: black;"
+    private val statusField: TextField by lazy { createStatusField() }
+    private val clockLabel: Label by lazy { createClockLabel() }
+    private val clockTimeline: Timeline by lazy { createClockTimeline() }
+
+    private val clockFormatter = DateTimeFormatter.ofPattern(Config.CLOCK_FORMAT)
+    private val statusFormatter = DateTimeFormatter.ofPattern(Config.STATUS_FORMAT)
+
+
+    init {
+        updateClock()
+        subscribeToLogUpdates()
     }
 
-    // Formatter
-    private val timeFmt = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
 
-    // Cache für letzte Log-Message
-    private var lastMessage = ""
+    fun getView(): HBox = createBar()
 
-    private val bar = HBox(10.0).apply {
-        padding = Insets(5.0)
-        alignment = Pos.CENTER_LEFT
+    fun start() {
+        clockTimeline.play()
+    }
 
-        val spacer = Region().apply {
-            HBox.setHgrow(this, Priority.ALWAYS)
+    fun stop() {
+        clockTimeline.stop()
+    }
+
+
+    private fun subscribeToLogUpdates() {
+        logger.addLogChangeListener { entry ->
+            val timestamp = entry.timestamp.format(statusFormatter)
+            val message = "$timestamp - ${entry.message}"
+            updateStatus(message)
         }
+    }
 
-        children.addAll(status, spacer, clockLabel)
-
-        HBox.setHgrow(status, Priority.ALWAYS)
-        style = "-fx-border-color: #cccccc; -fx-border-width: 1 0 0 0;"
+    private fun updateStatus(message: String) {
+        Platform.runLater {
+            statusField.text = message
+        }
     }
 
 
-
-
-    private val statusUpdateThread = Thread {
-        while (true) {
-            try {
-                // Nur alle 500ms prüfen (spart CPU!)
-                Thread.sleep(500)
-
-                val currentMessage = logger.getLastLogMessageWithTimestamp() ?: "Bereit"
-
-                // Nur updaten wenn sich was geändert hat
-                if (currentMessage != lastMessage) {
-                    lastMessage = currentMessage
-
-                    val lastEntry = logger.getLastLogEntry()
-
-                    // UI-Update im JavaFX-Thread
-                    Platform.runLater {
-                        updateStatus(currentMessage, lastEntry?.level)
-                    }
-                }
-
-
-            } catch (e: InterruptedException) {
-                break // Thread beenden
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }.apply {
-        isDaemon = true
-        name = "BottomBar-Status-Updater"
-        start()
+    private fun createClockTimeline() = Timeline(
+        KeyFrame(Duration.seconds(Config.CLOCK_INTERVAL_SECONDS), EventHandler { updateClock() })
+    ).apply {
+        cycleCount = Animation.INDEFINITE
     }
 
     private fun updateClock() {
-        clockLabel.text = LocalDateTime.now().format(timeFmt)
+        clockLabel.text = LocalDateTime.now().format(clockFormatter)
     }
 
-    val clockTimeline = Timeline().apply {
-        keyFrames.add(KeyFrame(Duration.ZERO, EventHandler { updateClock() }))
-        keyFrames.add(KeyFrame(Duration.seconds(1.0), EventHandler { updateClock() }))
-        cycleCount = Timeline.INDEFINITE
-        play()
+
+    private fun createStatusField() = TextField(Config.DEFAULT_STATUS).apply {
+        isDisable = true
+        isEditable = false
+        style = Config.STATUS_STYLE
     }
 
-    private fun updateStatus(message: String, level: logger.Level?) {
-        status.text = message
-
-        // Farbe basierend auf Log-Level
-//        status.style = when (level) {
-//            logger.Level.ERROR, logger.Level.FATAL ->
-//                "-fx-background-color: #ffe6e6; -fx-text-fill: red; -fx-font-weight: bold; -fx-opacity: 1.0;"
-//            logger.Level.WARN ->
-//                "-fx-background-color: #fff4e6; -fx-text-fill: orange; -fx-font-weight: bold; -fx-opacity: 1.0;"
-////           logger.Level.INFO ->
-////                "-fx-background-color: #e6f3ff; -fx-text-fill: blue; -fx-opacity: 1.0;"
-//            logger.Level.DEBUG ->
-//                "-fx-background-color: #f5f5f5; -fx-text-fill: gray; -fx-opacity: 1.0;"
-//            else ->
-//                "-fx-background-color: #f5f5f5; -fx-text-fill: black; -fx-opacity: 1.0;"
-//        }
+    private fun createClockLabel() = Label().apply {
+        style = Config.CLOCK_STYLE
     }
-    fun getView(): HBox = bar
+
+    private fun createBar() = HBox(Config.SPACING).apply {
+        padding = Insets(Config.PADDING)
+        alignment = Pos.CENTER_LEFT
+        style = Config.BAR_STYLE
+
+        HBox.setHgrow(statusField, Priority.ALWAYS)
+        children.addAll(statusField, createSpacer(), clockLabel)
+    }
+
+    private fun createSpacer() = Region().apply {
+        HBox.setHgrow(this, Priority.ALWAYS)
+    }
 }
