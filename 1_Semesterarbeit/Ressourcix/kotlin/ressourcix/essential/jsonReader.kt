@@ -133,8 +133,7 @@ object jsonReader {
             //Vacation neu berechnen, um Aktuelle daten zu haben
             employees.forEach { it.createVacationList() }
 
-            logger.info("${employees.size} Mitarbeitende geladen")
-            println("${employees.size} Mitarbeitende importiert")
+            logger.info("${employees.size} Mitarbeitende importiert")
             return employees
         } catch (e: Exception) {
             logger.fatal("Fehler beim Lesen von JSON: ${e.message}")
@@ -179,7 +178,7 @@ object jsonReader {
             }
 
             logger.info("Konfiguration geladen")
-            println("Konfiguration geladen")
+
 
         } catch (e: Exception) {
             logger.fatal("Fehler beim Lesen der Config: ${e.message}")

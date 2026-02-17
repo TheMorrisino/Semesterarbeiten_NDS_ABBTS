@@ -1,6 +1,6 @@
 //  Autor:        Pedro Santos
 
-package ressourcix.gui.popups
+package gui.popUp
 
 import javafx.geometry.Insets
 import javafx.geometry.Pos

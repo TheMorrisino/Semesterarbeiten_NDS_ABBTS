@@ -30,7 +30,7 @@
       "firstName": "Morris",
       "lastName": "the hutt",
       "workloadPercent": 23,
-      "role": "STAFF",
+      "role": "APPRENTICE",
       "department": "",
       "education": "",
       "birthday": "",
@@ -64,6 +64,20 @@
       "city": "",
       "vacationLimit": 5,
       "vacationEntries": [
+        {
+          "id": 9,
+          "employeeId": 3,
+          "year": 2026,
+          "startWeek": 1,
+          "endWeek": 5,
+          "weekStatus": {
+            "1": "REQUESTED",
+            "2": "REQUESTED",
+            "3": "REQUESTED",
+            "4": "REQUESTED",
+            "5": "REQUESTED"
+          }
+        }
       ]
     },
     {
@@ -114,6 +128,33 @@
             "44": "REQUESTED",
             "45": "REQUESTED"
           }
+        },
+        {
+          "id": 7,
+          "employeeId": 4,
+          "year": 2026,
+          "startWeek": 1,
+          "endWeek": 4,
+          "weekStatus": {
+            "1": "REQUESTED",
+            "2": "REQUESTED",
+            "3": "REQUESTED",
+            "4": "REQUESTED"
+          }
+        },
+        {
+          "id": 8,
+          "employeeId": 4,
+          "year": 2026,
+          "startWeek": 5,
+          "endWeek": 9,
+          "weekStatus": {
+            "5": "REQUESTED",
+            "6": "REQUESTED",
+            "7": "REQUESTED",
+            "8": "REQUESTED",
+            "9": "REQUESTED"
+          }
         }
       ]
     }
@@ -124,8 +165,8 @@
       "issuedIds": [0, 1, 2, 3, 4]
     },
     "vacationIds": {
-      "nextId": 6,
-      "issuedIds": [0, 1, 2, 3, 4, 5, 6]
+      "nextId": 9,
+      "issuedIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     }
   }
 }
