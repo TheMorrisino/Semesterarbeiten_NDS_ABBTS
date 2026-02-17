@@ -83,7 +83,7 @@ object parameterview: BorderPane() {
 
     private val minEmployeeBar = HBox(50.0).apply {
         padding = Insets(20.0)
-        alignment = Pos.TOP_LEFT
+        alignment = Pos.BOTTOM_CENTER
 
         val minEmployee = createDataBox("Min. Anzahl Mitarbeiter",minEmployeeTfl)
         val minStudents = createDataBox("Min. Anzahl Lehrlinge",minApprenticeTfl)
@@ -94,7 +94,7 @@ object parameterview: BorderPane() {
 
     private val vacationsBlockerBar = HBox(50.0).apply {
         padding = Insets(20.0)
-        alignment = Pos.CENTER_LEFT
+        alignment = Pos.CENTER
 
         val vacationsBlockDataB = createDataBox("Ferien Blocker",vacationsBlockTfl)
         val vacationsSchoolBlockDataB = createDataBox("Schulferien", vacationsSchoolBlockTfl)
@@ -105,7 +105,7 @@ object parameterview: BorderPane() {
 
     private val maxVacationsBar = HBox(50.0).apply {
         padding = Insets(20.0)
-        alignment = Pos.BOTTOM_LEFT
+        alignment = Pos.TOP_CENTER
 
         val maxVacationUntil25DataB = createDataBox("Anzahl Ferien bis 25 Jahre alt",vacationsUntil25Tfl)
         val maxVacationFrom25DataB = createDataBox("Anzahl Ferien ab 25 Jahre alt",vacationFrom25Tfl)

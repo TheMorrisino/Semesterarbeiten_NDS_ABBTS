@@ -68,6 +68,7 @@ class GuiBorderPane : Application() {
             setOnCloseRequest {  event ->
                 event.consume()
                 exit() }
+            bottomBar.start()
             show()
 
 
