@@ -78,10 +78,11 @@ object employeeManagementView : BorderPane() {
     }
     var birthdayField = createTfl("","tt.mm.jjjj").apply {
         installBirthdayField(this)
-        //TODO TextFormatter blockieren
     }
 
-    var remainingVacationWeeksField = createTfl("","")
+    var limitVacationWeeksField = createTfl("","").apply {
+        textFormatter = positiveIntNoZeroFormatter(2,52)
+    }
     var usedVacationWeeksField = createTfl("","")
 
     var newEmployee = false
@@ -197,7 +198,7 @@ object employeeManagementView : BorderPane() {
                 createLabeledComboBox("Rolle", roleField),
                 createLabeledComboBox("Abteilung", departmentField),
                 createDataBox("Wohnort", cityField),
-                createDataBox("Anzahl Ferienwochen", remainingVacationWeeksField)
+                createDataBox("Anzahl Ferienwochen", limitVacationWeeksField)
             )
         }
 
@@ -329,20 +330,20 @@ object employeeManagementView : BorderPane() {
         abbreviationField.text = emp.getAbbreviation().ifBlank { emp.abbreviationSting() }
         cityField.text = emp.getCity()
         birthdayField.text = emp.getBirthdayAsString()
-        remainingVacationWeeksField.clear()
-        usedVacationWeeksField.clear()
+        limitVacationWeeksField.text = "${emp.getVacationLimit()}"
+        usedVacationWeeksField.text = "${emp.plannedVacation}"
     }
 
     private fun generateEmployee(emp: Employee): Employee{
         emp.setFirstName(nameField.text)
         emp.setLastName(surnameField.text)
-        val w = workloadField.text.trim().toInt()
-        emp.setWorkloadPercent(w.toUByte())
+        emp.setWorkloadPercent(workloadField.text.trim().toInt().toUByte())
         emp.setRole(roleField.value!!)
         emp.setDepartment(departmentField.value)
         emp.setEducation(educationField.value)
         emp.setCity(cityField.text)
         emp.setBirthdayFromString(birthdayField.text)
+        emp.setVacationLimit(limitVacationWeeksField.text.trim().toUInt())
         return emp
     }
 
@@ -357,7 +358,7 @@ object employeeManagementView : BorderPane() {
         cityField.clear()
         workloadField.clear()
         birthdayField.clear()
-        remainingVacationWeeksField.clear()
+        limitVacationWeeksField.clear()
         usedVacationWeeksField.clear()
     }
 
@@ -381,7 +382,7 @@ object employeeManagementView : BorderPane() {
         educationField.isDisable = !editable
         cityField.isDisable = !editable
         birthdayField.isDisable = !editable
-        remainingVacationWeeksField.isDisable = true
+        limitVacationWeeksField.isDisable = !editable
         usedVacationWeeksField.isDisable = true
         isEditMode = editable
     }
