@@ -1,0 +1,640 @@
+@startuml
+title Ressourcix - Klassendiagramm Detail
+
+' Styling
+skinparam class {
+    BackgroundColor<<singleton>> LightYellow
+    BackgroundColor<<domain>> LightBlue
+    BackgroundColor<<gui>> LightGreen
+    BackgroundColor<<popup>> LightCoral
+    BackgroundColor<<enum>> Wheat
+    BorderColor Black
+}
+
+skinparam object {
+    BackgroundColor<<singleton>> LightYellow
+    BackgroundColor<<domain>> LightBlue
+    BackgroundColor<<gui>> LightGreen
+    BackgroundColor<<popup>> LightCoral
+    BorderColor Black
+}
+
+skinparam arrowColor Black
+skinparam arrowThickness 1.5
+
+' Abstände
+skinparam nodesep 80
+skinparam ranksep 100
+
+' ========================================
+' LEGENDE
+' ========================================
+
+legend top left
+|= **Farben** |= **Bedeutung** |
+| <back:LightYellow>Gelb</back> | Singleton |
+| <back:LightBlue>Blau</back> | Domain |
+| <back:LightGreen>Grün</back> | GUI |
+| <back:LightCoral>Rosa</back> | PopUp |
+| <back:Wheat>Beige</back> | Enum |
+
+|= **Beziehungen** |
+| ──> Verwendung |
+| *──> Komposition |
+| o──> Aggregation |
+
+**Glossar:**
+• **object**: Kotlin-Singleton (nur eine Instanz)
+• **class**: Normale Klasse (mehrere Instanzen möglich)
+• **Singleton**: Muster mit nur einer Instanz
+• **Domain**: Geschäftslogik-Klassen
+• **GUI**: Benutzeroberfläche-Komponenten
+• **PopUp**: Dialog-Fenster
+• **Enum**: Aufzählung fester Werte
+• **Komposition**: Starke Zugehörigkeit (Teil-von)
+• **Aggregation**: Schwache Zugehörigkeit (hat-ein)
+endlegend
+
+
+' ========================================
+' MAIN
+' ========================================
+
+
+object Main #LightSteelBlue
+
+' ========================================
+' DOMAIN - Core Classes
+' ========================================
+
+class Employee <<domain>> {
+    - id: UInt
+    - firstName: String
+    - lastName: String
+    - workloadPercent: UByte
+    - role: Role
+    - abbreviation: String
+    - department: Department?
+    - education: Education?
+    - birthday: LocalDate?
+    - city: String
+    - vacationLimit: UInt
+    - vacationEntries: MutableList<VacationEntry>
+    - vacationList: MutableList<Int>
+    --
+    + getId(): UInt
+    + getFirstName(): String
+    + getLastName(): String
+    + getWorkloadPercent(): UByte
+    + getRole(): Role
+    + getDepartment(): Department?
+    + getEducation(): Education?
+    + getBirthday(): LocalDate?
+    + getCity(): String
+    + getVacationLimit(): UInt
+    + getFullName(): String
+    + abbreviationSting(): String
+    + getBirthdayAsString(): String
+    + getAbbreviation(): String
+    + getVacationByIndex(index: Int): Int
+    + setFirstName(value: String)
+    + setLastName(value: String)
+    + setWorkloadPercent(value: UByte)
+    + setRole(value: Role)
+    + setDepartment(value: Department?)
+    + setEducation(value: Education?)
+    + setCity(value: String)
+    + setVacationLimit(limit: UInt)
+    + setBirthdayFromString(value: String)
+    + addVacationEntry(entry: VacationEntry)
+    + removeVacationEntry(vacationId: UInt, entry: VacationEntry)
+    + removeByStartWeek(startWeek: UInt): Boolean
+    + checkVacationLimits(entry: VacationEntry): Boolean
+    + createVacationList()
+    + getIdWithStartWeek(startWeek: UInt): UInt?
+}
+
+class VacationEntry <<domain>> {
+    + id: UInt
+    + employeeId: UInt
+    + year: UInt
+    + range: WeekRange
+    + status: VacationStatus
+    - statusByWeek: MutableMap<UInt, VacationStatus>
+    --
+    + hasWeek(week: UInt): Boolean
+    + getStatus(week: UInt): VacationStatus?
+    + setStatus(week: UInt, status: VacationStatus)
+    + toString(): String
+}
+
+class WeekRange <<domain>> {
+    + startWeek: UInt
+    + endWeek: UInt
+    --
+    + contains(week: UInt): Boolean
+    + overlaps(other: WeekRange): Boolean
+}
+
+class EmployeeManagement <<domain>> {
+    + employees: MutableList<Employee>
+    - overlapList: MutableList<Int>
+    + maxOverlapsPerKw: Int
+    + year: UInt
+    --
+    + listAll(): List<Employee>
+    + add(employee: Employee)
+    + removeById(id: UInt): Boolean
+    + findById(id: UInt): Employee?
+    + canAddVacation(employee: Employee, startWeek: UInt, endWeek: UInt): Boolean
+    + addVacationSafe(employee: Employee, startWeek: UInt, endWeek: UInt): Boolean
+    + removeVacation(empId: UInt, startWeek: UInt, endWeek: UInt)
+    + updateOverlapList()
+    + countAllOverlaps(): Int
+    + getEmployeesInWeek(week: Int): List<Employee>
+    + getEmployeeByIndex(index: Int): Employee
+    + getOverlapList(): List<Int>
+    + allVacationInKwFiltern()
+}
+
+' Enumerations
+enum Role <<enum>> {
+    APPRENTICE
+    STAFF
+    TEAM_LEAD
+    MANAGER
+    --
+    + displayName: String
+    + toString(): String
+}
+
+enum VacationStatus <<enum>> {
+    REQUESTED
+    APPROVED
+    REJECTED
+    --
+    + code: String
+}
+
+enum Department <<enum>> {
+    AUSSENDIENST
+    ADMIN
+    PLANUNG
+    --
+    + displayName: String
+    + toString(): String
+}
+
+enum Education <<enum>> {
+    LEHRLING
+    EFZ
+    DIPLOM_PFLEGE_HF
+    --
+    + displayName: String
+    + toString(): String
+}
+
+' Configuration
+object config <<singleton>> {
+    + {static} minEmployeeNumber: Int
+    + {static} minApprenticeNumber: Int
+    + {static} minManagerNumber: Int
+    + {static} vacation25Years: Int
+    + {static} vacationOver25Years: Int
+    + {static} vacationOver50Years: Int
+    + {static} vacationBlock: BooleanArray
+    + {static} vacationSchoolBlock: BooleanArray
+}
+
+' ========================================
+' APPLICATION - Core
+' ========================================
+
+object app <<singleton>> {
+    + {static} management: EmployeeManagement
+    + {static} employees: MutableList<Employee>
+    + {static} employeeIds: IdProvider
+    + {static} vacationIds: IdProvider
+    + {static} jasonFileAktiv: Boolean
+    --
+    + {static} run()
+}
+
+class IdProvider {
+    - start: UInt
+    - nextId: UInt
+    - id: UInt
+    - issuedIds: MutableSet<UInt>
+    --
+    + generateId(): UInt
+    + getIssuedIds(): Set<UInt>
+    + getNextId(): UInt
+    + isIssued(id: UInt): Boolean
+    + restore(state: IdState)
+}
+
+class IdState {
+    + nextId: UInt
+    + issuedIds: List<UInt>
+}
+
+object jsonReader <<singleton>> {
+    - {static} jsonDir: File
+    --
+    + {static} read(): List<Employee>
+    + {static} readConfig()
+    - {static} extractJsonObjects(json: String): List<String>
+    - {static} parseJsonObject(jsonObj: String): Map<String, String>
+    - {static} parseBooleanArray(arrayStr: String): BooleanArray
+}
+
+object jsonWriter <<singleton>> {
+    - {static} jsonDir: File
+    - {static} jsonToFile: Boolean
+    --
+    + {static} write()
+    - {static} escapeJson(text: String): String
+}
+
+object logger <<singleton>> {
+    - {static} currentLevel: Level
+    - {static} logToFile: Boolean
+    - {static} logToConsole: Boolean
+    - {static} logDir: File
+    - {static} logBuffer: ConcurrentLinkedQueue<LogEntry>
+    - {static} maxBufferSize: Int
+    - {static} dateFormatter: DateTimeFormatter
+    - {static} fileDateFormatter: DateTimeFormatter
+    --
+    + {static} debug(message: String, exception: Throwable?)
+    + {static} info(message: String, exception: Throwable?)
+    + {static} warn(message: String, exception: Throwable?)
+    + {static} error(message: String, exception: Throwable?)
+    + {static} fatal(message: String, exception: Throwable?)
+    + {static} setLevel(level: Level)
+    + {static} setFileLogging(enabled: Boolean)
+    + {static} setConsoleLogging(enabled: Boolean)
+    + {static} getLastLogMessage(): String?
+    + {static} getLastLogEntry(): LogEntry?
+    + {static} getLastLogMessageWithTimestamp(format: String): String?
+    - {static} log(level: Level, message: String, exception: Throwable?)
+    - {static} addToBuffer(entry: LogEntry)
+    - {static} printToConsole(entry: LogEntry)
+    - {static} writeToFile(entry: LogEntry)
+}
+
+class "logger.LogEntry" as LogEntry {
+    + timestamp: LocalDateTime
+    + level: Level
+    + message: String
+    + exception: Throwable?
+    + threadName: String
+    + className: String?
+    --
+    + toFormattedString(): String
+}
+
+enum "logger.Level" as LogLevel <<enum>> {
+    DEBUG
+    INFO
+    WARN
+    ERROR
+    FATAL
+}
+
+' ========================================
+' GUI - Main
+' ========================================
+
+class GuiBorderPane <<gui>> {
+    --
+    + start(stage: Stage)
+    + exit()
+}
+
+class StartAnimation <<gui>> {
+    --
+    + start(primaryStage: Stage)
+    + init()
+}
+
+class SplashScreenAdvanced <<gui>> {
+    - stage: Stage
+    - root: StackPane
+    - title: Text
+    - gradient: LinearGradient
+    --
+    + show()
+    + close()
+    - setupStage()
+    - createTitle()
+    - startAnimation()
+    - fadeOut()
+}
+
+class NavigationsController <<gui>> {
+    - root: BorderPane
+    - cache: MutableMap<Route, Node>
+    --
+    + navigate(to: Route)
+    - createView(route: Route): Node
+}
+
+enum Route <<enum>> {
+    DASHBOARD
+    CALENDER
+    EMPLOYEEMANAGEMENT
+    PARAMETER
+}
+
+object topNavigationBar <<singleton>> {
+    - {static} dashboardBtn: Button
+    - {static} calenderBtn: Button
+    - {static} employeeManagementBtn: Button
+    - {static} parameterBtn: Button
+    - {static} version: Text
+    - {static} spacer: Region
+    - {static} navBar: HBox
+    --
+    + {static} bind(router: NavigationsController)
+    + {static} getView(): HBox
+    - {static} createNavButton(text: String): Button
+    - {static} setActive(activeBtn: Button)
+    - {static} baseButtonStyle(): String
+    - {static} hoverButtonStyle(): String
+    - {static} activeButtonStyle(): String
+}
+
+object bottomBar <<singleton>> {
+    - {static} statusField: TextField
+    - {static} clockLabel: Label
+    - {static} bar: HBox
+    - {static} lastMessage: String
+    - {static} clockTimeline: Timeline
+    --
+    + {static} updateStatusIfChanged()
+    + {static} getView(): HBox
+    - {static} updateClock()
+    - {static} createStatusField(): TextField
+    - {static} createClockLabel(): Label
+    - {static} createBar(): HBox
+}
+
+' ========================================
+' GUI - Views
+' ========================================
+
+object dashboardView <<singleton>> <<gui>> {
+    - {static} barChart: BarChart<String, Number>
+    - {static} pieChart: PieChart
+    - {static} chartContainer: VBox
+    - {static} toggleChartButton: Button
+    - {static} showingBarChart: Boolean
+    - {static} lastData: List<Int>
+    - {static} toolTippON: Boolean
+    --
+    + {static} refreshCurrentChart()
+    - {static} initializeCharts()
+    - {static} createMainLayout(): GridPane
+    - {static} createChartContainer(): VBox
+    - {static} createButtonBox(): HBox
+    - {static} toggleChart()
+    - {static} showBarChart()
+    - {static} showPieChart()
+    - {static} updateBarChart()
+    - {static} updatePieChart()
+    - {static} updateYAxis(counts: List<Int>)
+    - {static} addBarChartTooltips()
+    - {static} addPieChartTooltips()
+    - {static} createBarChartTooltip(): Tooltip
+    - {static} createPieTooltip(): Tooltip
+    - {static} computeWeeklyDetails(): List<WeekInfo>
+    - {static} computeVacationStats(): VacationStats
+}
+
+object calenderView <<singleton>> <<gui>> {
+    + {static} selectedEmployee: Employee
+    - {static} employees: List<Employee>
+    - {static} fixedTable: TableView<Employee>
+    - {static} weekTable: TableView<Employee>
+    - {static} vScroll: ScrollBar
+    - {static} idColumn: TableColumn<Employee, UInt>
+    - {static} nameColumn: TableColumn<Employee, String>
+    - {static} currentYear: UInt
+    - {static} weekCodeCache: MutableMap<UInt, Array<String>>
+    - {static} spacer: Region
+    - {static} scrollSyncInstalled: Boolean
+    - {static} wheelForwardInstalled: Boolean
+    - {static} selectionSyncInstalled: Boolean
+    - {static} dim: Region
+    - {static} popupHost: StackPane
+    --
+    + {static} showYear(year: UInt, weeks: UInt)
+    + {static} refreshVacations()
+    + {static} updateEmployees()
+    + {static} showPopup(popupContent: Node)
+    + {static} closePopup()
+    - {static} makeRow(): TableRow<Employee>
+    - {static} rebuildCache(year: UInt, weeks: UInt)
+    - {static} installOnceOrRefresh()
+    - {static} forwardWheelScrollToWeekTable()
+    - {static} findScrollBar(): ScrollBar?
+    - {static} hideVerticalBar(bar: ScrollBar)
+    - {static} hideHorizontalBar(bar: ScrollBar)
+    - {static} onEmployeeDoubleClick(employee: Employee)
+    - {static} colorForOverlap(count: Int): String
+    - {static} clamp01(x: Double): Double
+    - {static} lerp(a: Int, b: Int, t: Double): Int
+    - {static} rgb(r: Int, g: Int, b: Int): String
+}
+
+object employeeManagementView <<singleton>> <<gui>> {
+    - {static} popupLayer: PopUpLayer
+    - {static} selectedEmployee: Employee?
+    - {static} isEditMode: Boolean
+    - {static} newEmployee: Boolean
+    - {static} idField: TextField
+    - {static} abbreviationField: TextField
+    - {static} nameField: TextField
+    - {static} surnameField: TextField
+    - {static} roleField: ComboBox<Role>
+    - {static} departmentField: ComboBox<Department>
+    - {static} educationField: ComboBox<Education>
+    - {static} cityField: TextField
+    - {static} workloadField: TextField
+    - {static} birthdayField: TextField
+    - {static} remainingVacationWeeksField: TextField
+    - {static} usedVacationWeeksField: TextField
+    - {static} mainContent: BorderPane
+    - {static} filterBar: HBox
+    - {static} employeeInfoBox: HBox
+    - {static} functionsBox: VBox
+    --
+    - {static} fillEmployeeFields(emp: Employee)
+    - {static} generateEmployee(emp: Employee): Employee
+    - {static} clearEmployeeFields()
+    - {static} resetSearch()
+    - {static} setFieldsEditable(editable: Boolean)
+    - {static} setNoSelectionState()
+}
+
+object parameterview <<singleton>> <<gui>> {
+    - {static} popupLayer: PopUpLayer
+    - {static} isEditMode: Boolean
+    - {static} weeksForBlocker: BooleanArray
+    - {static} weeksForSchool: BooleanArray
+    - {static} minEmployeeTfl: TextField
+    - {static} minApprenticeTfl: TextField
+    - {static} minManagerTfl: TextField
+    - {static} vacationsBlockTfl: TextField
+    - {static} vacationsSchoolBlockTfl: TextField
+    - {static} vacationsUntil25Tfl: TextField
+    - {static} vacationFrom25Tfl: TextField
+    - {static} vacationFrom45Tfl: TextField
+    - {static} parameterChangeBtn: Button
+    - {static} parameterSaveBtn: Button
+    - {static} parameterRestoreBtn: Button
+    - {static} mainContent: VBox
+    - {static} minEmployeeBar: HBox
+    - {static} vacationsBlockerBar: HBox
+    - {static} maxVacationsBar: HBox
+    - {static} functionBox: HBox
+    --
+    - {static} installWeekPopupHandlers()
+    - {static} setFieldsEditable(editable: Boolean)
+    - {static} lockToPopupOnly(tfl: TextField)
+    - {static} copyWeeks(src: BooleanArray, dst: BooleanArray)
+    - {static} weeksToText(weeks: BooleanArray): String
+    - {static} loadFromConfigToUi()
+    - {static} saveFromUiToConfig()
+}
+
+' ========================================
+' GUI - PopUps
+' ========================================
+
+object vacationPopUp <<singleton>> <<popup>> {
+    + {static} idField: TextField
+    + {static} nameField: TextField
+    --
+    + {static} build(onClose: () -> Unit, onRemove: (vacationRequestWK) -> Unit, onSave: (vacationRequestWK) -> Unit): Node
+    - {static} createButton(text: String): Button
+    - {static} createTfl(text: String, prompt: String): TextField
+    - {static} createDataBox(labelText: String, field: TextField): VBox
+    - {static} numbersOnly(tf: TextField)
+}
+
+object checkVacationPopUp <<singleton>> <<popup>> {
+    --
+    + {static} build(onClose: () -> Unit): Node
+    - {static} createButton(text: String): Button
+    - {static} createTfl(text: String, prompt: String): TextField
+    - {static} createDataBox(labelText: String, field: TextField): VBox
+}
+
+object filterPopUp <<singleton>> <<popup>> {
+    --
+    + {static} build(onClose: () -> Unit, onApply: (Department, Education) -> Unit): Node
+}
+
+object filteredEmployeePopUp <<singleton>> <<popup>> {
+    --
+    + {static} build(department: Department, education: Education, employees: List<Employee>, onClose: () -> Unit): Node
+}
+
+class weekPickerPopUp <<popup>> {
+    - label: String
+    - weeks: BooleanArray
+    - onTextChanged: (String) -> Unit
+    - onClose: () -> Unit
+    --
+    + build(): Node
+    - formatWeeksAsRanges(weeks: BooleanArray): String
+}
+
+class PopUpLayer <<popup>> {
+    - dim: Region
+    - popupHost: StackPane
+    --
+    + wrap(content: Node): StackPane
+    + show(popupContent: Node)
+    + close()
+}
+
+' ========================================
+' RELATIONSHIPS - MAIN
+' ========================================
+
+Main --> StartAnimation
+
+' ========================================
+' RELATIONSHIPS - Domain
+' ========================================
+
+EmployeeManagement "1" o-- "*" Employee : verwaltet
+Employee "1" *-- "*" VacationEntry : enthält
+VacationEntry "1" *-- "1" WeekRange : hat
+VacationEntry --> VacationStatus
+Employee --> Role
+Employee --> Department
+Employee --> Education
+
+' ========================================
+' RELATIONSHIPS - Application
+' ========================================
+
+app "1" *-- "1" EmployeeManagement : verwaltung
+app "1" *-- "2" IdProvider : ids
+app --> jsonReader : lädt
+app --> logger : loggt
+app --> config
+logger "1" *-- "*" LogEntry : erstellt
+logger --> LogLevel
+IdProvider --> IdState
+jsonReader --> Employee
+jsonReader --> config
+jsonWriter --> Employee
+jsonWriter --> config
+
+' ========================================
+' RELATIONSHIPS - GUI Main
+' ========================================
+
+GuiBorderPane "1" *-- "1" NavigationsController : besitzt
+GuiBorderPane --> topNavigationBar
+GuiBorderPane --> bottomBar
+GuiBorderPane --> jsonWriter : speichert
+StartAnimation --> GuiBorderPane : Startet nach \n SplashScreenAdvanced
+StartAnimation --> SplashScreenAdvanced
+NavigationsController --> Route
+NavigationsController "1" o-- "1" dashboardView : cached
+NavigationsController "1" o-- "1" calenderView : cached
+NavigationsController "1" o-- "1" employeeManagementView : cached
+NavigationsController "1" o-- "1" parameterview : cached
+
+' ========================================
+' RELATIONSHIPS - Views zu Domain
+' ========================================
+
+dashboardView --> EmployeeManagement : liest
+calenderView --> EmployeeManagement : liest/schreibt
+calenderView --> Employee : zeigt
+employeeManagementView --> EmployeeManagement : bearbeitet
+employeeManagementView --> Employee
+parameterview --> config : bearbeitet
+bottomBar --> logger
+
+' ========================================
+' RELATIONSHIPS - Views zu PopUps
+' ========================================
+
+calenderView "1" *-- "1" PopUpLayer : besitzt
+employeeManagementView "1" *-- "1" PopUpLayer : besitzt
+parameterview "1" *-- "1" PopUpLayer : besitzt
+calenderView --> vacationPopUp : öffnet
+employeeManagementView --> filterPopUp
+employeeManagementView --> filteredEmployeePopUp
+parameterview --> weekPickerPopUp
+vacationPopUp --> checkVacationPopUp
+
+@enduml

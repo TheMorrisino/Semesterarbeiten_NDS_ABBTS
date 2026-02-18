@@ -1,0 +1,39 @@
+{
+  "employees": [
+    {
+      "id": 6,
+      "firstName": "Morris",
+      "lastName": "Meier",
+      "workloadPercent": 100,
+      "role": "APPRENTICE",
+      "department": "AUSSENDIENST",
+      "education": "LEHRLING",
+      "birthday": "09.09.1999",
+      "city": "Baden",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 11,
+          "employeeId": 6,
+          "year": 2026,
+          "startWeek": 3,
+          "endWeek": 4,
+          "weekStatus": {
+            "3": "REQUESTED",
+            "4": "REQUESTED"
+          }
+        }
+      ]
+    }
+  ],
+  "idProviders": {
+    "employeeIds": {
+      "nextId": 6,
+      "issuedIds": [0, 1, 2, 3, 4, 5, 6]
+    },
+    "vacationIds": {
+      "nextId": 11,
+      "issuedIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    }
+  }
+}
