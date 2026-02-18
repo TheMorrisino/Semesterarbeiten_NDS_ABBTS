@@ -16,6 +16,9 @@ object app {
     val vacationIds = IdProvider(start = 1u)
     var jasonFileAktiv: Boolean = true
 
+    // Für die Demo Version setzte diese Variable auf True
+    var demoOn : Boolean = true
+
 
     fun run() {
         jsonReader.readConfig()

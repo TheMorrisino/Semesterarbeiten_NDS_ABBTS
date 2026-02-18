@@ -2,6 +2,7 @@ package ressourcix.essential
 
 import java.io.File
 import ressourcix.app.app
+import ressourcix.app.app.demoOn
 import ressourcix.domain.config
 import ressourcix.logger.logger
 
@@ -17,13 +18,26 @@ object jsonWriter {
     }
 
     fun write() {
+
+        var targetFile = jsonDir.resolve("employees.json")
+        var configFile = jsonDir.resolve("config.json")
+
         if (!jsonToFile) {
             println("JSON-Export ist deaktiviert.")
             return
         }
 
-        val targetFile = jsonDir.resolve("employees.json")
-        val configFile = jsonDir.resolve("config.json")
+        if (demoOn) {
+             targetFile = jsonDir.resolve("employees_Demo.json")
+             configFile = jsonDir.resolve("config_Demo.json")
+
+        } else {
+
+            targetFile = jsonDir.resolve("employees.json")
+            configFile = jsonDir.resolve("config.json")
+        }
+
+
 
         try {
             // Alle Mitarbeitenden holen
