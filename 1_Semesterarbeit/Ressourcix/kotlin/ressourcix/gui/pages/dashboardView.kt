@@ -81,7 +81,7 @@ object dashboardView : StackPane() {
             animated = true
             title = "Geplante/Verfügbare Ferien von Mitarbeitern"
             isLegendVisible = false
-            legendSide = Side.TOP
+//            legendSide = Side.TOP
         }
     }
 
@@ -188,9 +188,6 @@ object dashboardView : StackPane() {
         updatePieChart()
     }
 
-    // ====================================================================================================
-    // REFRESH
-    // ====================================================================================================
 
      fun refreshCurrentChart() {
         if (showingBarChart) {
@@ -200,10 +197,6 @@ object dashboardView : StackPane() {
             logger.info("BarChart & PieChart aktualisiert")
         }
     }
-
-    // ====================================================================================================
-    // BARCHART UPDATE
-    // ====================================================================================================
 
     private fun updateBarChart() {
         val weekDetails = try {
@@ -275,10 +268,6 @@ object dashboardView : StackPane() {
         }
     }
 
-    // ====================================================================================================
-    // PIE CHART UPDATE
-    // ====================================================================================================
-
     private fun updatePieChart() {
         val stats = try {
             computeVacationStats(app.employees)
@@ -295,7 +284,14 @@ object dashboardView : StackPane() {
                 PieChart.Data("Geplante Ferienwochen (${stats.used})", stats.used.toDouble()),
                 PieChart.Data("Verfügbare Ferienwochen (${stats.available})", stats.available.toDouble())
             )
+
+
             pieChart.data = data
+
+            if (stats.used == 0 && stats.available == 0) {
+                pieChart.data.clear()
+                return@runLater
+            }
 
             // Tooltips hinzufügen
             if (toolTippON) {
@@ -333,10 +329,6 @@ object dashboardView : StackPane() {
             showDuration = Duration.seconds(120.0)
         }
     }
-
-    // ====================================================================================================
-    // DATEN BERECHNUNG
-    // ====================================================================================================
 
     private fun computeWeeklyDetails(employees: List<Employee>): List<WeekInfo> {
         val weekData = MutableList(52) { mutableListOf<String>() }
@@ -402,9 +394,6 @@ object dashboardView : StackPane() {
         )
     }
 
-    // ====================================================================================================
-    // DATA CLASSES
-    // ====================================================================================================
 
     private data class WeekInfo(
         val count: Int,
