@@ -37,7 +37,7 @@ object filteredEmployeePopUp {
         }
 
         val table = TableView<Employee>().apply {
-            columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
+            columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS
             maxWidth = 800.0
             maxHeight = 200.0
         }
