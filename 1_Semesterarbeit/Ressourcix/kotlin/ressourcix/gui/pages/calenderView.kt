@@ -365,18 +365,18 @@ object calenderView : StackPane() {
                 onSave = { kw ->
                     if (management.canAddVacation(employee, kw.startKW, kw.endKW)){
                     management.addVacationSafe(employee, kw.startKW, kw.endKW)
-                    logger.info("Ferieneintrag hinzugefügt Mitarbeiter $empId von ${kw.startKW} bis ${kw.endKW} ")
                     management.updateOverlapList()
                     refreshVacations()
                     dashboardView.refreshCurrentChart()
+                    logger.info("Ferieneintrag hinzugefügt Mitarbeiter $empId von ${kw.startKW} bis ${kw.endKW} ")
                     }
                 },
                 onRemove = { kw ->
                     management.removeVacation(empId, kw.startKW)
-                    logger.info("Ferieneintrag entfernt Mitarbeiter $empId mit ${kw.startKW}")
                     management.updateOverlapList()
                     refreshVacations()
                     dashboardView.refreshCurrentChart()
+                    logger.info("Ferieneintrag entfernt Mitarbeiter $empId mit ${kw.startKW}")
                 }
             )
         )
