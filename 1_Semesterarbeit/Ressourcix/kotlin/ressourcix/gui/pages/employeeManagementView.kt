@@ -43,15 +43,15 @@ object employeeManagementView : BorderPane() {
     var idField = createTfl("", "ID eingeben...").apply {
         textFormatter = positiveIntNoZeroFormatter(4,1000)
     }
-    var abbreviationField = createTfl("", "Kürzel eingeben").apply {
+    var abbreviationField = createTfl("", "Kürzel eingeben...").apply {
         textFormatter = lettersMaxFormatter(4,true)
     }
-    var nameField = createTfl("","").apply {
+    var nameField = createTfl("","Vorname eingeben... *").apply {
         textFormatter =lettersMaxFormatter(30,false)
     }
     val roleField = ComboBox<Role>().apply {
         items = FXCollections.observableArrayList(Role.values().toList())
-        promptText = "Rolle auswählen..."
+        promptText = "Rolle auswählen... *"
         promptWhenNull()
     }
     val departmentField = ComboBox<Department>().apply {
@@ -60,14 +60,14 @@ object employeeManagementView : BorderPane() {
         isFocusTraversable = false
         promptWhenNull()
     }
-    var cityField = createTfl("","").apply {
+    var cityField = createTfl("","Wohnort eingeben...").apply {
         textFormatter = lettersMaxFormatter(30,false)
     }
 
-    var surnameField = createTfl("","").apply {
+    var surnameField = createTfl("","Nachname eingeben... *").apply {
         textFormatter = lettersMaxFormatter(30,false)
     }
-    var workloadField = createTfl("","").apply {
+    var workloadField = createTfl("","Pensum eingeben... *").apply {
         textFormatter = positiveIntNoZeroFormatter(3,100)
     }
     val educationField = ComboBox<Education>().apply {
@@ -80,7 +80,7 @@ object employeeManagementView : BorderPane() {
         installBirthdayField(this)
     }
 
-    var limitVacationWeeksField = createTfl("","").apply {
+    var limitVacationWeeksField = createTfl("","Anzahl Ferien eingeben... *").apply {
         textFormatter = positiveIntNoZeroFormatter(2,52)
     }
     var usedVacationWeeksField = createTfl("","")
