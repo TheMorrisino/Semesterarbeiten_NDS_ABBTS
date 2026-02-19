@@ -29,8 +29,12 @@ object filteredEmployeePopUp {
         onClose: () -> Unit
     ): Node {
 
-        val departmentField = createTfl("$department","")
-        val educationField = createTfl("$education","")
+        val departmentField = createTfl("$department","").apply {
+            isDisable = true
+        }
+        val educationField = createTfl("$education","").apply {
+            isDisable = true
+        }
 
         val table = TableView<Employee>().apply {
             columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
