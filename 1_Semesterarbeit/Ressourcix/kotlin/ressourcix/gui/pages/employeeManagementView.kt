@@ -248,6 +248,7 @@ object employeeManagementView : BorderPane() {
                         .or(surnameField.textProperty().isEmpty)
                         .or(workloadField.textProperty().isEmpty)
                         .or(roleField.valueProperty().isNull)
+                        .or(limitVacationWeeksField.textProperty().isEmpty)
                 )
                     setOnAction {
                         try {
