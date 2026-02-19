@@ -31,8 +31,6 @@ import ressourcix.gui.util.showEmployeeNotFound
 import ressourcix.gui.util.showDeleteFailed
 import ressourcix.gui.util.showSaveFailed
 
-//TODO Executions abfangen, anzeigen und loggen
-
 object employeeManagementView : BorderPane() {
 
     private val popupLayer = PopUpLayer()
@@ -50,12 +48,12 @@ object employeeManagementView : BorderPane() {
         textFormatter =lettersMaxFormatter(30,false)
     }
     val roleField = ComboBox<Role>().apply {
-        items = FXCollections.observableArrayList(Role.values().toList())
+        items = FXCollections.observableArrayList(Role.entries)
         promptText = "Rolle auswählen... *"
         promptWhenNull()
     }
     val departmentField = ComboBox<Department>().apply {
-        items = FXCollections.observableArrayList(Department.values().toList())
+        items = FXCollections.observableArrayList(Department.entries)
         promptText = "Abteilung auswählen..."
         isFocusTraversable = false
         promptWhenNull()
@@ -71,7 +69,7 @@ object employeeManagementView : BorderPane() {
         textFormatter = positiveIntNoZeroFormatter(3,100)
     }
     val educationField = ComboBox<Education>().apply {
-        items = FXCollections.observableArrayList(Education.values().toList())
+        items = FXCollections.observableArrayList(Education.entries)
         promptText = "Ausbildung auswählen..."
         isFocusTraversable = false
         promptWhenNull()
