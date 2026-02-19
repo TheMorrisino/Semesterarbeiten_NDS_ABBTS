@@ -1,0 +1,28 @@
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-padding: 0 12 0 12;
+
+    -fx-text-fill: black;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.nav-button:hover {
+    -fx-background-color: #dcdcdc;
+}
+
+.nav-button-active {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.nav-button-active:hover {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
