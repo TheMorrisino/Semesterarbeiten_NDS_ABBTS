@@ -4,13 +4,20 @@ import java.io.File
 import ressourcix.domain.*
 import ressourcix.logger.logger
 import ressourcix.app.app
+import ressourcix.app.app.demoOn
 
 object jsonReader {
 
     private val jsonDir = File("jsonfiles")
 
     fun read(): List<Employee> {
-        val targetFile = jsonDir.resolve("employees.json")
+        var  targetFile = jsonDir.resolve("employees.json")
+
+        if (demoOn) {
+            targetFile = jsonDir.resolve("employees_Demo.json")
+        } else {
+            targetFile = jsonDir.resolve("employees.json")
+        }
 
         if (!targetFile.exists()) {
             logger.warn("JSON-Datei nicht gefunden: ${targetFile.absolutePath}")
@@ -143,7 +150,12 @@ object jsonReader {
     }
 
     fun readConfig() {
-        val configFile = jsonDir.resolve("config.json")
+        var configFile = jsonDir.resolve("config.json")
+        if (demoOn) {
+            configFile = jsonDir.resolve("config_Demo.json")
+        } else {
+            configFile = jsonDir.resolve("config.json")
+        }
 
         if (!configFile.exists()) {
             logger.warn("Config-Datei nicht gefunden: ${configFile.absolutePath}")

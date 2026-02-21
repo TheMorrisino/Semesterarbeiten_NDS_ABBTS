@@ -1,0 +1,1316 @@
+{
+  "employees": [
+    {
+      "id": 0,
+      "firstName": "Anna",
+      "lastName": "Müller",
+      "workloadPercent": 100,
+      "role": "MANAGER",
+      "department": "ADMIN",
+      "education": "EFZ",
+      "birthday": "15.03.1975",
+      "city": "Zürich",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 0,
+          "employeeId": 0,
+          "year": 2026,
+          "startWeek": 7,
+          "endWeek": 8,
+          "weekStatus": {
+            "7": "APPROVED",
+            "8": "APPROVED"
+          }
+        },
+        {
+          "id": 1,
+          "employeeId": 0,
+          "year": 2026,
+          "startWeek": 28,
+          "endWeek": 30,
+          "weekStatus": {
+            "28": "APPROVED",
+            "29": "APPROVED",
+            "30": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "firstName": "Lukas",
+      "lastName": "Schneider",
+      "workloadPercent": 100,
+      "role": "STAFF",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "22.07.1988",
+      "city": "Bern",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 3,
+          "employeeId": 1,
+          "year": 2026,
+          "startWeek": 30,
+          "endWeek": 32,
+          "weekStatus": {
+            "30": "APPROVED",
+            "31": "APPROVED",
+            "32": "APPROVED"
+          }
+        },
+        {
+          "id": 4,
+          "employeeId": 1,
+          "year": 2026,
+          "startWeek": 12,
+          "endWeek": 13,
+          "weekStatus": {
+            "12": "APPROVED",
+            "13": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "firstName": "Sophie",
+      "lastName": "Weber",
+      "workloadPercent": 80,
+      "role": "STAFF",
+      "department": "ADMIN",
+      "education": "DIPLOM_PFLEGE_HF",
+      "birthday": "05.11.1990",
+      "city": "Basel",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 5,
+          "employeeId": 2,
+          "year": 2026,
+          "startWeek": 15,
+          "endWeek": 17,
+          "weekStatus": {
+            "15": "APPROVED",
+            "16": "APPROVED",
+            "17": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "firstName": "Tim",
+      "lastName": "Fischer",
+      "workloadPercent": 100,
+      "role": "APPRENTICE",
+      "department": "AUSSENDIENST",
+      "education": "LEHRLING",
+      "birthday": "14.06.2005",
+      "city": "Luzern",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 7,
+          "employeeId": 3,
+          "year": 2026,
+          "startWeek": 2,
+          "endWeek": 3,
+          "weekStatus": {
+            "2": "APPROVED",
+            "3": "APPROVED"
+          }
+        },
+        {
+          "id": 8,
+          "employeeId": 3,
+          "year": 2026,
+          "startWeek": 29,
+          "endWeek": 31,
+          "weekStatus": {
+            "29": "APPROVED",
+            "30": "APPROVED",
+            "31": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "firstName": "Laura",
+      "lastName": "Huber",
+      "workloadPercent": 60,
+      "role": "STAFF",
+      "department": "PLANUNG",
+      "education": "EFZ",
+      "birthday": "30.01.1985",
+      "city": "St. Gallen",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 9,
+          "employeeId": 4,
+          "year": 2026,
+          "startWeek": 20,
+          "endWeek": 22,
+          "weekStatus": {
+            "20": "APPROVED",
+            "21": "APPROVED",
+            "22": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "firstName": "Jonas",
+      "lastName": "Koch",
+      "workloadPercent": 100,
+      "role": "TEAM_LEAD",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "17.09.1972",
+      "city": "Winterthur",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 11,
+          "employeeId": 5,
+          "year": 2026,
+          "startWeek": 28,
+          "endWeek": 30,
+          "weekStatus": {
+            "28": "APPROVED",
+            "29": "APPROVED",
+            "30": "APPROVED"
+          }
+        },
+        {
+          "id": 12,
+          "employeeId": 5,
+          "year": 2026,
+          "startWeek": 9,
+          "endWeek": 10,
+          "weekStatus": {
+            "9": "APPROVED",
+            "10": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "firstName": "Morris",
+      "lastName": "Meier",
+      "workloadPercent": 100,
+      "role": "APPRENTICE",
+      "department": "AUSSENDIENST",
+      "education": "LEHRLING",
+      "birthday": "09.09.2004",
+      "city": "Baden",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 13,
+          "employeeId": 6,
+          "year": 2026,
+          "startWeek": 3,
+          "endWeek": 4,
+          "weekStatus": {
+            "3": "REQUESTED",
+            "4": "REQUESTED"
+          }
+        },
+        {
+          "id": 14,
+          "employeeId": 6,
+          "year": 2026,
+          "startWeek": 31,
+          "endWeek": 33,
+          "weekStatus": {
+            "31": "APPROVED",
+            "32": "APPROVED",
+            "33": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "firstName": "Lena",
+      "lastName": "Zimmermann",
+      "workloadPercent": 100,
+      "role": "STAFF",
+      "department": "PLANUNG",
+      "education": "DIPLOM_PFLEGE_HF",
+      "birthday": "28.04.1993",
+      "city": "Aarau",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 15,
+          "employeeId": 7,
+          "year": 2026,
+          "startWeek": 20,
+          "endWeek": 21,
+          "weekStatus": {
+            "20": "APPROVED",
+            "21": "APPROVED"
+          }
+        },
+        {
+          "id": 16,
+          "employeeId": 7,
+          "year": 2026,
+          "startWeek": 35,
+          "endWeek": 35,
+          "weekStatus": {
+            "35": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "firstName": "Nico",
+      "lastName": "Bauer",
+      "workloadPercent": 100,
+      "role": "APPRENTICE",
+      "department": "ADMIN",
+      "education": "LEHRLING",
+      "birthday": "03.02.2006",
+      "city": "Schaffhausen",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 17,
+          "employeeId": 8,
+          "year": 2026,
+          "startWeek": 2,
+          "endWeek": 4,
+          "weekStatus": {
+            "2": "APPROVED",
+            "3": "APPROVED",
+            "4": "APPROVED"
+          }
+        },
+        {
+          "id": 18,
+          "employeeId": 8,
+          "year": 2026,
+          "startWeek": 28,
+          "endWeek": 28,
+          "weekStatus": {
+            "28": "REQUESTED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "firstName": "Mia",
+      "lastName": "Richter",
+      "workloadPercent": 80,
+      "role": "STAFF",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "11.12.1991",
+      "city": "Frauenfeld",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 19,
+          "employeeId": 9,
+          "year": 2026,
+          "startWeek": 16,
+          "endWeek": 17,
+          "weekStatus": {
+            "16": "APPROVED",
+            "17": "APPROVED"
+          }
+        },
+        {
+          "id": 20,
+          "employeeId": 9,
+          "year": 2026,
+          "startWeek": 34,
+          "endWeek": 36,
+          "weekStatus": {
+            "34": "APPROVED",
+            "35": "APPROVED",
+            "36": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "firstName": "Florian",
+      "lastName": "Schmid",
+      "workloadPercent": 100,
+      "role": "MANAGER",
+      "department": "PLANUNG",
+      "education": "EFZ",
+      "birthday": "25.05.1968",
+      "city": "Zug",
+      "vacationLimit": 6,
+      "vacationEntries": [
+        {
+          "id": 21,
+          "employeeId": 10,
+          "year": 2026,
+          "startWeek": 29,
+          "endWeek": 32,
+          "weekStatus": {
+            "29": "APPROVED",
+            "30": "APPROVED",
+            "31": "APPROVED",
+            "32": "APPROVED"
+          }
+        },
+        {
+          "id": 22,
+          "employeeId": 10,
+          "year": 2026,
+          "startWeek": 11,
+          "endWeek": 12,
+          "weekStatus": {
+            "11": "APPROVED",
+            "12": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "firstName": "Isabelle",
+      "lastName": "Keller",
+      "workloadPercent": 50,
+      "role": "STAFF",
+      "department": "ADMIN",
+      "education": "DIPLOM_PFLEGE_HF",
+      "birthday": "08.08.1987",
+      "city": "Olten",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 24,
+          "employeeId": 11,
+          "year": 2026,
+          "startWeek": 25,
+          "endWeek": 27,
+          "weekStatus": {
+            "25": "APPROVED",
+            "26": "APPROVED",
+            "27": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "firstName": "Dominik",
+      "lastName": "Wolf",
+      "workloadPercent": 100,
+      "role": "STAFF",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "19.10.1995",
+      "city": "Thun",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 26,
+          "employeeId": 12,
+          "year": 2026,
+          "startWeek": 8,
+          "endWeek": 10,
+          "weekStatus": {
+            "8": "APPROVED",
+            "9": "APPROVED",
+            "10": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "firstName": "Nadine",
+      "lastName": "Braun",
+      "workloadPercent": 100,
+      "role": "APPRENTICE",
+      "department": "PLANUNG",
+      "education": "LEHRLING",
+      "birthday": "21.03.2005",
+      "city": "Solothurn",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 28,
+          "employeeId": 13,
+          "year": 2026,
+          "startWeek": 2,
+          "endWeek": 3,
+          "weekStatus": {
+            "2": "APPROVED",
+            "3": "APPROVED"
+          }
+        },
+        {
+          "id": 29,
+          "employeeId": 13,
+          "year": 2026,
+          "startWeek": 30,
+          "endWeek": 32,
+          "weekStatus": {
+            "30": "APPROVED",
+            "31": "APPROVED",
+            "32": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "firstName": "Tobias",
+      "lastName": "Schwarz",
+      "workloadPercent": 100,
+      "role": "STAFF",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "07.01.1983",
+      "city": "Biel",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 30,
+          "employeeId": 14,
+          "year": 2026,
+          "startWeek": 18,
+          "endWeek": 20,
+          "weekStatus": {
+            "18": "APPROVED",
+            "19": "APPROVED",
+            "20": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "firstName": "Katharina",
+      "lastName": "Hoffmann",
+      "workloadPercent": 70,
+      "role": "TEAM_LEAD",
+      "department": "ADMIN",
+      "education": "DIPLOM_PFLEGE_HF",
+      "birthday": "14.07.1979",
+      "city": "Chur",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 32,
+          "employeeId": 15,
+          "year": 2026,
+          "startWeek": 25,
+          "endWeek": 27,
+          "weekStatus": {
+            "25": "APPROVED",
+            "26": "APPROVED",
+            "27": "APPROVED"
+          }
+        },
+        {
+          "id": 33,
+          "employeeId": 15,
+          "year": 2026,
+          "startWeek": 13,
+          "endWeek": 14,
+          "weekStatus": {
+            "13": "APPROVED",
+            "14": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "firstName": "Patrick",
+      "lastName": "Krause",
+      "workloadPercent": 100,
+      "role": "STAFF",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "02.11.1996",
+      "city": "Sion",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 34,
+          "employeeId": 16,
+          "year": 2026,
+          "startWeek": 28,
+          "endWeek": 30,
+          "weekStatus": {
+            "28": "APPROVED",
+            "29": "APPROVED",
+            "30": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "firstName": "Vanessa",
+      "lastName": "Lehmann",
+      "workloadPercent": 80,
+      "role": "STAFF",
+      "department": "PLANUNG",
+      "education": "EFZ",
+      "birthday": "29.04.1992",
+      "city": "Fribourg",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 36,
+          "employeeId": 17,
+          "year": 2026,
+          "startWeek": 22,
+          "endWeek": 24,
+          "weekStatus": {
+            "22": "APPROVED",
+            "23": "APPROVED",
+            "24": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "firstName": "Marcel",
+      "lastName": "Günther",
+      "workloadPercent": 100,
+      "role": "APPRENTICE",
+      "department": "AUSSENDIENST",
+      "education": "LEHRLING",
+      "birthday": "16.08.2005",
+      "city": "Kreuzlingen",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 38,
+          "employeeId": 18,
+          "year": 2026,
+          "startWeek": 3,
+          "endWeek": 5,
+          "weekStatus": {
+            "3": "APPROVED",
+            "4": "APPROVED",
+            "5": "APPROVED"
+          }
+        },
+        {
+          "id": 39,
+          "employeeId": 18,
+          "year": 2026,
+          "startWeek": 30,
+          "endWeek": 31,
+          "weekStatus": {
+            "30": "APPROVED",
+            "31": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "firstName": "Sarah",
+      "lastName": "Baumann",
+      "workloadPercent": 100,
+      "role": "STAFF",
+      "department": "ADMIN",
+      "education": "DIPLOM_PFLEGE_HF",
+      "birthday": "10.02.1989",
+      "city": "Rapperswil",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 40,
+          "employeeId": 19,
+          "year": 2026,
+          "startWeek": 17,
+          "endWeek": 18,
+          "weekStatus": {
+            "17": "APPROVED",
+            "18": "APPROVED"
+          }
+        },
+        {
+          "id": 41,
+          "employeeId": 19,
+          "year": 2026,
+          "startWeek": 33,
+          "endWeek": 35,
+          "weekStatus": {
+            "33": "APPROVED",
+            "34": "APPROVED",
+            "35": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "firstName": "Michael",
+      "lastName": "Vogel",
+      "workloadPercent": 100,
+      "role": "MANAGER",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "06.06.1970",
+      "city": "Arlesheim",
+      "vacationLimit": 6,
+      "vacationEntries": [
+        {
+          "id": 42,
+          "employeeId": 20,
+          "year": 2026,
+          "startWeek": 29,
+          "endWeek": 32,
+          "weekStatus": {
+            "29": "APPROVED",
+            "30": "APPROVED",
+            "31": "APPROVED",
+            "32": "APPROVED"
+          }
+        },
+        {
+          "id": 43,
+          "employeeId": 20,
+          "year": 2026,
+          "startWeek": 14,
+          "endWeek": 15,
+          "weekStatus": {
+            "14": "APPROVED",
+            "15": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "firstName": "Elena",
+      "lastName": "Roth",
+      "workloadPercent": 60,
+      "role": "STAFF",
+      "department": "PLANUNG",
+      "education": "EFZ",
+      "birthday": "23.09.1994",
+      "city": "Liestal",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 45,
+          "employeeId": 21,
+          "year": 2026,
+          "startWeek": 19,
+          "endWeek": 21,
+          "weekStatus": {
+            "19": "APPROVED",
+            "20": "APPROVED",
+            "21": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "firstName": "Stefan",
+      "lastName": "Maier",
+      "workloadPercent": 100,
+      "role": "STAFF",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "31.12.1986",
+      "city": "Rheinfelden",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 47,
+          "employeeId": 22,
+          "year": 2026,
+          "startWeek": 22,
+          "endWeek": 24,
+          "weekStatus": {
+            "22": "APPROVED",
+            "23": "APPROVED",
+            "24": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "firstName": "Julia",
+      "lastName": "Stein",
+      "workloadPercent": 100,
+      "role": "APPRENTICE",
+      "department": "ADMIN",
+      "education": "LEHRLING",
+      "birthday": "18.05.2006",
+      "city": "Münsingen",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 49,
+          "employeeId": 23,
+          "year": 2026,
+          "startWeek": 2,
+          "endWeek": 3,
+          "weekStatus": {
+            "2": "APPROVED",
+            "3": "APPROVED"
+          }
+        },
+        {
+          "id": 50,
+          "employeeId": 23,
+          "year": 2026,
+          "startWeek": 28,
+          "endWeek": 30,
+          "weekStatus": {
+            "28": "APPROVED",
+            "29": "APPROVED",
+            "30": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "firstName": "Andreas",
+      "lastName": "Frank",
+      "workloadPercent": 100,
+      "role": "STAFF",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "04.04.1997",
+      "city": "Burgdorf",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 51,
+          "employeeId": 24,
+          "year": 2026,
+          "startWeek": 11,
+          "endWeek": 13,
+          "weekStatus": {
+            "11": "APPROVED",
+            "12": "APPROVED",
+            "13": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "firstName": "Petra",
+      "lastName": "Berg",
+      "workloadPercent": 80,
+      "role": "STAFF",
+      "department": "PLANUNG",
+      "education": "DIPLOM_PFLEGE_HF",
+      "birthday": "12.10.1981",
+      "city": "Langenthal",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 53,
+          "employeeId": 25,
+          "year": 2026,
+          "startWeek": 26,
+          "endWeek": 28,
+          "weekStatus": {
+            "26": "APPROVED",
+            "27": "APPROVED",
+            "28": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "firstName": "Christian",
+      "lastName": "Hartmann",
+      "workloadPercent": 100,
+      "role": "TEAM_LEAD",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "26.08.1984",
+      "city": "Grenchen",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 55,
+          "employeeId": 26,
+          "year": 2026,
+          "startWeek": 16,
+          "endWeek": 18,
+          "weekStatus": {
+            "16": "APPROVED",
+            "17": "APPROVED",
+            "18": "APPROVED"
+          }
+        },
+        {
+          "id": 56,
+          "employeeId": 26,
+          "year": 2026,
+          "startWeek": 33,
+          "endWeek": 34,
+          "weekStatus": {
+            "33": "APPROVED",
+            "34": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "firstName": "Sabrina",
+      "lastName": "Ernst",
+      "workloadPercent": 100,
+      "role": "APPRENTICE",
+      "department": "AUSSENDIENST",
+      "education": "LEHRLING",
+      "birthday": "07.07.2005",
+      "city": "Uster",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 57,
+          "employeeId": 27,
+          "year": 2026,
+          "startWeek": 3,
+          "endWeek": 5,
+          "weekStatus": {
+            "3": "APPROVED",
+            "4": "APPROVED",
+            "5": "APPROVED"
+          }
+        },
+        {
+          "id": 58,
+          "employeeId": 27,
+          "year": 2026,
+          "startWeek": 32,
+          "endWeek": 33,
+          "weekStatus": {
+            "32": "REQUESTED",
+            "33": "REQUESTED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "firstName": "Kevin",
+      "lastName": "Kaiser",
+      "workloadPercent": 100,
+      "role": "STAFF",
+      "department": "ADMIN",
+      "education": "EFZ",
+      "birthday": "15.11.1998",
+      "city": "Wettingen",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 59,
+          "employeeId": 28,
+          "year": 2026,
+          "startWeek": 11,
+          "endWeek": 12,
+          "weekStatus": {
+            "11": "APPROVED",
+            "12": "APPROVED"
+          }
+        },
+        {
+          "id": 60,
+          "employeeId": 28,
+          "year": 2026,
+          "startWeek": 28,
+          "endWeek": 28,
+          "weekStatus": {
+            "28": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "firstName": "Monika",
+      "lastName": "Herrmann",
+      "workloadPercent": 70,
+      "role": "STAFF",
+      "department": "PLANUNG",
+      "education": "DIPLOM_PFLEGE_HF",
+      "birthday": "03.03.1976",
+      "city": "Reinach",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 61,
+          "employeeId": 29,
+          "year": 2026,
+          "startWeek": 23,
+          "endWeek": 25,
+          "weekStatus": {
+            "23": "APPROVED",
+            "24": "APPROVED",
+            "25": "APPROVED"
+          }
+        },
+        {
+          "id": 62,
+          "employeeId": 29,
+          "year": 2026,
+          "startWeek": 42,
+          "endWeek": 43,
+          "weekStatus": {
+            "42": "REQUESTED",
+            "43": "REQUESTED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "firstName": "Daniel",
+      "lastName": "Kühn",
+      "workloadPercent": 100,
+      "role": "MANAGER",
+      "department": "ADMIN",
+      "education": "EFZ",
+      "birthday": "20.06.1965",
+      "city": "Allschwil",
+      "vacationLimit": 6,
+      "vacationEntries": [
+        {
+          "id": 63,
+          "employeeId": 30,
+          "year": 2026,
+          "startWeek": 28,
+          "endWeek": 31,
+          "weekStatus": {
+            "28": "APPROVED",
+            "29": "APPROVED",
+            "30": "APPROVED",
+            "31": "APPROVED"
+          }
+        },
+        {
+          "id": 64,
+          "employeeId": 30,
+          "year": 2026,
+          "startWeek": 8,
+          "endWeek": 9,
+          "weekStatus": {
+            "8": "APPROVED",
+            "9": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "firstName": "Tanja",
+      "lastName": "Schreiber",
+      "workloadPercent": 80,
+      "role": "STAFF",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "09.01.1993",
+      "city": "Wohlen",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 66,
+          "employeeId": 31,
+          "year": 2026,
+          "startWeek": 15,
+          "endWeek": 17,
+          "weekStatus": {
+            "15": "APPROVED",
+            "16": "APPROVED",
+            "17": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "firstName": "Markus",
+      "lastName": "König",
+      "workloadPercent": 100,
+      "role": "TEAM_LEAD",
+      "department": "PLANUNG",
+      "education": "EFZ",
+      "birthday": "17.03.1980",
+      "city": "Dietikon",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 68,
+          "employeeId": 32,
+          "year": 2026,
+          "startWeek": 21,
+          "endWeek": 23,
+          "weekStatus": {
+            "21": "APPROVED",
+            "22": "APPROVED",
+            "23": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "firstName": "Franziska",
+      "lastName": "Lange",
+      "workloadPercent": 100,
+      "role": "APPRENTICE",
+      "department": "ADMIN",
+      "education": "LEHRLING",
+      "birthday": "25.10.2005",
+      "city": "Kloten",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 70,
+          "employeeId": 33,
+          "year": 2026,
+          "startWeek": 2,
+          "endWeek": 4,
+          "weekStatus": {
+            "2": "APPROVED",
+            "3": "APPROVED",
+            "4": "APPROVED"
+          }
+        },
+        {
+          "id": 71,
+          "employeeId": 33,
+          "year": 2026,
+          "startWeek": 30,
+          "endWeek": 31,
+          "weekStatus": {
+            "30": "APPROVED",
+            "31": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "firstName": "Oliver",
+      "lastName": "Fuchs",
+      "workloadPercent": 100,
+      "role": "STAFF",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "13.07.1990",
+      "city": "Horgen",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 72,
+          "employeeId": 34,
+          "year": 2026,
+          "startWeek": 19,
+          "endWeek": 21,
+          "weekStatus": {
+            "19": "APPROVED",
+            "20": "APPROVED",
+            "21": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "firstName": "Simone",
+      "lastName": "Weiß",
+      "workloadPercent": 60,
+      "role": "STAFF",
+      "department": "PLANUNG",
+      "education": "DIPLOM_PFLEGE_HF",
+      "birthday": "01.05.1982",
+      "city": "Küsnacht",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 74,
+          "employeeId": 35,
+          "year": 2026,
+          "startWeek": 24,
+          "endWeek": 26,
+          "weekStatus": {
+            "24": "APPROVED",
+            "25": "APPROVED",
+            "26": "APPROVED"
+          }
+        },
+        {
+          "id": 75,
+          "employeeId": 35,
+          "year": 2026,
+          "startWeek": 41,
+          "endWeek": 42,
+          "weekStatus": {
+            "41": "REQUESTED",
+            "42": "REQUESTED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "firstName": "Benjamin",
+      "lastName": "Lorenz",
+      "workloadPercent": 100,
+      "role": "STAFF",
+      "department": "AUSSENDIENST",
+      "education": "EFZ",
+      "birthday": "27.02.1999",
+      "city": "Männedorf",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 76,
+          "employeeId": 36,
+          "year": 2026,
+          "startWeek": 14,
+          "endWeek": 16,
+          "weekStatus": {
+            "14": "APPROVED",
+            "15": "APPROVED",
+            "16": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "firstName": "Nicole",
+      "lastName": "Brandt",
+      "workloadPercent": 80,
+      "role": "STAFF",
+      "department": "ADMIN",
+      "education": "DIPLOM_PFLEGE_HF",
+      "birthday": "08.09.1977",
+      "city": "Embrach",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 78,
+          "employeeId": 37,
+          "year": 2026,
+          "startWeek": 26,
+          "endWeek": 28,
+          "weekStatus": {
+            "26": "APPROVED",
+            "27": "APPROVED",
+            "28": "APPROVED"
+          }
+        },
+        {
+          "id": 79,
+          "employeeId": 37,
+          "year": 2026,
+          "startWeek": 44,
+          "endWeek": 45,
+          "weekStatus": {
+            "44": "REQUESTED",
+            "45": "REQUESTED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "firstName": "Philipp",
+      "lastName": "Möller",
+      "workloadPercent": 100,
+      "role": "APPRENTICE",
+      "department": "AUSSENDIENST",
+      "education": "LEHRLING",
+      "birthday": "30.11.2004",
+      "city": "Bassersdorf",
+      "vacationLimit": 5,
+      "vacationEntries": [
+        {
+          "id": 80,
+          "employeeId": 38,
+          "year": 2026,
+          "startWeek": 3,
+          "endWeek": 4,
+          "weekStatus": {
+            "3": "APPROVED",
+            "4": "APPROVED"
+          }
+        },
+        {
+          "id": 81,
+          "employeeId": 38,
+          "year": 2026,
+          "startWeek": 29,
+          "endWeek": 31,
+          "weekStatus": {
+            "29": "APPROVED",
+            "30": "APPROVED",
+            "31": "APPROVED"
+          }
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "firstName": "Christina",
+      "lastName": "Pohl",
+      "workloadPercent": 100,
+      "role": "STAFF",
+      "department": "PLANUNG",
+      "education": "EFZ",
+      "birthday": "11.04.1994",
+      "city": "Regensdorf",
+      "vacationLimit": 4,
+      "vacationEntries": [
+        {
+          "id": 82,
+          "employeeId": 39,
+          "year": 2026,
+          "startWeek": 24,
+          "endWeek": 26,
+          "weekStatus": {
+            "24": "APPROVED",
+            "25": "APPROVED",
+            "26": "APPROVED"
+          }
+        }
+      ]
+    }
+  ],
+  "idProviders": {
+    "employeeIds": {
+      "nextId": 40,
+      "issuedIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]
+    },
+    "vacationIds": {
+      "nextId": 84,
+      "issuedIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83]
+    }
+  }
+}
