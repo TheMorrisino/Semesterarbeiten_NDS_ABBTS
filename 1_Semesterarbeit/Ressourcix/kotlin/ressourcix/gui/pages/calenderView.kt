@@ -14,10 +14,8 @@ import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import ressourcix.app.app.management
-//import ressourcix.calendar.consoleCalendarOutput
 import ressourcix.domain.Employee
 import ressourcix.domain.Role
-import ressourcix.domain.VacationStatus
 import ressourcix.domain.code
 import ressourcix.domain.config
 import ressourcix.gui.popUp.vacationPopUp
@@ -154,7 +152,6 @@ object calenderView : StackPane() {
         }
         return row
     }
-
 
     private fun installOnceOrRefresh() {
         val leftV = findScrollBar(fixedTable, Orientation.VERTICAL)

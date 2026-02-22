@@ -1,5 +1,6 @@
 package ressourcix.domain
 
+import ressourcix.logger.logger
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
@@ -117,6 +118,7 @@ class Employee(private val id: UInt) {
         vacationEntryIds.add(entry.id)
         createVacationList()
         plannedVacation = vacationList.sum().toUInt()
+        logger.info("Ferieneintrag hinzugefügt Startwoche ${entry.range.startWeek} bis ${entry.range.endWeek} von ${getFullName(99)}")
     }
 
     fun removeVacationEntry(vacationId: UInt, entry: VacationEntry){
@@ -146,6 +148,7 @@ class Employee(private val id: UInt) {
         vacationEntries.remove(entry)
         vacationEntryIds.remove(entry.id)
         createVacationList()
+        logger.info("Ferieneintrag gelöscht Startwoche ${entry.range.startWeek} bis ${entry.range.endWeek} von ${getFullName(99)}")
         plannedVacation = vacationList.sum().toUInt()
         return true
     }
@@ -175,13 +178,6 @@ class Employee(private val id: UInt) {
 
     fun setVacationLimit(limit: UInt){
       vacationLimit = limit
-    }
-
-    fun isOnVacation(week: UInt): Boolean {
-        require(week in 1u..52u) { "Kalenderwoche muss zwischen 1 und 52 liegen" }
-        return vacationEntries.any { entry ->
-            week in entry.range.startWeek..entry.range.endWeek
-        }
     }
 
     fun getVacationLimit() = vacationLimit
