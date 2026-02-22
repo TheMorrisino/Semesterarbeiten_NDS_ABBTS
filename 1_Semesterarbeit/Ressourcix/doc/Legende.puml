@@ -1,0 +1,31 @@
+@startuml
+' ========================================
+' LEGENDE
+' ========================================
+
+legend top left
+|= **Farben** |= **Bedeutung** |
+| <back:LightYellow>Gelb</back> | Singleton |
+| <back:LightBlue>Blau</back> | Domain |
+| <back:LightGreen>Grün</back> | GUI |
+| <back:LightCoral>Rosa</back> | PopUp |
+| <back:Wheat>Beige</back> | Enum |
+
+|= **Beziehungen** |
+| ──> Verwendung |
+| *──> Komposition |
+| o──> Aggregation |
+
+**Glossar:**
+• **object**: Kotlin-Singleton (nur eine Instanz)
+• **class**: Normale Klasse (mehrere Instanzen möglich)
+• **Singleton**: Muster mit nur einer Instanz
+• **Domain**: Geschäftslogik-Klassen
+• **GUI**: Benutzeroberfläche-Komponenten
+• **PopUp**: Dialog-Fenster
+• **Enum**: Aufzählung fester Werte
+• **Komposition**: Starke Zugehörigkeit (Teil-von)
+• **Aggregation**: Schwache Zugehörigkeit (hat-ein)
+endlegend
+
+@enduml

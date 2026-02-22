@@ -18,25 +18,12 @@ import kotlin.math.ceil
 
 
 object dashboardView : StackPane() {
-
-    // ====================================================================================================
-    // KONSTANTEN
-    // ====================================================================================================
     private const val BTN_HEIGHT = 50.0
     private const val BTN_WIDTH = 180.0
-
-    // ====================================================================================================
-    // UI KOMPONENTEN
-    // ====================================================================================================
     private lateinit var barChart: BarChart<String, Number>
     private lateinit var pieChart: PieChart
     private lateinit var chartContainer: VBox
     private val toggleChartButton = Button()
-
-
-    // ====================================================================================================
-    // STATE
-    // ====================================================================================================
     private var showingBarChart = true
     private var lastData: List<Int> = emptyList()
     private var toolTippON = true
@@ -52,10 +39,6 @@ object dashboardView : StackPane() {
                 logger.info("Dashboard initial geladen")
             }
     }
-
-    // ====================================================================================================
-    // INITIALISIERUNG
-    // ====================================================================================================
 
     private fun initializeCharts() {
         // BarChart
@@ -151,9 +134,6 @@ object dashboardView : StackPane() {
 
         return box
     }
-    // ====================================================================================================
-    // CHART WECHSEL
-    // ====================================================================================================
 
     private fun toggleChart() {
         showingBarChart = !showingBarChart
@@ -190,12 +170,10 @@ object dashboardView : StackPane() {
 
 
      fun refreshCurrentChart() {
-        if (showingBarChart) {
             lastData = emptyList()
             updateBarChart()
             updatePieChart()
             logger.info("BarChart & PieChart aktualisiert")
-        }
     }
 
     private fun updateBarChart() {
