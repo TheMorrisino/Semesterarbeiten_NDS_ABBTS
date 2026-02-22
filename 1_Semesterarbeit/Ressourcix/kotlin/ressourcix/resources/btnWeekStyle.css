@@ -1,0 +1,45 @@
+.btnWeekStyle {
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 8, 7, 6;
+    -fx-border-radius: 8;
+    -fx-border-color: #B0B0B0;
+    -fx-border-width: 1;
+
+    -fx-background-color:
+        #f7f7f7,
+        #eeeeee,
+        linear-gradient(#ffffff, #e6e6e6);
+
+    -fx-text-fill: #222;
+    -fx-font-family: "System";
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 10 6 10;
+}
+
+.btnWeekStyle:hover {
+    -fx-background-color:
+        #ffffff,
+        #f0f0f0,
+        linear-gradient(#ffffff, #dedede);
+}
+
+.btnWeekStyle:selected {
+    -fx-border-color: #2E7D32;
+    -fx-background-color:
+        #4CAF50,
+        #43A047,
+        linear-gradient(#66BB6A, #2E7D32);
+    -fx-text-fill: white;
+}
+
+.btnWeekStyle:selected:hover {
+    -fx-background-color:
+        #55C85A,
+        #4CAF50,
+        linear-gradient(#6FD073, #2E7D32);
+}
+
+.btnWeekStyle:pressed {
+    -fx-translate-y: 1;
+}

@@ -49,19 +49,7 @@ object topNavigationBar {
             minHeight = NAV_HEIGHT
             maxHeight = NAV_HEIGHT
             isFocusTraversable = false
-            style = "-fx-font-size: 18px;-fx-font-weight: bold;"
-        }
-
-        btn.setOnMouseEntered {
-            if (!btn.properties.containsKey("active")) {
-                btn.style = hoverButtonStyle()
-            }
-        }
-
-        btn.setOnMouseExited {
-            if (!btn.properties.containsKey("active")) {
-                btn.style = baseButtonStyle()
-            }
+            styleClass.add("nav-button")
         }
 
         return btn
@@ -89,57 +77,19 @@ object topNavigationBar {
             router.navigate(Route.PARAMETER)
         }
 
-        // Startzustand
         setActive(dashboardBtn)
     }
 
     fun getView(): HBox = navBar
 
-    private fun baseButtonStyle(): String = """
-        -fx-background-color: transparent;
-        -fx-background-insets: 0;
-        -fx-border-color: transparent;
-        -fx-border-width: 0;
-        -fx-focus-color: transparent;
-        -fx-faint-focus-color: transparent;
-        -fx-padding: 0 12 0 12;
-        -fx-text-fill: black;
-    """.trimIndent()
-
-    private fun hoverButtonStyle(): String = """
-        -fx-background-color: #dcdcdc;
-        -fx-background-insets: 0;
-        -fx-border-color: transparent;
-        -fx-border-width: 0;
-        -fx-focus-color: transparent;
-        -fx-faint-focus-color: transparent;
-        -fx-padding: 0 12 0 12;
-        -fx-text-fill: black;
-    """.trimIndent()
-
-    private fun activeButtonStyle(): String = """
-        -fx-background-color: black;
-        -fx-background-insets: 0;
-        -fx-border-color: transparent;
-        -fx-border-width: 0;
-        -fx-focus-color: transparent;
-        -fx-faint-focus-color: transparent;
-        -fx-padding: 0 12 0 12;
-        -fx-text-fill: white;
-    """.trimIndent()
-
     private fun setActive(activeBtn: Button) {
         val allButtons = listOf(dashboardBtn, calenderBtn, employeeManagementBtn, parameterBtn)
 
-        // alle zurücksetzen
-        allButtons.forEach { btn ->
-            btn.properties.remove("active")
-            btn.style = baseButtonStyle()
+        allButtons.forEach {
+            it.styleClass.remove("nav-button-active")
         }
 
-        // aktiven setzen
-        activeBtn.properties["active"] = true
-        activeBtn.style = activeButtonStyle()
+        activeBtn.styleClass.add("nav-button-active")
     }
 }
 

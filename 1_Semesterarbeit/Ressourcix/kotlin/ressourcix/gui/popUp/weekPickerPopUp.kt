@@ -30,6 +30,7 @@ class weekPickerPopUp(private val label: String,
         val cols = 13
         for (w in 1..52) {
             val btn = ToggleButton("KW $w").apply {
+                styleClass.add("btnWeekStyle")
                 isSelected = weeks[w]
                 prefWidth = 78.0
                 setOnAction {

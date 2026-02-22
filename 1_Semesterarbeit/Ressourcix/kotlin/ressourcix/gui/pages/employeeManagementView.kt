@@ -31,8 +31,6 @@ import ressourcix.gui.util.showEmployeeNotFound
 import ressourcix.gui.util.showDeleteFailed
 import ressourcix.gui.util.showSaveFailed
 
-//TODO Executions abfangen, anzeigen und loggen
-
 object employeeManagementView : BorderPane() {
 
     private val popupLayer = PopUpLayer()
@@ -43,35 +41,35 @@ object employeeManagementView : BorderPane() {
     var idField = createTfl("", "ID eingeben...").apply {
         textFormatter = positiveIntNoZeroFormatter(4,1000)
     }
-    var abbreviationField = createTfl("", "Kürzel eingeben").apply {
+    var abbreviationField = createTfl("", "Kürzel eingeben...").apply {
         textFormatter = lettersMaxFormatter(4,true)
     }
-    var nameField = createTfl("","").apply {
+    var nameField = createTfl("","Vorname eingeben... *").apply {
         textFormatter =lettersMaxFormatter(30,false)
     }
     val roleField = ComboBox<Role>().apply {
-        items = FXCollections.observableArrayList(Role.values().toList())
-        promptText = "Rolle auswählen..."
+        items = FXCollections.observableArrayList(Role.entries)
+        promptText = "Rolle auswählen... *"
         promptWhenNull()
     }
     val departmentField = ComboBox<Department>().apply {
-        items = FXCollections.observableArrayList(Department.values().toList())
+        items = FXCollections.observableArrayList(Department.entries)
         promptText = "Abteilung auswählen..."
         isFocusTraversable = false
         promptWhenNull()
     }
-    var cityField = createTfl("","").apply {
+    var cityField = createTfl("","Wohnort eingeben...").apply {
         textFormatter = lettersMaxFormatter(30,false)
     }
 
-    var surnameField = createTfl("","").apply {
+    var surnameField = createTfl("","Nachname eingeben... *").apply {
         textFormatter = lettersMaxFormatter(30,false)
     }
-    var workloadField = createTfl("","").apply {
+    var workloadField = createTfl("","Pensum eingeben... *").apply {
         textFormatter = positiveIntNoZeroFormatter(3,100)
     }
     val educationField = ComboBox<Education>().apply {
-        items = FXCollections.observableArrayList(Education.values().toList())
+        items = FXCollections.observableArrayList(Education.entries)
         promptText = "Ausbildung auswählen..."
         isFocusTraversable = false
         promptWhenNull()
@@ -80,7 +78,7 @@ object employeeManagementView : BorderPane() {
         installBirthdayField(this)
     }
 
-    var limitVacationWeeksField = createTfl("","").apply {
+    var limitVacationWeeksField = createTfl("","Anzahl Ferien eingeben... *").apply {
         textFormatter = positiveIntNoZeroFormatter(2,52)
     }
     var usedVacationWeeksField = createTfl("","")
@@ -248,6 +246,7 @@ object employeeManagementView : BorderPane() {
                         .or(surnameField.textProperty().isEmpty)
                         .or(workloadField.textProperty().isEmpty)
                         .or(roleField.valueProperty().isNull)
+                        .or(limitVacationWeeksField.textProperty().isEmpty)
                 )
                     setOnAction {
                         try {
