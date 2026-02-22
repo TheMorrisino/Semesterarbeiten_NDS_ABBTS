@@ -31,7 +31,7 @@ git push origin mein-feature
 Teammitglieder können den Code reviewen, Kommentare hinterlassen und den PR schliesslich mergen.
 
 
-**📑 Lizenz & Hinweis**
+**📑Hinweis**
 
 Dieses Repository ist ausschliesslich für den internen Gebrauch im Rahmen unseres Studiums gedacht. 
 Bitte respektiert die Urheberrechte aller eingebrachten Materialien und verwendet keine fremden Inhalte ohne Genehmigung.

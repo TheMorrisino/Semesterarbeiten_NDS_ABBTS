@@ -41,6 +41,11 @@ class GuiBorderPane : Application() {
 
         val scene = Scene(outer, baseW, baseH)
 
+        scene.stylesheets.addAll(
+            javaClass.getResource("/btnWeekStyle.css")!!.toExternalForm(),
+            javaClass.getResource("/btnNavigationStyle.css")!!.toExternalForm()
+        )
+
         fun updateScale() {
             val sx = scene.width / baseW
             val sy = scene.height / baseH
