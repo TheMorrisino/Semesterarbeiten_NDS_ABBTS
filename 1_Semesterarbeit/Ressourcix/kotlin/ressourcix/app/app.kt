@@ -14,7 +14,7 @@ object app {
     var jasonFileAktiv: Boolean = true
 
     // Für die Demo Version setzte diese Variable auf True
-    var demoOn : Boolean = true
+    var demoOn : Boolean = false
 
     fun run() {
         jsonReader.readConfig()
