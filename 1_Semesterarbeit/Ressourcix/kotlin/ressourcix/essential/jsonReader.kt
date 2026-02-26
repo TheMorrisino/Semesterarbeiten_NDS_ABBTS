@@ -54,7 +54,6 @@ object jsonReader {
                     }
                 }
 
-
                 fields["role"]?.let { roleName ->
                     if (roleName.isNotBlank()) {
                         try { employee.setRole(Role.valueOf(roleName)) }
@@ -74,7 +73,6 @@ object jsonReader {
                     }
                 }
 
-
                 fields["vacationEntries"]?.let { vacationJson ->
                     val vacationObjects = extractJsonObjects(vacationJson)
                     vacationObjects.forEach { vacObj ->
@@ -88,9 +86,7 @@ object jsonReader {
                         val range = WeekRange(startWeek, endWeek)
                         val entry = VacationEntry(vacId, empId, year, range)
 
-
                         vacFields["weekStatus"]?.let { statusJson ->
-                            // Entferne die geschweiften Klammern, damit parseJsonObject funktioniert
                             val cleaned = statusJson.removePrefix("{").removeSuffix("}")
                             val statusMap = parseJsonObject(cleaned)
                             statusMap.forEach { (weekStr, statusStr) ->
@@ -137,7 +133,6 @@ object jsonReader {
                 }
             }
 
-            //Vacation neu berechnen, um Aktuelle daten zu haben
             employees.forEach { it.createVacationList() }
 
             logger.info("${employees.size} Mitarbeitende importiert")
@@ -166,14 +161,12 @@ object jsonReader {
             val json = configFile.readText()
             val fields = parseJsonObject(json)
 
-
             fields["minEmployeeNumber"]?.toIntOrNull()?.let { config.minEmployeeNumber = it }
             fields["minApprenticeNumber"]?.toIntOrNull()?.let { config.minApprenticeNumber = it }
             fields["minManagerNumber"]?.toIntOrNull()?.let { config.minManagerNumber = it }
             fields["vacation25Years"]?.toIntOrNull()?.let { config.vacation25Years = it }
             fields["vacationOver25Years"]?.toIntOrNull()?.let { config.vacationOver25Years = it }
             fields["vacationOver50Years"]?.toIntOrNull()?.let { config.vacationOver50Years = it }
-
 
             fields["vacationBlock"]?.let { arrayStr ->
                 val booleans = parseBooleanArray(arrayStr)
@@ -199,15 +192,11 @@ object jsonReader {
     }
 
     private fun parseBooleanArray(arrayStr: String): BooleanArray {
-        // Entferne [ ] und whitespace
         val content = arrayStr.trim().removePrefix("[").removeSuffix("]")
-
-        // Splitte bei Kommas und konvertiere zu Boolean
         return content.split(",")
             .map { it.trim().toBoolean() }
             .toBooleanArray()
     }
-
 
     private fun extractJsonObjects(json: String): List<String> {
         val objects = mutableListOf<String>()
