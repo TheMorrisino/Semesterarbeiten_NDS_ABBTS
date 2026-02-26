@@ -5,9 +5,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.ConcurrentLinkedQueue
 
-
 object logger {
-
 
     private object logConfig {
         const val MAX_BUFFER_SIZE = 1000

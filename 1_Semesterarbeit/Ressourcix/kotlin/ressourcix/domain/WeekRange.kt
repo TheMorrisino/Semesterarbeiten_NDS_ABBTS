@@ -1,6 +1,5 @@
 package ressourcix.domain
 
-
 data class WeekRange(val startWeek: UInt, val endWeek: UInt) {
     init {
         require(startWeek in 1u..53u) { "startWeek must be 1..53" }

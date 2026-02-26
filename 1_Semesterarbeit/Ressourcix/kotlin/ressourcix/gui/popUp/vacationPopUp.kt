@@ -1,10 +1,10 @@
+
 package ressourcix.gui.popUp
 
 import javafx.beans.binding.Bindings
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
-import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
 import javafx.scene.control.TextFormatter
@@ -12,21 +12,14 @@ import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
-import javafx.scene.text.TextAlignment
 import ressourcix.app.app
 import ressourcix.gui.pages.calenderView.closePopup
 import ressourcix.gui.pages.calenderView.selectedEmployee
 import ressourcix.gui.pages.calenderView.showPopup
+import ressourcix.gui.util.*
 
-private const val BTN_HEIGHT = 50.0
-private const val BTN_WIDTH = 140.0
-private const val TFL_HEIGHT = 30.0
-private const val TFL_WIDTH = 300.0
 private const val BOX_HEIGHT = 340.0
 private const val BOX_WIDTH = 600.0
-
-
-
 
 object vacationPopUp {
 
@@ -40,7 +33,6 @@ object vacationPopUp {
         var firstVacationWeek = createTfl("", "Erste Ferien Woche eintragen...")
         var lastVacationWeek = createTfl("", "Letzte Ferien Woche eintragen...")
 
-        // nur Zahlen erlauben
         numbersOnly(firstVacationWeek)
         numbersOnly(lastVacationWeek)
 
@@ -147,10 +139,6 @@ object vacationPopUp {
             }
         }
 
-
-
-
-
         val closeBtn = createButton("X").apply {
             style = """
                 -fx-background-color: transparent;
@@ -175,10 +163,8 @@ object vacationPopUp {
             children.addAll(title, spacer, closeBtn)
         }
 
-        // Fehler live updaten
         firstVacationWeek.textProperty().addListener { _, _, _ -> updateError() }
         lastVacationWeek.textProperty().addListener { _, _, _ -> updateError() }
-
         updateError()
 
         return VBox().apply {
@@ -228,30 +214,6 @@ object vacationPopUp {
             )
         }
     }
-
-    private fun createButton(text: String) = Button(text).apply {
-        prefHeight = BTN_HEIGHT
-        prefWidth = BTN_WIDTH
-        textAlignment = TextAlignment.CENTER
-        alignment = Pos.CENTER
-        isFocusTraversable = false
-        style = " -fx-font-weight: bold;"
-    }
-
-    private fun createTfl(text: String, prompt: String): TextField =
-        TextField(text).apply {
-            promptText = prompt
-            prefHeight = TFL_HEIGHT
-            prefWidth = TFL_WIDTH
-            isFocusTraversable = false
-        }
-
-    private fun createDataBox(labelText: String, field: TextField): VBox =
-        VBox(6.0).apply {
-            children.addAll(Label(labelText).apply {
-                style = " -fx-font-weight: bold;"
-            }, field)
-        }
 
     private fun numbersOnly(tf: TextField) {
         tf.textFormatter = TextFormatter<String> { change ->

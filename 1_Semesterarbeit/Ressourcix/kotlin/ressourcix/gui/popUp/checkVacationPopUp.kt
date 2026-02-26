@@ -1,3 +1,4 @@
+
 package ressourcix.gui.popUp
 
 import javafx.beans.binding.Bindings
@@ -8,22 +9,18 @@ import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.control.*
 import javafx.scene.layout.*
-import javafx.scene.text.TextAlignment
 import ressourcix.app.app
 import ressourcix.domain.VacationStatus
 import ressourcix.gui.pages.calenderView.selectedEmployee
 import ressourcix.gui.pages.calenderView.refreshVacations
+import ressourcix.gui.util.*
 
-private const val BTN_HEIGHT = 50.0
-private const val BTN_WIDTH = 160.0
 private const val TFL_HEIGHT = 30.0
 private const val TFL_WIDTH = 300.0
 private const val BOX_HEIGHT = 520.0
 private const val BOX_WIDTH = 720.0
 
 object checkVacationPopUp {
-
-    /* ================= Tabellenmodell ================= */
 
     data class VacationTableRow(
         val id: UInt,
@@ -32,13 +29,9 @@ object checkVacationPopUp {
         val status: VacationStatus
     )
 
-    /* ================= UI Builder ================= */
-
     fun build(
         onClose: () -> Unit
     ): Node {
-
-        /* ================= Felder ================= */
 
         val vacationId = createTfl("", "ID").apply {
             isEditable = false
@@ -53,8 +46,6 @@ object checkVacationPopUp {
             isFocusTraversable = false
             promptWhenNull()
         }
-
-        /* ================= Tabelle ================= */
 
         val vacationTable = TableView<VacationTableRow>().apply {
             prefHeight = 200.0
@@ -79,7 +70,6 @@ object checkVacationPopUp {
 
         vacationTable.columns.addAll(colId, colStartWeek, colEndWeek, colStatus)
 
-        /* ================= Tabelle füllen ================= */
 
         fun loadTableData() {
             vacationTable.items.setAll(
@@ -96,16 +86,12 @@ object checkVacationPopUp {
 
         loadTableData()
 
-        /* ================= Tabellenklick ================= */
-
         vacationTable.selectionModel.selectedItemProperty().addListener { _, _, row ->
             row?.let {
                 vacationId.text = it.id.toString()
                 statusField.value = it.status
             }
         }
-
-        /* ================= Fehleranzeige ================= */
 
         val errorLabel = Label().apply {
             style = "-fx-text-fill: red;"
@@ -127,7 +113,6 @@ object checkVacationPopUp {
 
         statusField.valueProperty().addListener { _, _, _ -> updateError() }
 
-        /* ================= Save Button ================= */
 
         val saveBtn = createButton("Status\nändern").apply {
 
@@ -165,8 +150,6 @@ object checkVacationPopUp {
 
         }
 
-        /* ================= Close Button ================= */
-
         val closeBtn = createButton("X").apply {
             style = """
                 -fx-background-color: transparent;
@@ -183,8 +166,6 @@ object checkVacationPopUp {
                 onClose() }
         }
 
-        /* ================= Header ================= */
-
         val title = Label("Ferienstatus ändern").apply {
             style = "-fx-font-size: 18px; -fx-font-weight: bold;"
         }
@@ -200,8 +181,6 @@ object checkVacationPopUp {
         }
 
         updateError()
-
-        /* ================= Layout ================= */
 
         return VBox().apply {
             padding = Insets(12.0)
@@ -246,35 +225,6 @@ object checkVacationPopUp {
             )
         }
     }
-
-    /* ================= Helper ================= */
-
-    private fun createButton(text: String) = Button(text).apply {
-        prefHeight = BTN_HEIGHT
-        prefWidth = BTN_WIDTH
-        textAlignment = TextAlignment.CENTER
-        alignment = Pos.CENTER
-        isFocusTraversable = false
-        style = "-fx-font-weight: bold;"
-    }
-
-    private fun createTfl(text: String, prompt: String): TextField =
-        TextField(text).apply {
-            promptText = prompt
-            prefHeight = TFL_HEIGHT
-            prefWidth = TFL_WIDTH
-            isFocusTraversable = false
-        }
-
-    private fun createDataBox(labelText: String, field: TextField): VBox =
-        VBox(6.0).apply {
-            children.addAll(
-                Label(labelText).apply {
-                    style = "-fx-font-weight: bold;"
-                },
-                field
-            )
-        }
 
     private fun <T> ComboBox<T>.promptWhenNull() {
         val p = promptText

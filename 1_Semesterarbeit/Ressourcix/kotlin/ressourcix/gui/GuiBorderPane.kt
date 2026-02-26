@@ -1,5 +1,5 @@
-package ressourcix.gui
 
+package ressourcix.gui
 
 import javafx.application.Application
 import javafx.scene.Group

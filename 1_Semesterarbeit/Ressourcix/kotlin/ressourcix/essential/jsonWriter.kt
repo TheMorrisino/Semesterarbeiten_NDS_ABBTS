@@ -37,16 +37,11 @@ object jsonWriter {
             configFile = jsonDir.resolve("config.json")
         }
 
-
-
         try {
-            // Alle Mitarbeitenden holen
             val employees = app.management.employees.toList()
 
-            // JSON Manuell bilden
             val json = buildString {
                 appendLine("{")
-                // ---------- Mitarbeitende ----------
                 appendLine("  \"employees\": [")
                 employees.forEachIndexed { index, emp ->
                     appendLine("    {")
@@ -60,8 +55,8 @@ object jsonWriter {
                     appendLine("      \"birthday\": \"${escapeJson(emp.getBirthdayAsString())}\",")
                     appendLine("      \"city\": \"${escapeJson(emp.getCity())}\",")
                     appendLine("      \"vacationLimit\": ${emp.getVacationLimit()},")
-
                     appendLine("      \"vacationEntries\": [")
+
                     val entries = emp.vacationEntries
                     entries.forEachIndexed { vIdx, vac ->
                         appendLine("        {")
@@ -70,8 +65,8 @@ object jsonWriter {
                         appendLine("          \"year\": ${vac.year},")
                         appendLine("          \"startWeek\": ${vac.range.startWeek},")
                         appendLine("          \"endWeek\": ${vac.range.endWeek},")
-
                         appendLine("          \"weekStatus\": {")
+
                         val weeks = (vac.range.startWeek..vac.range.endWeek).toList()
                         weeks.forEachIndexed { wIdx, week ->
                             val status = vac.getStatus(week)?.name ?: "GENERATED"
@@ -88,9 +83,7 @@ object jsonWriter {
                 }
                 appendLine("  ],")   // Ende employees‑Array
 
-
                 appendLine("  \"idProviders\": {")
-
 
                 val empState = IdState(
                     nextId = app.employeeIds.getNextId(),
@@ -100,7 +93,6 @@ object jsonWriter {
                 appendLine("      \"nextId\": ${empState.nextId},")
                 appendLine("      \"issuedIds\": ${empState.issuedIds}")
                 appendLine("    },")
-
 
                 val vacState = IdState(
                     nextId = app.vacationIds.getNextId(),
@@ -126,7 +118,6 @@ object jsonWriter {
                 appendLine("  \"vacationOver25Years\": ${config.vacationOver25Years},")
                 appendLine("  \"vacationOver50Years\": ${config.vacationOver50Years},")
 
-                // Vacation Block als Array
                 appendLine("  \"vacationBlock\": [")
                 config.vacationBlock.forEachIndexed { index, value ->
                     append("    $value")
@@ -135,7 +126,6 @@ object jsonWriter {
                 }
                 appendLine("  ],")
 
-                // Vacation School Block als Array
                 appendLine("  \"vacationSchoolBlock\": [")
                 config.vacationSchoolBlock.forEachIndexed { index, value ->
                     append("    $value")
@@ -149,15 +139,14 @@ object jsonWriter {
 
             logger.info("JSON erfolgreich geschrieben nach: ${targetFile.absolutePath}")
             logger.info("Config gespeichert nach: ${configFile.absolutePath}")
-            println("${employees.size} Mitarbeiter exportiert")
-            println("Konfiguration gespeichert")
+            logger.info("${employees.size} Mitarbeiter exportiert")
+            logger.info("Konfiguration gespeichert")
 
         } catch (e: Exception) {
             logger.fatal("Fehler beim Schreiben von JSON: ${e.message}")
             e.printStackTrace()
         }
     }
-
 
     private fun escapeJson(text: String): String {
         return text

@@ -1,12 +1,9 @@
 package ressourcix.app
 
-
-
 import ressourcix.domain.EmployeeManagement
 import ressourcix.essential.jsonReader
 import ressourcix.logger.logger
 import ressourcix.essential.IdProvider
-
 
 object app {
 
@@ -18,7 +15,6 @@ object app {
 
     // Für die Demo Version setzte diese Variable auf True
     var demoOn : Boolean = false
-
 
     fun run() {
         jsonReader.readConfig()

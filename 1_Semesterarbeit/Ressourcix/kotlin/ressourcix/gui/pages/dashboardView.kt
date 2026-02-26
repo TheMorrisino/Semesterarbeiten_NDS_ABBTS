@@ -1,7 +1,5 @@
 package ressourcix.gui.pages
 
-
-
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.geometry.Insets
@@ -15,7 +13,6 @@ import ressourcix.app.app
 import ressourcix.domain.Employee
 import ressourcix.logger.logger
 import kotlin.math.ceil
-
 
 object dashboardView : StackPane() {
     private const val BTN_HEIGHT = 50.0
@@ -41,7 +38,6 @@ object dashboardView : StackPane() {
     }
 
     private fun initializeCharts() {
-        // BarChart
         val xAxis = CategoryAxis().apply {
             label = "Kalenderwochen"
             side = Side.BOTTOM
@@ -59,12 +55,10 @@ object dashboardView : StackPane() {
             title = "Urlaubsübersicht"
         }
 
-        // PieChart
         pieChart = PieChart().apply {
             animated = true
             title = "Geplante/Verfügbare Ferien von Mitarbeitern"
             isLegendVisible = false
-//            legendSide = Side.TOP
         }
     }
 
@@ -73,7 +67,6 @@ object dashboardView : StackPane() {
             padding = Insets(5.0)
             hgap = 1.0
             vgap = 1.0
-
 
             columnConstraints.add(ColumnConstraints().apply {
                 percentWidth = 100.0
@@ -102,12 +95,10 @@ object dashboardView : StackPane() {
             prefWidth = Double.MAX_VALUE
             prefHeight = Double.MAX_VALUE
 
-
             barChart.prefWidthProperty().bind(widthProperty())
             barChart.prefHeightProperty().bind(heightProperty())
             pieChart.prefWidthProperty().bind(widthProperty())
             pieChart.prefHeightProperty().bind(heightProperty())
-
 
             children.add(barChart)
             VBox.setVgrow(barChart, Priority.ALWAYS)
@@ -139,7 +130,6 @@ object dashboardView : StackPane() {
         showingBarChart = !showingBarChart
 
         Platform.runLater {
-            // Cleanup
             chartContainer.children.forEach { VBox.setVgrow(it, null) }
             chartContainer.children.clear()
 
@@ -155,8 +145,7 @@ object dashboardView : StackPane() {
         chartContainer.children.add(barChart)
         VBox.setVgrow(barChart, Priority.ALWAYS)
         toggleChartButton.text = "Geplant/Verfügbare Ferien"
-
-        lastData = emptyList() // Force update
+        lastData = emptyList()
         updateBarChart()
     }
 
@@ -167,7 +156,6 @@ object dashboardView : StackPane() {
 
         updatePieChart()
     }
-
 
      fun refreshCurrentChart() {
             lastData = emptyList()
@@ -199,8 +187,6 @@ object dashboardView : StackPane() {
             updateYAxis(counts)
             if (toolTippON) {
                 addBarChartTooltips(series, weekDetails)
-            } else {
-                logger.info("Tooltips ausgeschaltet")
             }
         }
     }
@@ -257,12 +243,10 @@ object dashboardView : StackPane() {
         Platform.runLater {
             pieChart.data.clear()
 
-            // Daten erstellen
             val data = FXCollections.observableArrayList(
                 PieChart.Data("Geplante Ferienwochen (${stats.used})", stats.used.toDouble()),
                 PieChart.Data("Verfügbare Ferienwochen (${stats.available})", stats.available.toDouble())
             )
-
 
             pieChart.data = data
 
@@ -271,22 +255,18 @@ object dashboardView : StackPane() {
                 return@runLater
             }
 
-            // Tooltips hinzufügen
             if (toolTippON) {
             Platform.runLater {
                 addPieChartTooltips(data, stats)
-            }} else
-                logger.info("PieChart Tooltips ausgeschaltet")
+            }}
 
         }
     }
 
     private fun addPieChartTooltips(data: List<PieChart.Data>, stats: VacationStats) {
-        // Tooltip für "Geplant"
         val usedTooltip = createPieTooltip("Geplante Ferienwochen", stats.used, stats.withVacation)
         data[0].node?.let { Tooltip.install(it, usedTooltip) }
 
-        // Tooltip für "Verfügbar"
         val availableTooltip = createPieTooltip("Verfügbare Ferienwochen", stats.available, stats.withoutVacation)
         data[1].node?.let { Tooltip.install(it, availableTooltip) }
     }
@@ -339,9 +319,8 @@ object dashboardView : StackPane() {
 
         employees.forEach { emp ->
             val limit = emp.getVacationLimit().toInt()
-
-            // Geplante Wochen zählen
             val plannedWeeks = mutableSetOf<UInt>()
+
             emp.vacationEntries.forEach { entry ->
                 for (week in entry.range.startWeek..entry.range.endWeek) {
                     plannedWeeks.add(week)
@@ -371,7 +350,6 @@ object dashboardView : StackPane() {
             withoutVacation = withoutVacation.sorted()
         )
     }
-
 
     private data class WeekInfo(
         val count: Int,

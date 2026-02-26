@@ -1,43 +1,6 @@
 {
   "employees": [
     {
-      "id": 0,
-      "firstName": "Anna",
-      "lastName": "Müller",
-      "workloadPercent": 100,
-      "role": "MANAGER",
-      "department": "ADMIN",
-      "education": "EFZ",
-      "birthday": "15.03.1975",
-      "city": "Zürich",
-      "vacationLimit": 5,
-      "vacationEntries": [
-        {
-          "id": 0,
-          "employeeId": 0,
-          "year": 2026,
-          "startWeek": 7,
-          "endWeek": 8,
-          "weekStatus": {
-            "7": "APPROVED",
-            "8": "APPROVED"
-          }
-        },
-        {
-          "id": 1,
-          "employeeId": 0,
-          "year": 2026,
-          "startWeek": 28,
-          "endWeek": 30,
-          "weekStatus": {
-            "28": "APPROVED",
-            "29": "APPROVED",
-            "30": "APPROVED"
-          }
-        }
-      ]
-    },
-    {
       "id": 1,
       "firstName": "Lukas",
       "lastName": "Schneider",
