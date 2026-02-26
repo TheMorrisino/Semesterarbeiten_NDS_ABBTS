@@ -4,10 +4,7 @@ import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
 import javafx.animation.Timeline
 import javafx.scene.Scene
-import javafx.scene.effect.Blend
-import javafx.scene.effect.BlendMode
 import javafx.scene.effect.DropShadow
-import javafx.scene.effect.Glow
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import javafx.scene.paint.CycleMethod
@@ -19,7 +16,6 @@ import javafx.scene.text.Text
 import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.util.Duration
-
 
 class SplashScreenAdvanced(private val onFinished: () -> Unit) {
     private val stage = Stage()
@@ -48,7 +44,6 @@ class SplashScreenAdvanced(private val onFinished: () -> Unit) {
 
         }
 
-
         stage.apply {
             initStyle(StageStyle.TRANSPARENT)
             scene = Scene(root, 800.0, 400.0, Color.TRANSPARENT)
@@ -71,20 +66,17 @@ class SplashScreenAdvanced(private val onFinished: () -> Unit) {
         }
     }
 
-
     private fun startAnimation() {
         val mainTimeline = Timeline()
-
-        // ---------- POP‑Effekt ----------
         mainTimeline.keyFrames.addAll(
-            // Start: unsichtbar, verkleinert
+
             KeyFrame(
                 Duration.seconds(0.0),
                 KeyValue(title.opacityProperty(), 0.0),
                 KeyValue(title.scaleXProperty(), 0.5),
                 KeyValue(title.scaleYProperty(), 0.5)
             ),
-            // Aufblitzen + leichte Drehung
+
             KeyFrame(
                 Duration.seconds(0.15),
                 KeyValue(title.opacityProperty(), 1.0),
@@ -92,7 +84,7 @@ class SplashScreenAdvanced(private val onFinished: () -> Unit) {
                 KeyValue(title.scaleYProperty(), 1.3),
                 KeyValue(title.rotateProperty(), 5.0)
             ),
-            // Zurück zur normalen Größe und Rotation
+
             KeyFrame(
                 Duration.seconds(0.3),
                 KeyValue(title.scaleXProperty(), 1.0),
@@ -107,7 +99,6 @@ class SplashScreenAdvanced(private val onFinished: () -> Unit) {
         root.children.add(title)
         mainTimeline.play()
     }
-
 
     private fun fadeOut() {
         val fadeTimeline = Timeline(

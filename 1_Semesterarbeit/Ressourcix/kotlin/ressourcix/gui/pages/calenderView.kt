@@ -14,10 +14,8 @@ import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import ressourcix.app.app.management
-//import ressourcix.calendar.consoleCalendarOutput
 import ressourcix.domain.Employee
 import ressourcix.domain.Role
-import ressourcix.domain.VacationStatus
 import ressourcix.domain.code
 import ressourcix.domain.config
 import ressourcix.gui.popUp.vacationPopUp
@@ -25,8 +23,8 @@ import ressourcix.logger.logger
 
 object calenderView : StackPane() {
 
-    // ---------------- Overlay (Popup) ----------------
     lateinit var selectedEmployee : Employee
+    private var year = 2026u
     private val dim = Region().apply {
         style = "-fx-background-color: rgba(0,0,0,0.35);"
         isVisible = false
@@ -44,14 +42,8 @@ object calenderView : StackPane() {
         maxHeight = Double.MAX_VALUE
     }
 
-    // ---------------- Data / Tables ----------------
-
-
-
     private val fixedTable = TableView<Employee>()
     private val weekTable = TableView<Employee>()
-
-    // (Name bleibt, nicht genutzt)
     private val vScroll = ScrollBar().apply {
         orientation = Orientation.VERTICAL
         isVisible = false
@@ -72,18 +64,14 @@ object calenderView : StackPane() {
         isReorderable = true
     }
 
-    private var currentYear: UInt = 2026u
+    private var currentYear: UInt = year
     private val weekCodeCache: MutableMap<UInt, Array<String>> = mutableMapOf()
 
-    /**
-     * Spacer unten links: gleiche Höhe wie horizontale Scrollbar rechts
-     */
     private val spacer = Region().apply {
         minHeight = 0.0
         prefHeight = 0.0
         maxHeight = 0.0
     }
-
 
     private var scrollSyncInstalled = false
     private var wheelForwardInstalled = false
@@ -127,9 +115,7 @@ object calenderView : StackPane() {
         fixedTable.setRowFactory { makeRow() }
         weekTable.setRowFactory { makeRow() }
 
-
-        showYear(2026u)
-
+        showYear(year)
 
         fixedTable.skinProperty().addListener { _, _, _ -> Platform.runLater { installOnceOrRefresh() } }
         weekTable.skinProperty().addListener { _, _, _ -> Platform.runLater { installOnceOrRefresh() } }
@@ -154,7 +140,6 @@ object calenderView : StackPane() {
         }
         return row
     }
-
 
     private fun installOnceOrRefresh() {
         val leftV = findScrollBar(fixedTable, Orientation.VERTICAL)
@@ -229,12 +214,9 @@ object calenderView : StackPane() {
         bar.maxHeight = 0.0
     }
 
-    // ----------------- Cache / Table Generation -----------------
-
-    /** Cache für alle Mitarbeiter für ein Jahr: KW1..KW52 */
+    // Cache für alle Mitarbeiter für ein Jahr: KW1..KW52
     private fun rebuildCache(year: UInt, weeks: UInt = 52u) {
         weekCodeCache.clear()
-        //println(app.management.employees[0].vacationEntries[0].status)
         for (employee in management.employees) {
             val codes = Array(weeks.toInt() + 1) { "💼" }
             if (employee.getRole() == Role.APPRENTICE) {
@@ -352,7 +334,6 @@ object calenderView : StackPane() {
         Platform.runLater{refreshVacations()}
     }
 
-    // ----------------- Popup Handling -----------------
 
     private fun onEmployeeDoubleClick(employee: Employee) {
         val empId = employee.getId()
@@ -381,6 +362,7 @@ object calenderView : StackPane() {
             )
         )
     }
+
     fun showPopup(popupContent: Node) {
         popupHost.children.setAll(popupContent)
         dim.isVisible = true
@@ -399,7 +381,7 @@ object calenderView : StackPane() {
         popupHost.isManaged = false
     }
 
-    // ----------------- Farben -----------------
+    // Farben
 
     private fun clamp01(x: Double) = x.coerceIn(0.0, 1.0)
     private fun lerp(a: Int, b: Int, t: Double): Int = (a + (b - a) * t).toInt()

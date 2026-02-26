@@ -1,5 +1,3 @@
-// Autor: Tiago de Sousa Sá
-//        Pedro Santos
 
 package ressourcix.gui.popUp
 
@@ -24,8 +22,6 @@ private const val BOX_WIDTH = 720.0
 
 object checkVacationPopUp {
 
-    /* ================= Tabellenmodell ================= */
-
     data class VacationTableRow(
         val id: UInt,
         val startWeek: UInt,
@@ -33,13 +29,9 @@ object checkVacationPopUp {
         val status: VacationStatus
     )
 
-    /* ================= UI Builder ================= */
-
     fun build(
         onClose: () -> Unit
     ): Node {
-
-        /* ================= Felder ================= */
 
         val vacationId = createTfl("", "ID").apply {
             isEditable = false
@@ -54,8 +46,6 @@ object checkVacationPopUp {
             isFocusTraversable = false
             promptWhenNull()
         }
-
-        /* ================= Tabelle ================= */
 
         val vacationTable = TableView<VacationTableRow>().apply {
             prefHeight = 200.0
@@ -80,7 +70,6 @@ object checkVacationPopUp {
 
         vacationTable.columns.addAll(colId, colStartWeek, colEndWeek, colStatus)
 
-        /* ================= Tabelle füllen ================= */
 
         fun loadTableData() {
             vacationTable.items.setAll(
@@ -97,16 +86,12 @@ object checkVacationPopUp {
 
         loadTableData()
 
-        /* ================= Tabellenklick ================= */
-
         vacationTable.selectionModel.selectedItemProperty().addListener { _, _, row ->
             row?.let {
                 vacationId.text = it.id.toString()
                 statusField.value = it.status
             }
         }
-
-        /* ================= Fehleranzeige ================= */
 
         val errorLabel = Label().apply {
             style = "-fx-text-fill: red;"
@@ -128,7 +113,6 @@ object checkVacationPopUp {
 
         statusField.valueProperty().addListener { _, _, _ -> updateError() }
 
-        /* ================= Save Button ================= */
 
         val saveBtn = createButton("Status\nändern").apply {
 
@@ -166,8 +150,6 @@ object checkVacationPopUp {
 
         }
 
-        /* ================= Close Button ================= */
-
         val closeBtn = createButton("X").apply {
             style = """
                 -fx-background-color: transparent;
@@ -184,8 +166,6 @@ object checkVacationPopUp {
                 onClose() }
         }
 
-        /* ================= Header ================= */
-
         val title = Label("Ferienstatus ändern").apply {
             style = "-fx-font-size: 18px; -fx-font-weight: bold;"
         }
@@ -201,8 +181,6 @@ object checkVacationPopUp {
         }
 
         updateError()
-
-        /* ================= Layout ================= */
 
         return VBox().apply {
             padding = Insets(12.0)

@@ -1,6 +1,5 @@
 package ressourcix.domain
 
-
 enum class Role (val displayName: String) {
     APPRENTICE("Lernende"),
     STAFF("Mitarbeitende"),

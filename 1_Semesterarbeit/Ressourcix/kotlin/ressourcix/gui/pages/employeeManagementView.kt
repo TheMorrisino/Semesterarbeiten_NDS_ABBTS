@@ -1,4 +1,3 @@
-// Autor: Pedro Santos
 
 package ressourcix.gui.pages
 
@@ -34,7 +33,6 @@ import ressourcix.gui.util.showSaveFailed
 object employeeManagementView : BorderPane() {
 
     private val popupLayer = PopUpLayer()
-
     private var selectedEmployee: Employee? = null
     private var isEditMode: Boolean = false
 
