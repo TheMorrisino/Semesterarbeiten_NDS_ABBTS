@@ -1,7 +1,5 @@
 package ressourcix.gui.pages
 
-
-
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.geometry.Insets

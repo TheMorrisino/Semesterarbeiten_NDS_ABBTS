@@ -1,3 +1,6 @@
+// Autor: Tiago de Sousa Sá
+//        Pedro Santos
+
 package ressourcix.gui.popUp
 
 import javafx.beans.binding.Bindings
@@ -8,14 +11,12 @@ import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.control.*
 import javafx.scene.layout.*
-import javafx.scene.text.TextAlignment
 import ressourcix.app.app
 import ressourcix.domain.VacationStatus
 import ressourcix.gui.pages.calenderView.selectedEmployee
 import ressourcix.gui.pages.calenderView.refreshVacations
+import ressourcix.gui.util.*
 
-private const val BTN_HEIGHT = 50.0
-private const val BTN_WIDTH = 160.0
 private const val TFL_HEIGHT = 30.0
 private const val TFL_WIDTH = 300.0
 private const val BOX_HEIGHT = 520.0
@@ -246,35 +247,6 @@ object checkVacationPopUp {
             )
         }
     }
-
-    /* ================= Helper ================= */
-
-    private fun createButton(text: String) = Button(text).apply {
-        prefHeight = BTN_HEIGHT
-        prefWidth = BTN_WIDTH
-        textAlignment = TextAlignment.CENTER
-        alignment = Pos.CENTER
-        isFocusTraversable = false
-        style = "-fx-font-weight: bold;"
-    }
-
-    private fun createTfl(text: String, prompt: String): TextField =
-        TextField(text).apply {
-            promptText = prompt
-            prefHeight = TFL_HEIGHT
-            prefWidth = TFL_WIDTH
-            isFocusTraversable = false
-        }
-
-    private fun createDataBox(labelText: String, field: TextField): VBox =
-        VBox(6.0).apply {
-            children.addAll(
-                Label(labelText).apply {
-                    style = "-fx-font-weight: bold;"
-                },
-                field
-            )
-        }
 
     private fun <T> ComboBox<T>.promptWhenNull() {
         val p = promptText

@@ -1,3 +1,5 @@
+// Autor: Pedro Santos
+
 package ressourcix.gui.util
 
 const val BTN_HEIGHT = 50.0

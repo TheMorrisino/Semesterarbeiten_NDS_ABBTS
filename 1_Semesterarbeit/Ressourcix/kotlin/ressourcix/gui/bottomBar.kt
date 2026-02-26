@@ -1,3 +1,6 @@
+// Autor: Pedro Santos
+//        Morris Meier
+
 package ressourcix.gui
 
 import javafx.animation.Animation

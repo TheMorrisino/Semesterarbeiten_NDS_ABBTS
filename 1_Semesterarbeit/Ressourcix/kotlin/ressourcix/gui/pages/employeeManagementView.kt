@@ -1,4 +1,4 @@
-//  Autor:        Pedro Santos
+// Autor: Pedro Santos
 
 package ressourcix.gui.pages
 
@@ -147,6 +147,7 @@ object employeeManagementView : BorderPane() {
                 showByIdBtn
             )
         }
+
         val showByAbbreviationBtn = createButton("MA nach Kürzel\nanzeigen").apply {
             disableProperty().bind(abbreviationField.textProperty().isEmpty)
             setOnAction {

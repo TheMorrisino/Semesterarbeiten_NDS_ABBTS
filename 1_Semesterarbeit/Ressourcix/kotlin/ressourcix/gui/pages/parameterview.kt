@@ -1,4 +1,4 @@
-//  Autor:        Pedro Santos
+// Autor: Pedro Santos
 
 package ressourcix.gui.pages
 import javafx.geometry.Insets
@@ -229,7 +229,5 @@ mainContent.children.addAll(minEmployeeBar,vacationsBlockerBar,maxVacationsBar,f
         config.vacationBlock = weeksForBlocker.copyOf()
         config.vacationSchoolBlock = weeksForSchool.copyOf()
     }
-
-
 
 }
