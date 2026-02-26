@@ -1,3 +1,5 @@
+// Autor: Pedro Santos
+
 package ressourcix.gui.components
 
 import javafx.geometry.Pos

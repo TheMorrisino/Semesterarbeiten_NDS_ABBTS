@@ -1,3 +1,5 @@
+// Autor: Pedro Santos
+
 package ressourcix.gui.popUp
 
 import javafx.beans.property.ReadOnlyObjectWrapper

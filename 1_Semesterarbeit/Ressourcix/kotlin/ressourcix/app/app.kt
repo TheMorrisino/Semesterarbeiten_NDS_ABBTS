@@ -17,7 +17,7 @@ object app {
     var jasonFileAktiv: Boolean = true
 
     // Für die Demo Version setzte diese Variable auf True
-    var demoOn : Boolean = false
+    var demoOn : Boolean = true
 
 
     fun run() {
