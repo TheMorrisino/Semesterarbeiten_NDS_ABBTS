@@ -187,8 +187,6 @@ object dashboardView : StackPane() {
             updateYAxis(counts)
             if (toolTippON) {
                 addBarChartTooltips(series, weekDetails)
-            } else {
-                logger.info("Tooltips ausgeschaltet")
             }
         }
     }
@@ -260,8 +258,7 @@ object dashboardView : StackPane() {
             if (toolTippON) {
             Platform.runLater {
                 addPieChartTooltips(data, stats)
-            }} else
-                logger.info("PieChart Tooltips ausgeschaltet")
+            }}
 
         }
     }
