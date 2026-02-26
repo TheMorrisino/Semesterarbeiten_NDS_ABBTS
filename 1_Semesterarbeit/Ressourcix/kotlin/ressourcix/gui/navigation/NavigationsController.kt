@@ -1,4 +1,4 @@
-// Autor: Pedro Santos
+
 package ressourcix.gui.navigation
 
 import javafx.scene.Node
