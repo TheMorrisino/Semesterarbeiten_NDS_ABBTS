@@ -1,5 +1,3 @@
-// Autor: Pedro Santos
-//        Tiago de Sousa Sá
 
 package ressourcix.gui.popUp
 

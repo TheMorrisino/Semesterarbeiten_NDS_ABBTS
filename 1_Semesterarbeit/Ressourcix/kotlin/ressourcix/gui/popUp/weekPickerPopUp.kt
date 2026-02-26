@@ -1,4 +1,3 @@
-// Autor: Pedro Santos
 
 package gui.popUp
 
