@@ -1,4 +1,5 @@
 // Autor: Pedro Santos
+//        Morris Meier
 
 package ressourcix.gui
 
