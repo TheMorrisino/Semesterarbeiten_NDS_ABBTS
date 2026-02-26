@@ -230,6 +230,4 @@ mainContent.children.addAll(minEmployeeBar,vacationsBlockerBar,maxVacationsBar,f
         config.vacationSchoolBlock = weeksForSchool.copyOf()
     }
 
-
-
 }

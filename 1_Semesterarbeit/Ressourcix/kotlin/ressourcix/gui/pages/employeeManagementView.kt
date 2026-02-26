@@ -147,6 +147,7 @@ object employeeManagementView : BorderPane() {
                 showByIdBtn
             )
         }
+
         val showByAbbreviationBtn = createButton("MA nach Kürzel\nanzeigen").apply {
             disableProperty().bind(abbreviationField.textProperty().isEmpty)
             setOnAction {
