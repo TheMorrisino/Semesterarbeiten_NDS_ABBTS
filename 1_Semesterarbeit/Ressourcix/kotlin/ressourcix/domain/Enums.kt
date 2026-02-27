@@ -1,3 +1,5 @@
+// Autor Tiago & Pedro
+
 package ressourcix.domain
 
 enum class Role (val displayName: String) {

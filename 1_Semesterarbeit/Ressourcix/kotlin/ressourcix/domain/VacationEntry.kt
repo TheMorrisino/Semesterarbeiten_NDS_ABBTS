@@ -1,3 +1,5 @@
+// Autor Morris & Tiago
+
 package ressourcix.domain
 
 class VacationEntry(

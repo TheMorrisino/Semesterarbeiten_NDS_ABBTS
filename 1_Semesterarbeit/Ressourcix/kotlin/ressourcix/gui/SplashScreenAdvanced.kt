@@ -1,3 +1,5 @@
+// Autor GPT
+
 package gui
 
 import javafx.animation.KeyFrame
