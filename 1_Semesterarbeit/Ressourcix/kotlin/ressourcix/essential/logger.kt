@@ -1,3 +1,5 @@
+// Autor Morris
+
 package ressourcix.logger
 
 import java.io.File

@@ -1,3 +1,4 @@
+// Autor Morris & Pedro
 
 package ressourcix.gui
 

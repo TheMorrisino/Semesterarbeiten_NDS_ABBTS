@@ -1,3 +1,5 @@
+// Autor Morris & Tiago & Pedro
+
 package gui
 
 import javafx.application.Application

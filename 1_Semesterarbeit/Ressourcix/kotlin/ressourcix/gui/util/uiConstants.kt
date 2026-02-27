@@ -1,3 +1,4 @@
+// Autor Pedro
 
 package ressourcix.gui.util
 
