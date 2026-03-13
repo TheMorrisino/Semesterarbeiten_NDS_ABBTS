@@ -34,10 +34,7 @@ class EmployeeManagement () {
     }
 
     fun canAddVacation(
-        employee: Employee,
-        startWeek: UInt,
-        endWeek: UInt
-    ): Boolean {
+        employee: Employee, startWeek: UInt, endWeek: UInt): Boolean {
 
         return employee.vacationEntries.none { existing ->
             val existingStart = existing.range.startWeek
@@ -54,6 +51,7 @@ class EmployeeManagement () {
     ): Boolean {
 
         if (!canAddVacation(employee, startWeek, endWeek)) {
+            logger.info("Ferieneintrag konnte nicht hinzugefügt werden Startwoche ${startWeek} bis ${endWeek} von ${employee.getFullName(99)}")
             return false
         }
 
@@ -90,7 +88,5 @@ class EmployeeManagement () {
         updateOverlapList()
         return overlapList
     }
-
-
 }
 
