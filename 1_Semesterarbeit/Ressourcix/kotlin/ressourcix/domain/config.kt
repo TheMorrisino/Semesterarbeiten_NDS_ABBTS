@@ -1,3 +1,5 @@
+// Autor Tiago
+
 package ressourcix.domain
 
 object config {

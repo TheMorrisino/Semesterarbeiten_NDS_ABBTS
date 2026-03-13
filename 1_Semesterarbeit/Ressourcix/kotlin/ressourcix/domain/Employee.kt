@@ -1,10 +1,11 @@
+// Autor Morris & Tiago & Pedro
+
 package ressourcix.domain
 
 import ressourcix.logger.logger
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
-
 
 class Employee(private val id: UInt) {
     private var firstName: String = ""
@@ -38,7 +39,6 @@ class Employee(private val id: UInt) {
             else           -> " [$planned/$vacationLimit] ✖"
         }
     }
-
 
     fun getFirstName(): String = firstName
     fun getLastName(): String = lastName
@@ -80,7 +80,7 @@ class Employee(private val id: UInt) {
             birthday = null
             return
         }
-        birthday = LocalDate.parse(text, birthdayFormatter) // wirft Exception bei ungültig
+        birthday = LocalDate.parse(text, birthdayFormatter)
     }
 
 
@@ -105,13 +105,11 @@ class Employee(private val id: UInt) {
             .joinToString(" ")
     }
 
-
     fun abbreviationSting(): String {
         if (firstName.isBlank() || lastName.isBlank()) return ""
         abbreviation = (firstName.take(2) + lastName.take(2)).uppercase()
         return abbreviation
     }
-
 
     fun addVacationEntry(entry: VacationEntry) {
         vacationEntries.add(entry)
@@ -153,25 +151,22 @@ class Employee(private val id: UInt) {
         return true
     }
 
-
     fun getVacationByIndex(index: Int) :  Int {
          return vacationList[index]
     }
 
-
     fun createVacationList() {
         vacationList = MutableList(52) { 0 }
         for (vacation in vacationEntries){
-        //println(vacationList)
             for (e in 1..52) {
                 if (e >= vacation.range.startWeek.toInt() && (e <= vacation.range.endWeek.toInt())) {
                     vacationList[e - 1] = 1
-//                    println(vacationList)
 
                 }
             }
         }
     }
+
     fun getBirthdayAsString(): String = birthday?.format(birthdayFormatter).orEmpty()
 
     fun getAbbreviation(): String = abbreviation

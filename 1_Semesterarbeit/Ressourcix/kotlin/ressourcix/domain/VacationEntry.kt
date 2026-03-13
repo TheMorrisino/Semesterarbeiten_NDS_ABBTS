@@ -1,3 +1,5 @@
+// Autor Morris & Tiago
+
 package ressourcix.domain
 
 class VacationEntry(
@@ -18,7 +20,6 @@ class VacationEntry(
     fun hasWeek(week: UInt): Boolean = range.contains(week)
 
     fun getStatus(week: UInt): VacationStatus? = statusByWeek[week]
-
 
     fun setStatus(week: UInt, status: VacationStatus) {
         require(hasWeek(week)) { "week $week is not part of this VacationEntry (range ${range.startWeek}-${range.endWeek})." }

@@ -1,4 +1,4 @@
-//  Autor:        Pedro Santos
+// Autor Pedro
 
 package ressourcix.gui.navigation
 
@@ -13,7 +13,6 @@ import ressourcix.gui.pages.calenderView
 object topNavigationBar {
 
     private const val NAV_HEIGHT = 30.0
-
     private val dashboardBtn = createNavButton("Dashboard")
     private val calenderBtn = createNavButton("Kalender")
     private val employeeManagementBtn = createNavButton("Mitarbeiter Verwaltung")
@@ -24,6 +23,7 @@ object topNavigationBar {
         style = "-fx-fill: #b0b0b0;"
 
     }
+
     private val spacer = Region().apply {
         HBox.setHgrow(this, Priority.ALWAYS)
     }

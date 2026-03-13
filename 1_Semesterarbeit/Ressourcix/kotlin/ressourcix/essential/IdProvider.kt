@@ -1,7 +1,7 @@
+// Autor Morris
 package ressourcix.essential
 
 import ressourcix.logger.logger
-
 
 data class IdState(
     val nextId: UInt,
@@ -23,7 +23,6 @@ class IdProvider(
             throw IllegalStateException("No more IDs available")
         }
 
-        // Suche die erste freie ID
         while (nextId in issuedIds) {
             nextId++
         }
@@ -38,7 +37,6 @@ class IdProvider(
     fun getIssuedIds(): Set<UInt> = issuedIds.toSet()
     fun getNextId(): UInt = nextId
     fun isIssued(id: UInt): Boolean = id in issuedIds
-
 
     // Für das JASON File
     fun restore(state: IdState) {

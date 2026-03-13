@@ -1,4 +1,4 @@
-//  Autor:        Pedro Santos
+// Autor Pedro
 
 package ressourcix.gui.pages
 
@@ -34,7 +34,6 @@ import ressourcix.gui.util.showSaveFailed
 object employeeManagementView : BorderPane() {
 
     private val popupLayer = PopUpLayer()
-
     private var selectedEmployee: Employee? = null
     private var isEditMode: Boolean = false
 
@@ -147,6 +146,7 @@ object employeeManagementView : BorderPane() {
                 showByIdBtn
             )
         }
+
         val showByAbbreviationBtn = createButton("MA nach Kürzel\nanzeigen").apply {
             disableProperty().bind(abbreviationField.textProperty().isEmpty)
             setOnAction {

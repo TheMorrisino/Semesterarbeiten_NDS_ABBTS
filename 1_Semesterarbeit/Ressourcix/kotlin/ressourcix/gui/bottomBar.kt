@@ -1,3 +1,5 @@
+// Autor Morris & Pedro
+
 package ressourcix.gui
 
 import javafx.animation.Animation
@@ -36,16 +38,13 @@ object bottomBar {
     private val statusField: TextField by lazy { createStatusField() }
     private val clockLabel: Label by lazy { createClockLabel() }
     private val clockTimeline: Timeline by lazy { createClockTimeline() }
-
     private val clockFormatter = DateTimeFormatter.ofPattern(Config.CLOCK_FORMAT)
     private val statusFormatter = DateTimeFormatter.ofPattern(Config.STATUS_FORMAT)
-
 
     init {
         updateClock()
         subscribeToLogUpdates()
     }
-
 
     fun getView(): HBox = createBar()
 
@@ -56,7 +55,6 @@ object bottomBar {
     fun stop() {
         clockTimeline.stop()
     }
-
 
     private fun subscribeToLogUpdates() {
         logger.addLogChangeListener { entry ->
@@ -72,7 +70,6 @@ object bottomBar {
         }
     }
 
-
     private fun createClockTimeline() = Timeline(
         KeyFrame(Duration.seconds(Config.CLOCK_INTERVAL_SECONDS), EventHandler { updateClock() })
     ).apply {
@@ -84,7 +81,6 @@ object bottomBar {
             clockLabel.text = LocalDateTime.now().format(clockFormatter)
         }
     }
-
 
     private fun createStatusField() = TextField(Config.DEFAULT_STATUS).apply {
         isDisable = true

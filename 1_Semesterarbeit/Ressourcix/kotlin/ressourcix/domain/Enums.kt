@@ -1,5 +1,6 @@
-package ressourcix.domain
+// Autor Tiago & Pedro
 
+package ressourcix.domain
 
 enum class Role (val displayName: String) {
     APPRENTICE("Lernende"),

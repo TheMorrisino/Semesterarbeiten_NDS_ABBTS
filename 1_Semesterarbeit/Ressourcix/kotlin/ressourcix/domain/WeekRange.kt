@@ -1,5 +1,6 @@
-package ressourcix.domain
+// Autor Morris & Tiago
 
+package ressourcix.domain
 
 data class WeekRange(val startWeek: UInt, val endWeek: UInt) {
     init {

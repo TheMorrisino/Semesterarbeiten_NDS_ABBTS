@@ -1,5 +1,6 @@
-package ressourcix.gui
+// Autor Morris & Pedro
 
+package ressourcix.gui
 
 import javafx.application.Application
 import javafx.scene.Group

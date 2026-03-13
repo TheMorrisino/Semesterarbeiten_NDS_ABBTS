@@ -1,4 +1,4 @@
-//  Autor:        Pedro Santos
+// Autor Pedro
 
 package gui.popUp
 

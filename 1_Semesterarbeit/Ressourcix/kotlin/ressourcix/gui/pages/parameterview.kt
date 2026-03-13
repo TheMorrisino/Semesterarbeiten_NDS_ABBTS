@@ -1,6 +1,7 @@
-//  Autor:        Pedro Santos
+// Autor Pedro
 
 package ressourcix.gui.pages
+
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.TextField
@@ -21,7 +22,6 @@ object parameterview: BorderPane() {
 
     private val weeksForBlocker = BooleanArray(53)
     private val weeksForSchool  = BooleanArray(53)
-
     private var isEditMode: Boolean = false
 
     val minEmployeeTfl  = createTfl("","").apply {
@@ -229,7 +229,5 @@ mainContent.children.addAll(minEmployeeBar,vacationsBlockerBar,maxVacationsBar,f
         config.vacationBlock = weeksForBlocker.copyOf()
         config.vacationSchoolBlock = weeksForSchool.copyOf()
     }
-
-
 
 }
