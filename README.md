@@ -1,6 +1,7 @@
 **Hallo Zusammen**
 
 
+
 **Erstes Semester**  
 1_Semesterarbeit/Ressourcix/ – Hier arbeiten wir alle gemeinsam am eigentlichen Projekt.
 Alle Änderungen sollten über Pull‑Requests bzw. Merge‑Requests in diesen Ordner erfolgen, damit wir den Überblick behalten.
