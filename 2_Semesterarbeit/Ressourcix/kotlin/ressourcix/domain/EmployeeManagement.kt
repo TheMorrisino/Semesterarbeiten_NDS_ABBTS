@@ -4,6 +4,7 @@ package ressourcix.domain
 
 import ressourcix.app.app.vacationIds
 import ressourcix.gui.pages.calenderView.updateEmployees
+import ressourcix.logger.logger
 
 // Als Klasse definiert um später Verschiedene Jahre zu verwalten
 class EmployeeManagement () {
