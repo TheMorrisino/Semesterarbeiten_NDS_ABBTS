@@ -1,6 +1,7 @@
 **Hallo Zusammen**
 
 
+
 **Erstes Semester**  
 1_Semesterarbeit/Ressourcix/ – Hier arbeiten wir alle gemeinsam am eigentlichen Projekt.
 Alle Änderungen sollten über Pull‑Requests bzw. Merge‑Requests in diesen Ordner erfolgen, damit wir den Überblick behalten.
@@ -31,7 +32,7 @@ git push origin mein-feature
 Teammitglieder können den Code reviewen, Kommentare hinterlassen und den PR schliesslich mergen.
 
 
-**📑 Lizenz & Hinweis**
+**📑Hinweis**
 
 Dieses Repository ist ausschliesslich für den internen Gebrauch im Rahmen unseres Studiums gedacht. 
 Bitte respektiert die Urheberrechte aller eingebrachten Materialien und verwendet keine fremden Inhalte ohne Genehmigung.
