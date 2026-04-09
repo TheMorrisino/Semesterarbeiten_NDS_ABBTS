@@ -1,0 +1,253 @@
+@startuml
+title Ressourcix - Klassendiagramm Grob
+
+' Styling
+skinparam class {
+    BackgroundColor<<singleton>> LightYellow
+    BackgroundColor<<domain>> LightBlue
+    BackgroundColor<<gui>> LightGreen
+    BackgroundColor<<popup>> LightCoral
+    BackgroundColor<<enum>> Wheat
+    BorderColor Black
+}
+
+skinparam object {
+    BackgroundColor<<singleton>> LightYellow
+    BackgroundColor<<domain>> LightBlue
+    BackgroundColor<<gui>> LightGreen
+    BackgroundColor<<popup>> LightCoral
+    BorderColor Black
+}
+
+skinparam arrowColor Black
+skinparam arrowThickness 1.5
+
+' Abstände
+skinparam nodesep 80
+skinparam ranksep 100
+
+
+' ========================================
+' DOMAIN - Core Classes
+' ========================================
+
+class Employee <<domain>> {
+
+}
+
+class VacationEntry <<domain>> {
+
+}
+
+class WeekRange <<domain>> {
+
+}
+
+class EmployeeManagement <<domain>> {
+
+}
+
+' Enumerations
+enum Role <<enum>> {
+
+}
+
+enum VacationStatus <<enum>> {
+
+}
+
+enum Department <<enum>> {
+
+}
+
+enum Education <<enum>> {
+
+
+}
+
+' Configuration
+object config <<singleton>> {
+
+}
+
+' ========================================
+' APPLICATION - Core
+' ========================================
+
+object app <<singleton>> {
+}
+
+class IdProvider {
+}
+
+class IdState {
+
+}
+
+object jsonReader <<singleton>> {
+
+}
+
+object jsonWriter <<singleton>> {
+
+}
+
+object logger <<singleton>> {
+
+}
+
+class "logger.LogEntry" as LogEntry {
+
+}
+
+enum "logger.Level" as LogLevel <<enum>> {
+
+}
+
+' ========================================
+' GUI - Main
+' ========================================
+
+class GuiBorderPane <<gui>> {
+
+}
+
+class StartAnimation <<gui>> {
+
+}
+
+class SplashScreenAdvanced <<gui>> {
+
+}
+
+class NavigationsController <<gui>> {
+
+}
+
+enum Route <<enum>> {
+
+}
+
+object topNavigationBar <<singleton>> {
+
+}
+
+object bottomBar <<singleton>> {
+}
+
+
+' ========================================
+' GUI - Views
+' ========================================
+
+object dashboardView <<singleton>> <<gui>> {
+
+}
+
+object calenderView <<singleton>> <<gui>> {
+
+}
+
+object employeeManagementView <<singleton>> <<gui>> {
+
+}
+
+object parameterview <<singleton>> <<gui>> {
+}
+
+' ========================================
+' GUI - PopUps
+' ========================================
+
+object vacationPopUp <<singleton>> <<popup>> {
+}
+
+object checkVacationPopUp <<singleton>> <<popup>> {
+
+}
+
+object filterPopUp <<singleton>> <<popup>> {
+}
+
+object filteredEmployeePopUp <<singleton>> <<popup>> {
+
+}
+
+class weekPickerPopUp <<popup>> {
+
+}
+
+class PopUpLayer <<popup>> {
+
+}
+
+' ========================================
+' RELATIONSHIPS - Domain
+' ========================================
+
+EmployeeManagement "1" o-- "*" Employee : verwaltet
+Employee "1" *-- "*" VacationEntry : enthält
+VacationEntry "1" *-- "1" WeekRange : hat
+VacationEntry --> VacationStatus
+Employee --> Role
+Employee --> Department
+Employee --> Education
+
+' ========================================
+' RELATIONSHIPS - Application
+' ========================================
+
+app "1" *-- "1" EmployeeManagement : verwaltung
+app "1" *-- "2" IdProvider : ids
+app --> jsonReader : lädt
+app --> logger : loggt
+app --> config
+logger "1" *-- "*" LogEntry : erstellt
+logger --> LogLevel
+IdProvider --> IdState
+jsonReader --> Employee
+jsonReader --> config
+jsonWriter --> Employee
+jsonWriter --> config
+
+' ========================================
+' RELATIONSHIPS - GUI Main
+' ========================================
+
+GuiBorderPane "1" *-- "1" NavigationsController : besitzt
+GuiBorderPane --> topNavigationBar
+GuiBorderPane --> bottomBar
+GuiBorderPane --> jsonWriter : speichert
+StartAnimation --> GuiBorderPane : startet
+StartAnimation --> SplashScreenAdvanced
+NavigationsController --> Route
+NavigationsController "1" o-- "1" dashboardView
+NavigationsController "1" o-- "1" calenderView
+NavigationsController "1" o-- "1" employeeManagementView
+NavigationsController "1" o-- "1" parameterview
+' ========================================
+' RELATIONSHIPS - Views zu Domain
+' ========================================
+
+dashboardView --> EmployeeManagement : liest
+calenderView --> EmployeeManagement : liest/schreibt
+calenderView --> Employee : zeigt
+employeeManagementView --> EmployeeManagement : bearbeitet
+employeeManagementView --> Employee
+parameterview --> config : bearbeitet
+bottomBar --> logger
+
+' ========================================
+' RELATIONSHIPS - Views zu PopUps
+' ========================================
+
+calenderView "1" *-- "1" PopUpLayer : besitzt
+employeeManagementView "1" *-- "1" PopUpLayer : besitzt
+parameterview "1" *-- "1" PopUpLayer : besitzt
+calenderView --> vacationPopUp : öffnet
+employeeManagementView --> filterPopUp
+employeeManagementView --> filteredEmployeePopUp
+parameterview --> weekPickerPopUp
+vacationPopUp --> checkVacationPopUp
+
+@enduml
